@@ -1,0 +1,503 @@
+<template>
+	<div class="content">
+		<p class="head">客户信息标准版</p>
+		<el-tabs v-model="activeName" @tab-click="handleClick" class="report-tabs">
+		    <el-tab-pane label="用户基本信息" name="first"></el-tab-pane>
+		    <el-tab-pane label="金融类通话信息" name="second"></el-tab-pane>
+		    <el-tab-pane label="联系人区域汇总" name="third"></el-tab-pane>
+		    <el-tab-pane label="长时间联系人" name="fourth"></el-tab-pane>
+		    <el-tab-pane label="高级联系人" name="five"></el-tab-pane>
+		    <el-tab-pane label="催收风险分析" name="six"></el-tab-pane>
+		    <el-tab-pane label="出行数据分析" name="seven"></el-tab-pane>
+		</el-tabs>
+		<div class="nav nav1">
+			<p class="navP-title">用户基本信息</p>
+			<p class="navP-head">基本信息</p>
+			<ul class="nav1-ul">
+				<li><span class="tabName"><b>登记姓名</b></span><span class="tabValue">尹燕强</span><span class="tabName"><b>性别</b></span><span class="tabValue">男</span></li>
+				<li><span class="tabName"><b>年龄</b></span><span class="tabValue">30</span><span class="tabName"><b>户籍地址</b></span><span class="tabValue">山东省济南市平阴县</span></li>
+				<li><span class="tabName"><b>居住地址</b></span><span class="tabValue tabValue2">山东省济南市平阴县<b>高级版可验真</b></span></li>
+				<li><span class="tabName"><b>工作地址</b></span><span class="tabValue tabValue2">山东省济南市平阴县<b>高级版可验真</b></span></li>
+				<li><span class="tabName"><b>身份证</b></span><span class="tabValue tabValue2">370124198701263011<b>高级版可验真</b></span></li>
+				<li class="mobile-li"><span class="tabName tabMobile"><b>手机号</b></span><span class="tabValue tabValue2 tabValue3">
+						<p class="mobile-p1">山东移动<span>未实名认证</span></p>
+						<p class="mobile-p2">
+							<span>13553167865（已使用26个月）</span>
+							<span class="mobile-span1"><svg-icon icon-class="dian" />用户姓名与运营商提供的姓名[xx强]不匹配</span>
+							<span class="mobile-spanlast mobile-span1"><svg-icon icon-class="dian" />运营商未提供身份证号码</span>
+						</p>
+						<p class="mobile-p3">
+							<span>6个月内有10天无通话记录</span>
+							<span class="mobile-spanlast mobile-span2"><svg-icon icon-class="dian" />根据运营商通话详单数据，连续三天以上无通话记录1次: 2015-04-03 13:05:26 - 2015-04-08 00:07:36, 10天</span>
+						</p>
+						<p class="mobile-p4">互通过电话的号码有21个，比例为69%</p>
+					</span>
+				</li>
+			</ul>
+			<p class="navP-head">联系人</p>
+			<ul class="contact-ul">
+				<li class="contact-li"><span>关系</span><span>姓名</span><span class="contact-span">手机号码</span><span class="contact-span">是否为临时小号</span><span class="contact-span">通话时长排名</span><span class="contact-span">联系次数(6个月)</span><span>通话时长</span></li>
+			    <li ><span>父母</span><span>王玉梅</span><span class="contact-span">15966335913</span><span class="contact-span">非临时小号</span><span class="contact-span">1</span><span class="contact-span">379</span><span>459.20</span></li>
+			    <li ><span>父母</span><span>王玉梅</span><span class="contact-span">15966335913</span><span class="contact-span">非临时小号</span><span class="contact-span">1</span><span class="contact-span">379</span><span>459.20</span></li>
+			    <li ><span>父母</span><span>王玉梅</span><span class="contact-span">15966335913</span><span class="contact-span">非临时小号</span><span class="contact-span">1</span><span class="contact-span">379</span><span>459.20</span></li>
+			    <li ><span>父母</span><span>王玉梅</span><span class="contact-span">15966335913</span><span class="contact-span">非临时小号</span><span class="contact-span">1</span><span class="contact-span">379</span><span>459.20</span></li>
+			    <li ><span>父母</span><span>王玉梅</span><span class="contact-span">15966335913</span><span class="contact-span">非临时小号</span><span class="contact-span">1</span><span class="contact-span">379</span><span>459.20</span></li>
+			    <li ><span>父母</span><span>王玉梅</span><span class="contact-span">15966335913</span><span class="contact-span">非临时小号</span><span class="contact-span">1</span><span class="contact-span">379</span><span>459.20</span></li>
+			</ul>
+			<p class="navP-head">黑名单</p>
+			<ul class="contact-ul blacklist-ul">
+				<li class="contact-li"><span>检查项</span><span>结果</span><span class="blacklist-span">依据</span></li>
+			    <li ><span>黑中介分数</span><span>14</span><span class="blacklist-span">分数范围0-100，参考分为10，分数越低关系越紧密</span></li>
+			    <li ><span>直接联系人中黑名单人数</span><span>1</span><span class="blacklist-span">分数范围0-100，参考分为10，分数越低关系越紧密</span></li>
+			    <li ><span>间接联系人中黑名单人数</span><span>298</span><span class="blacklist-span">间接联系人：和被查询号码的直接联系人有通话记录</span></li>
+			    <li ><span>直接联系人数量</span><span>329</span><span class="blacklist-span">直接联系人：和被查询号码有通话记录</span></li>
+			    <li ><span>引起黑名单的直接联系人数量</span><span>104</span><span class="blacklist-span">直接联系人有和黑名单用户的通话记录的号码数量</span></li>
+			    <li ><span>直接联系人中引起间接黑名单占比</span><span>32%</span><span class="blacklist-span">直接联系人有和黑名单用户的通话记录的号码数量在直接联系人数量中的百分比</span></li>
+			</ul>
+		</div>
+		<div class="nav nav2">
+			<p class="navP-title">金融类通话信息</p>
+			<ul class="contact-ul blacklist-ul">
+				<li class="contact-li"><span>检查项</span><span>结果</span><span class="blacklist-span">依据</span></li>
+			     <li ><span>黑中介分数</span><span>14</span><span class="blacklist-span">分数范围0-100，参考分为10，分数越低关系越紧密</span></li>
+			    <li ><span>直接联系人中黑名单人数</span><span>1</span><span class="blacklist-span">分数范围0-100，参考分为10，分数越低关系越紧密</span></li>
+			    <li ><span>间接联系人中黑名单人数</span><span>298</span><span class="blacklist-span">间接联系人：和被查询号码的直接联系人有通话记录</span></li>
+			    <li ><span>直接联系人数量</span><span>329</span><span class="blacklist-span">直接联系人：和被查询号码有通话记录</span></li>
+			    <li ><span>引起黑名单的直接联系人数量</span><span>104</span><span class="blacklist-span">直接联系人有和黑名单用户的通话记录的号码数量</span></li>
+			    <li ><span>直接联系人中引起间接黑名单占比</span><span>32%</span><span class="blacklist-span">直接联系人有和黑名单用户的通话记录的号码数量在直接联系人数量中的百分比</span></li>
+			</ul>
+		</div>
+		<div class="nav nav3">
+			<p class="navP-title">联系人区域汇总</p>
+			<div id="myChart" ></div>
+		</div>
+		<div class="nav nav4">
+			<p class="navP-title">长时间联系人(Top10)</p>
+			<div id="longTimeChart" ></div>
+		</div>
+		<div class="nav nav5">
+			<p class="navP-title">高级联系人(Top10)</p>
+			<div id="highChart" ></div>
+		</div>
+		<div class="nav nav6">
+			<p class="navP-title">催收风险分析</p>
+			<ul class="contact-ul blacklist-ul">
+				<li class="contact-li"><span>检查项</span><span>催收信息</span><span>疑似催收信息</span></li>
+			    <li ><span>号码个数</span><span>6个</span><span>2个</span></li>
+			    <li ><span>被叫次数</span><span>1次</span><span>2次</span></li>
+			    <li ><span>被叫时长</span><span>2次</span><span>27秒</span></li>
+			    <li ><span>被叫时长15s以下的次数</span><span>3次</span><span>3次</span></li>
+			    <li ><span>被同一号码呼叫的最多次数</span><span>10次</span><span>5次</span></li>
+			    <li ><span>被同一号码呼叫2次以上的号码个数</span><span>32个</span><span>3个</span></li>
+			</ul>
+		</div>
+		<div class="nav nav7">
+			<p class="navP-title">出行数据分析</p>
+			<ul class="contact-ul trip-ul">
+				<li class="contact-li"><span>时间段</span><span>出发地</span><span>目的地</span><span class="trip-span">出行开始时间</span><span class="trip-span">出行结束时间</span></li>
+			    <li ><span>双休日</span><span>山东</span><span>北京</span><span class="trip-span">2010-07-02 15：23：20</span><span class="trip-span">2010-07-02 15：23：20</span></li>
+			    <li ><span>工作日</span><span>北京</span><span>山东</span><span class="trip-span">2010-07-02 15：23：20</span><span class="trip-span">2010-07-02 15：23：20</span></li>
+			    <li ><span>双休日</span><span>山东</span><span>湖南</span><span class="trip-span">2010-07-02 15：23：20</span><span class="trip-span">2010-07-02 15：23：20</span></li>
+			</ul>
+		</div>
+	</div>
+</template>
+
+<script>
+	import echarts from 'echarts'
+	 export default {
+	    data() {
+	      return {
+	        activeName: 'first'
+	      };
+	    },
+	    mounted:function(){
+	    	this.initChart1()
+	    	this.initChart2()
+	    	this.initChart3()
+	    },
+	    methods: {
+	      handleClick(tab, event) {
+	        console.log(tab, event);
+	      },
+	      initChart1(){
+	      	this.chart = echarts.init(document.getElementById('myChart'))
+	      	var colors = ['#a4d266', '#5a9dee', '#333']
+	      	this.chart.setOption({
+	      		color: colors,
+			    tooltip: {
+			        trigger: 'axis',
+			        axisPointer: {
+			            type: 'cross'
+			        }
+			    },
+//			    grid: {
+//			        right: '20%'
+//			    },
+//			    toolbox: {
+//			        feature: {
+//			            dataView: {show: true, readOnly: false},
+//			            restore: {show: true},
+//			            saveAsImage: {show: true}
+//			        }
+//			    },
+			    legend: {
+			        data:['呼入次数','呼出次数','号码个数']
+			    },
+			    xAxis: [
+			        {
+			            type: 'category',
+			            axisTick: {
+			                alignWithLabel: true
+			            },
+			            data: ['澳门','美国','山东','全国','广东','湖南','海南','江苏','湖北','浙江','四川']
+			        }
+			    ],
+			    yAxis: [
+			        {
+			            type: 'value',
+			            name: '次数',
+//			            min: 0,
+//			            max: 250,
+			            position: 'left',
+//			            axisLine: {
+//			                lineStyle: {
+//			                    color: "#999"
+//			                }
+//			            },
+			            axisLabel: {
+			                formatter: '{value}'
+			            }
+			        },
+			        {
+			            type: 'value',
+			            name: '个数',
+//			            min: 0,
+//			            max: 250,
+			            position: 'right',
+//			            axisLine: {
+//			                lineStyle: {
+//			                     color: "#999"
+//			                }
+//			            },
+			            axisLabel: {
+			                formatter: '{value}'
+			            }
+			        }
+			    ],
+			    series: [
+			        {
+			            name:'呼入次数',
+			            type:'bar',
+			            barWidth:25,
+			            data:[50,20,130,210,120,35,50,25,40,30,5]
+			        },
+			        {
+			            name:'呼出次数',
+			            type:'bar',
+			            barWidth:25,
+			            data:[30,10,210,50,70,20,30,10,30,25,8]
+			        },
+			        {
+			            name:'号码个数',
+			            type:'line',
+			            smooth: true,
+			            yAxisIndex: 1,
+			            data:[80,80,100,130,160,180,210,220,190,160,130,100]
+			        }
+			    ]
+	      	})
+	      },
+	      initChart2(){
+	      	this.chart = echarts.init(document.getElementById('longTimeChart'))
+	      	var colors = ['#a4d266', '#5a9dee']
+	      	this.chart.setOption({
+	      		 color: colors,
+	      		 tooltip : {
+			        trigger: 'axis',
+			        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+			            type : 'line'        // 默认为直线，可选为：'line' | 'shadow'
+			        }
+			    },
+			    legend: {
+			        data:['通话时长', '通话次数']
+			    },
+//			    grid: {
+//			        left: '3%',
+//			        right: '4%',
+//			        bottom: '3%',
+//			        containLabel: true
+//			    },
+			    xAxis : [
+			        {
+			            type : 'value'
+			        }
+			    ],
+			    yAxis : [
+			        {
+			            type : 'category',
+			            axisTick : {show: false},
+			            data : ['15696324365','15696324365','15696324365','15696324365','15696324365','15696324365','15696324365','15696324365','15696324365','15696324365',]
+			        }
+			    ],
+			    series : [
+			        {
+			            name:'通话次数',
+			            type:'bar',
+			            barWidth:20,
+			            barCategoryGap:50,
+			            stack: '总量',
+			            splitNumber:0,
+			            label: {
+			                normal: {
+			                    show: true,
+//			                    position: 'right'
+			                }
+			            },
+			            data:[320, 120,302, 341,250, 374, 390,250,450, 420]
+			        },
+			        {
+			            name:'通话时长',
+			            type:'bar',
+			            stack: '总量',
+			            splitNumber:0,
+			            label: {
+			                normal: {
+			                    show: true,
+			                    position: 'left'
+			                }
+			            },
+			            data:[-1200, -3000,-1320, -1010,-4000, -1340, -1900,-3500,-2300, -2100]
+			        }
+			    ]
+	      	})
+	      },
+	      initChart3(){
+	      	this.chart = echarts.init(document.getElementById('highChart'))
+	      	var colors = ['#a4d266', '#5a9dee']
+	      	this.chart.setOption({
+	      		 color: colors,
+	      		 tooltip : {
+			        trigger: 'axis',
+			        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+			            type : 'line'        // 默认为直线，可选为：'line' | 'shadow'
+			        }
+			    },
+			    legend: {
+			        data:['通话时长', '通话次数']
+			    },
+			    grid: {
+			        left: '3%',
+			        right: '4%',
+			        bottom: '3%',
+			        containLabel: true
+			    },
+			    xAxis : [
+			        {
+			            type : 'value'
+			        }
+			    ],
+			    yAxis : [
+			        {
+			            type : 'category',
+			            axisTick : {show: false},
+			            data : ['15696324365','15696324365','15696324365','15696324365','15696324365','15696324365','15696324365','15696324365','15696324365','15696324365',]
+			        }
+			    ],
+			    series : [
+			        {
+			            name:'通话次数',
+			            type:'bar',
+			            barWidth:20,
+			            barCategoryGap:50,
+			            stack: '总量',
+			            label: {
+			                normal: {
+//			                    show: true
+			                }
+			            },
+			           data:[320, 120,302, 341,250, 374, 390,250,450, 420]
+			        },
+			        {
+			            name:'通话时长',
+			            type:'bar',
+			            stack: '总量',
+			            label: {
+			                normal: {
+//			                    show: true,
+			                    position: 'left'
+			                }
+			            },
+			            data:[-1200, -3000,-1320, -1010,-4000, -1340, -1900,-3500,-2300, -2100]
+			        }
+			    ]
+	      	})
+	      }
+	    }
+	  };
+</script>
+
+<style scoped>
+	.content{
+		padding: 0 70px;
+		padding-bottom: 30px;
+	}
+	.content .head{
+		height: 80px;
+		line-height: 80px;
+		font-weight: bold;
+		font-size: 24px;
+		border-bottom: 1px #D8D8D8 solid;
+		margin-bottom: 20px;
+	}
+	.el-tabs{
+		/*padding-left: 50px;*/
+	}
+	.el-tabs__nav-wrap::after{
+		display: none;
+		height: 0;
+	}
+	.nav{
+		margin-top: 30px;
+	}
+	.nav .navP-title{
+		text-align: center;
+		font-size: 20px;
+		color: #333;
+		font-weight: bold;
+		margin-bottom: 30px;
+	}
+	.nav .navP-head{
+		font-size: 18px;
+		color: #333;
+		padding-left: 10px;
+		border-left: 4px #409EFF solid;
+		margin-bottom: 20px;
+		margin-top: 20px;
+	}
+	.nav .nav1-ul{
+		border-radius:5px ;
+		font-size: 14px;
+		border-top: 1px #E3E7F1 solid;
+		border-left: 1px #E3E7F1 solid;
+	}
+	.nav .nav1-ul li{
+		border-bottom: 1px #E3E7F1 solid;
+	}
+	.nav .tabName{
+		color: #666;
+		padding: 10px 0;
+		display: inline-block;
+		width: 10%;
+	}
+	.nav .tabName b{
+		padding-left: 30%;
+	}
+	.nav .tabMobile{
+		float: left;
+		margin-top: 100px;
+	}
+	.nav .tabValue{
+		padding: 15px 0;
+		padding-left: 20px;
+		display: inline-block;
+		width: 40%;
+		border-left: 1px #E3E7F1 solid;
+		border-right: 1px #E3E7F1 solid;
+	}
+	.nav .tabValue2{
+		width: 90%;
+	}
+	.nav .tabValue2 b{
+		margin-left: 30px;
+		color: #409EFF;
+	}
+	.nav .tabValue3{
+		padding-left: 0;
+		width: 90%;
+	}
+	.nav .nav1-ul  .mobile-li p{
+		padding: 15px 0;
+		padding-left: 20px;
+		display: flex;
+		flex-direction:column;
+        justify-content: center;
+        border-bottom: 1px #E3E7F1 solid;
+	}
+	.nav .nav1-ul  .mobile-li .mobile-p1{
+		display: inline-block;
+		width: 100%;
+		padding-top: 0;
+	}
+	.nav .nav1-ul  .mobile-li .mobile-p1 span{
+		margin-left: 30px;
+		padding: 5px;
+		border-radius: 3px;
+		color: #fff;
+		background: #ED5543;
+	}
+	.nav .nav1-ul  .mobile-li .mobile-p4{
+		border-bottom: none;
+		padding-bottom: 0;
+	}
+	.mobile-li .tabValue2 span{
+		margin-bottom: 10px;
+	}
+	.mobile-li .tabValue2 .mobile-spanlast{
+		margin-bottom: 0;
+	}
+	.mobile-li .svg-icon{
+		margin-right: 10px;
+	}
+	.mobile-li .tabValue2 .mobile-span1{
+	     color: red;
+	     font-size: 12px;
+	}
+	.mobile-li .tabValue2 .mobile-span2{
+	     color: #999;
+	     font-size: 12px;
+	}
+    .contact-ul{
+    	border: 1px #E3E7F1 solid;
+    	border-right: none;
+    	border-bottom: none;
+    }
+    .contact-ul li{
+    	display: flex;
+    }
+    .contact-ul .contact-li{
+    	background: #F1F2F8;
+    }
+    .contact-ul li span{
+    	flex: 1;
+    	display: inline-block;
+    	padding: 10px 0;
+    	padding-left: 30px;
+    	border-right: 1px #E3E7F1 solid;
+    	border-bottom: 1px #E3E7F1 solid;
+    }
+    .contact-ul li .contact-span{
+    	flex: 1.5;
+    }
+    .blacklist-ul li .blacklist-span{
+    	flex: 2.5;
+    }
+    .trip-ul li .trip-span{
+    	flex: 1.5;
+    }
+    #myChart{
+    	width: 100%;
+    	height: 600px;
+    	margin: 0 auto;
+    }
+    #longTimeChart{
+    	width: 100%;
+    	height: 600px;
+    	margin: 0 auto;
+    }
+     #highChart{
+    	width: 100%;
+    	height: 600px;
+    	margin: 0 auto;
+    }
+</style>

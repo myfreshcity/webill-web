@@ -7,8 +7,8 @@
 		  <el-step title="完善基本信息"></el-step>
 		  <el-step title="填写运营商服务密码"></el-step>
 		</el-steps>
-		<div class="nav1">
-			<el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm" label-position="left" v-show="step1">
+		<div class="nav1"  v-show="step1">
+			<el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm" label-position="left">
 			  <el-form-item label="姓名" prop="name">
 			    <el-input v-model="ruleForm.name" class="nav-input"></el-input>
 			  </el-form-item>
@@ -20,11 +20,10 @@
 			  </el-form-item>
 			   <el-form-item>
 			    <el-button type="primary" @click="submitForm('ruleForm')">下一步</el-button>
-			    <!--<el-button @click="resetForm('ruleForm')">重置</el-button>-->
 			  </el-form-item>
 			</el-form>
 		</div>
-		<div class="nav2">
+		<div class="nav2"  v-show="step2">
 			<p class="add-p"><span>添加联系人信息</span><span class="add-span" @click="addRel">继续添加 <svg-icon icon-class="add" /></span></p>
 			<ul v-show="!addRelShow" class="relList-ul">
 				<li v-for="(ele,k) in relationList"><span>{{ele.relation|relationFilter}}</span><span>{{ele.name}}</span><span>{{ele.mobile}}</span><span class="svg-span" @click="redactRel(ele,k)"><svg-icon icon-class="redact" /></span><span class="svg-span" @click="removeRel(k)"><svg-icon icon-class="remove" /></span></li>
@@ -57,7 +56,7 @@
 			</el-form>
 			<!--<el-button :plain="true" class="">消息</el-button>-->
 		</div>
-		<div class="nav2 nav3">
+		<div class="nav2 nav3"  v-show="step2">
 			<p class="add-p"><span>添加地址信息</span></p>
 			<div class="nav3-form">
 				<span class="nav3-span">工作地址</span><el-cascader
@@ -77,36 +76,39 @@
 			    <el-input v-model="homeAddress" class="work-input" placeholder="详细到门牌号"></el-input>
 			</div>
 		</div>
-		<div class="nav2 nav4">
+		<div class="nav2 nav4"  v-show="isNew">
 			<p class="add-p"><span>信息更新设置</span></p>
 			<p class="nav4-p"><span>上次更新时间：</span>{{lastTime}}</p>
 			<p class="nav4-p"><span>更新信息类型：</span>{{lastType}}</p>
 			<p class="nav4-p"><span>是否更新</span><el-radio v-model="isUpdate" label="1">是</el-radio><el-radio v-model="isUpdate" label="0">否</el-radio></p>
 	    </div>
-	    <div class="nav2 nav5">
+	    <div class="nav2 nav5" v-show="step2">
 			<p class="add-p"><span>选择获取信息内容</span></p>
 			<ul class="norm-ul">
 				<li class="norm-li1">&nbsp;&nbsp;<el-radio v-model="selectType" label="1">&nbsp;</el-radio></li>
-				<li class="norm-li2">客户信息标准版<svg-icon icon-class="doubt" /></li>
-				<li class="norm-li2">可用次数：{{normCount}}次<svg-icon icon-class="shopCar" /></li>
+				<li class="norm-li2">客户信息标准版<span @click="goInformation()"><svg-icon icon-class="doubt"/></span></li>
+				<li class="norm-li2">可用次数：{{normCount}}次<span @click="goCar()"><svg-icon icon-class="shopCar" /></span></li>
 			</ul>
 			<ul class="norm-ul expert-ul">
 				<li class="norm-li1">&nbsp;&nbsp;<el-radio v-model="selectType" label="2">&nbsp;</el-radio></li>
-				<li class="norm-li2">客户信息高级版<svg-icon icon-class="doubt" /></li>
-				<li class="norm-li2">可用次数：{{expertCount}}次<svg-icon icon-class="shopCar" /></li>
+				<li class="norm-li2" >客户信息高级版<span @click="goInformation()"><svg-icon icon-class="doubt" /></span></li>
+				<li class="norm-li2">可用次数：{{expertCount}}次<span @click="goCar()"><svg-icon icon-class="shopCar" /></span></li>
 			</ul>
+			<el-button  type="primary" @click="lastStep(1)" class="subPwd" >上一步</el-button>
+			<el-button  type="primary" @click="nextStep()" >下一步</el-button>
 	    </div>
-	    <div class="nav2 nav4 nav6">
-			<p class="add-p"><span>填写运营商服务密码</span></p>
-			<p class="nav4-p"><span>姓名：</span>{{ruleForm.name}}</p>
-			<p class="nav4-p"><span>身份证号：</span>{{ruleForm.idCard}}</p>
-			<p class="nav4-p"><span>手机号：</span>{{ruleForm.mobile}}</p>
-			<p class="nav4-p" v-show="pwdShow"><span>服务密码：</span><el-input class="nav-input" placeholder="请输入服务密码"></el-input> <span class="forgetPwd" @click="forgetPwd()">忘记密码</span></p>
-			<el-button type="primary" @click="submitPwd()" class="subPwd" v-show="pwdShow">提交</el-button>
+	    <div class="nav2 nav4 nav6" v-show="step3">
+			<p class="fillPwd"><span><svg-icon icon-class="tip" />获取身份、账单、通话信息需提交运营商服务密码进行认证</span></p>
+			<p class="nav4-p"><span>姓名</span>{{ruleForm.name}}</p>
+			<p class="nav4-p"><span>身份证号</span>{{ruleForm.idCard}}</p>
+			<p class="nav4-p"><span>手机号</span>{{ruleForm.mobile}}</p>
+			<p class="nav4-p" v-show="pwdShow"><span>服务密码</span><el-input class="nav-input" placeholder="请输入服务密码"></el-input> <span class="forgetPwd" @click="forgetPwd()">忘记密码</span></p>
+			<el-button type="primary" @click="lastStep(2)" class="subPwd" v-show="pwdShow">上一步</el-button>
+			<el-button type="primary" @click="submitPwd()" v-show="pwdShow">提交</el-button>
 	        <div v-show="!pwdShow">
-	        	<p class="nav4-p"><span>验证码：</span><el-input class="nav-input" placeholder="请输入服务密码"></el-input></p>
-	        	<p class="nav4-p"><span>重置服务密码：</span><el-input class="nav-input" placeholder="请输入服务密码"></el-input></p>
-	        	<p class="nav4-p"><span>密码确认：</span><el-input class="nav-input" placeholder="请输入服务密码"></el-input></p>
+	        	<p class="nav4-p"><span>验证码</span><el-input class="nav-input" placeholder="请输入服务密码"></el-input></p>
+	        	<p class="nav4-p"><span>重置服务密码</span><el-input class="nav-input" placeholder="请输入服务密码"></el-input></p>
+	        	<p class="nav4-p"><span>密码确认</span><el-input class="nav-input" placeholder="请输入服务密码"></el-input></p>
 	        	<el-button @click="pwdCancel()" class="subPwd">取消</el-button>
 			    <el-button type="primary" @click="resetPwd()">确认修改</el-button>
 	        </div>
@@ -119,6 +121,7 @@
   export default {
     data() {
       return {
+      	isNew:false,
       	pwdShow:true,
       	normCount:50,                 //可用标准版次数
       	expertCount:20,               //可用高级版次数
@@ -127,8 +130,8 @@
       	lastTime:"36天前",            
       	lastType:"客户信息标准版",
       	step1:true,
-      	step2:true,
-      	step3:true,
+      	step2:false,
+      	step3:false,
       	addRelShow:true,
       	cancleShow:true,
       	relationList:[],
@@ -220,7 +223,6 @@
 //	     }
 //	},
     mounted:function(){
-    	console.log(this.relationList.length) 
     	if(this.relationList.length==0){
     		this.cancleShow=false
     		this.addRelShow=true
@@ -249,17 +251,24 @@
     	}
     },
     methods: {
-      next() {
-        if (this.active++ > 2) this.active = 0;
+      goInformation(){
+      	this.$router.push({path:'/template/information'})
       },
+      goCar(){
+      	this.$router.push({path:'/personal/buyData'})
+      },
+//    next() {
+//      if (this.active++ > 2) this.active = 0;
+//    },
        submitForm(formName) {
+       	this.step1=false
+       	this.step2=true
+       	this.active=2
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            alert('submit!');
+            console.log('submit!');
           } else {
           	this.active=2
-          	console.log(this.active)
-            console.log('error submit!!');
             return false;
             
           }
@@ -276,8 +285,12 @@
           		 this.addRelShow=false
           		 this.redactIndex=-1
           	}else{
-          		 this.relationList.push({"relation":this.relForm.relation,"name":this.relForm.relName,"mobile":this.relForm.relMobile})
-                 this.addRelShow=false
+          		 if(this.relationList.length==6){
+          		 	this.$message('联系人信息最多添加6条');
+          		 }else{
+          		 	this.relationList.push({"relation":this.relForm.relation,"name":this.relForm.relName,"mobile":this.relForm.relMobile})
+                    this.addRelShow=false
+          		 }
           	}
             console.log(this.relationList)
           } else {
@@ -314,9 +327,7 @@
       	this.redactIndex=index
       },
       removeRel(index){
-      	console.log(index)
       	this.relationList.splice(index,1);
-      	console.log(this.relationList)
       	if(this.relationList.length==0){
       		this.addRelShow=true
       	}
@@ -329,6 +340,25 @@
       },
       pwdCancel(){
       	this.pwdShow=true
+      },
+      nextStep(){
+      	this.step2=false
+      	this.step3=true
+      	this.active=3
+      },
+      lastStep(index){
+      	if(index==1){
+      		this.step1=true
+      	    this.step2=false
+      	    this.active=1
+      	}else if(index==2){
+      		this.step2=true
+      	    this.step3=false
+      	    this.active=2
+      	}
+      },
+      submitPwd(){
+      	this.$router.push({path:'/client/reportPage'})
       }
     }
   }
@@ -339,6 +369,7 @@
 	}
 	.el-steps{
 		padding: 0 200px;
+		margin-bottom: 30px;
 	}
 	.el-form-item{
 		margin-bottom: 36px;
@@ -350,7 +381,6 @@
 		padding-left: 200px;
 	}
 	.nav1 .el-button{
-		/*background: #3CC477;*/
 		outline: none;
 		border: none;
 	}
@@ -436,6 +466,9 @@
 		height: 100px;
 		line-height: 100px;
 	}
+	.nav5 .expert-ul{
+		margin-bottom: 20px;
+	}
 	.nav5 .expert-ul li{
 		border-top:none;
 	}
@@ -445,6 +478,28 @@
 	.nav5 ul .norm-li2{
 		width: 200px;
 		border-left: none;
+	}
+	.nav6{
+		border-bottom: none;
+	}
+	.nav6 .nav4-p{
+		margin-bottom: 40px;
+	}
+	.fillPwd{
+		padding: 0 30%;
+		margin-bottom: 50px;
+		text-align: center;
+	}
+	.fillPwd span{
+		display: block;
+		height: 40px;
+		background: #eee;
+		line-height: 40px;
+		color: #666;
+		font-size: 14px;
+	}
+	.fillPwd span .svg-icon{
+		margin-right: 10px;
 	}
 	.svg-icon{
 		color: #666;

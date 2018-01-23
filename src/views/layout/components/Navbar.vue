@@ -3,27 +3,27 @@
     <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
     <breadcrumb></breadcrumb>
     <el-dropdown class="avatar-container" trigger="click">
-      <div class="avatar-wrapper">
-        <img class="user-avatar" :src="avatar+'?imageView2/1/w/80/h/80'">
-        <i class="el-icon-caret-bottom"></i>
-      </div>
-      
-      <el-dropdown-menu class="user-dropdown" slot="dropdown">
-      	<!--<ul class="right-title">
-      	<li>18236591890</li>
+      <!--<div class="avatar-wrapper">-->
+        <!--<img class="user-avatar" :src="avatar+'?imageView2/1/w/80/h/80'">
+        <i class="el-icon-caret-bottom"></i>-->
+      <!--</div>-->
+      <ul class="right-title">
+      	<li>18888888888</li>
       	<li class="line">|</li>
-      	<li class="li-active">报告模板</li>
+      	<li class="li-active" @click="goReport">报告模板</li>
       	<li class="line">|</li>
       	<li @click="logout" class="li-active">退出</li>
-      </ul>-->
-        <router-link class="inlineBlock" to="/">
-          <el-dropdown-item>
+      </ul>
+      <el-dropdown-menu  slot="dropdown">
+      	
+        <!--<router-link  to="/">-->
+          <!--<el-dropdown-item>-->
             
-          </el-dropdown-item>
-        </router-link>
-        <el-dropdown-item divided>
-          <span @click="logout" style="display:block;">LogOut</span>
-        </el-dropdown-item>
+          <!--</el-dropdown-item>-->
+        <!--</router-link>-->
+        <!--<el-dropdown-item divided>-->
+          <!--<span @click="logout" style="display:block;">LogOut</span>-->
+        <!--</el-dropdown-item>-->
       </el-dropdown-menu>
     </el-dropdown>
   </el-menu>
@@ -53,6 +53,9 @@ export default {
       this.$store.dispatch('LogOut').then(() => {
         location.reload() // 为了重新实例化vue-router对象 避免bug
       })
+    },
+    goReport(){
+    	this.$router.push({path:'/template/temPage'})
     }
   }
 }

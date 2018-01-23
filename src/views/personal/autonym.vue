@@ -21,7 +21,7 @@
 			    <el-input v-model="ruleForm.code" class="nav-input"></el-input>
 			  </el-form-item>
 			   <el-form-item>
-			    <el-button type="primary" @click="submitForm('ruleForm')"  v-if="!realShow">下一步</el-button>
+			    <el-button type="primary" @click="submitForm('ruleForm')"  v-if="!realShow">去认证</el-button>
 			  </el-form-item>
 			</el-form>
 		</div>
@@ -81,7 +81,7 @@
 
 <style scoped>
 	.content{
-	   padding-top: 80px;
+	   padding-top: 50px;
 	}
 	.el-steps{
 		padding: 0 200px;

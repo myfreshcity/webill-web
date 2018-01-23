@@ -1,7 +1,8 @@
 <template>
   <div class="dashboard-container">
-    <div class="dashboard-text">name:{{name}}</div>
-    <div class="dashboard-text">role:<span v-for='role in roles' :key='role'>{{role}}</span></div>
+    <!--<div class="dashboard-text">name:{{name}}</div>
+    <div class="dashboard-text">role:<span v-for='role in roles' :key='role'>{{role}}</span></div>-->
+    <p class="p-head">欢迎使用微账房</p>
   </div>
 </template>
 
@@ -28,5 +29,8 @@ export default {
     font-size: 30px;
     line-height: 46px;
   }
+}
+.p-head{
+	font-size: 30px;
 }
 </style>

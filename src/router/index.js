@@ -20,8 +20,10 @@ import Layout from '../views/layout/Layout'
 **/
 export const constantRouterMap = [
   { path: '/login', component: _import('login/index'), hidden: true },
+  { path: '/wzflogin', component: _import('login/login'), hidden: true },
+  { path: '/register', component: _import('login/register'), hidden: true },
   { path: '/404', component: _import('404'), hidden: true },
-
+  
   {
     path: '/',
     component: Layout,
@@ -33,28 +35,27 @@ export const constantRouterMap = [
       component: _import('dashboard/index')
     }]
   },
-
-  {
-    path: '/example',
-    component: Layout,
-    redirect: '/example/table',
-    name: 'Example',
-    meta: { title: 'Example', icon: 'example' },
-    children: [
-      {
-        path: 'table',
-        name: 'Table',
-        component: _import('table/index'),
-        meta: { title: 'Table', icon: 'table' }
-      },
-      {
-        path: 'tree',
-        name: 'Tree',
-        component: _import('tree/index'),
-        meta: { title: 'Tree', icon: 'tree' }
-      }
-    ]
-  },
+//{
+//  path: '/example',
+//  component: Layout,
+//  redirect: '/example/table',
+//  name: 'Example',
+//  meta: { title: 'Example', icon: 'example' },
+//  children: [
+//    {
+//      path: 'table',
+//      name: 'Table',
+//      component: _import('table/index'),
+//      meta: { title: 'Table', icon: 'table' }
+//    },
+//    {
+//      path: 'tree',
+//      name: 'Tree',
+//      component: _import('tree/index'),
+//      meta: { title: 'Tree', icon: 'tree' }
+//    }
+//  ]
+//},
   {
     path: '/client',
     component: Layout,
@@ -112,6 +113,33 @@ export const constantRouterMap = [
         name: 'BuyRecord',
         component: _import('personal/buyRecord'),
         meta: { title: '购买记录', icon: '' }
+      },
+       {
+        path: 'buyData',
+        name: 'BuyData',
+        component: _import('personal/buyData'),
+        meta: { title: '购买数据', icon: '' }
+      }
+    ]
+  },
+   {
+  	path: '/template',
+    component: Layout,
+    redirect: '/template/temPage',
+    name: 'Template',
+    meta: { title: '其他', icon: 'other' },
+    children: [
+      {
+        path: 'temPage',
+        name: 'TemPage',
+        component: _import('template/temPage'),
+        meta: { title: '报告页模板', icon: '' }
+      },
+      {
+        path: 'information',
+        name: 'Information',
+        component: _import('template/information'),
+        meta: { title: '标准版&高级版', icon: '' }
       }
     ]
   },

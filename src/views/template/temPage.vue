@@ -1,6 +1,12 @@
+<!--模板页面-->
+
 <template>
 	<div class="content">
-		<p class="head">客户信息标准版</p>
+		<p class="msgType">
+			<el-button type="primary" @click="changeType(1)">标准版</el-button>
+			<el-button type="primary" @click="changeType(2)">高级版</el-button>
+		</p>
+		<p class="head">{{msgTitle}}</p>
 		<!--<el-tabs v-model="activeName" @tab-click="handleClick" class="report-tabs">
 		    <el-tab-pane label="用户基本信息" name="first"></el-tab-pane>
 		    <el-tab-pane label="金融类通话信息" name="second"></el-tab-pane>
@@ -8,7 +14,7 @@
 		    <el-tab-pane label="长时间联系人" name="fourth"></el-tab-pane>
 		    <el-tab-pane label="高级联系人" name="five"></el-tab-pane>
 		    <el-tab-pane label="催收风险分析" name="six"></el-tab-pane>
-		    <el-tab-pane label="出行数据分析" name="seven"></el-tab-pane>
+		    <el-tab-pane label="出行数据分析" name="seven" ><a href="#section-7">111</a></el-tab-pane>
 		</el-tabs>-->
 		<ul class="tabs-ul">
 			<li :class="{'li-active':liActive==1}" @click="changeLi(1)"><a href="#section-1">用户基本信息</a></li>
@@ -123,6 +129,7 @@
 	    data() {
 	      return {
 	      	liActive:1,
+	      	msgTitle:'客户信息标准版',
 	        activeName: 'first'
 	      };
 	    },
@@ -132,7 +139,7 @@
 	    	this.initChart3()
 	    },
 	    methods: {
-	      goTop(){
+    	  goTop(){
     		window.scrollTo(0, 0); 
     		this.liActive=1
     	  },
@@ -142,8 +149,15 @@
 	      handleClick(tab, event) {
 	        console.log(tab, event);
 	      },
+	      changeType(index){
+	      	if(index==1){
+	      		this.msgTitle="客户信息标准版"
+	      	}else{
+	      		this.msgTitle="客户信息高级版"
+	      	}
+	      },
 	      initChart1(){
-	      	Highcharts.chart(document.getElementById('myChart'),{
+		    Highcharts.chart(document.getElementById('myChart'),{
 		    	colors : ['#a4d266', '#5a9dee', '#333'],
 		        chart: {
 		            zoomType: 'xy'
@@ -268,7 +282,7 @@
 			            label: {
 			                normal: {
 			                    show: true,
-//			                    position: 'right'
+			                    position: 'right'
 			                }
 			            },
 			            data:[1200, 1000,302, 410,1500, 1740, 1000,1500,500, 1200]
@@ -330,10 +344,11 @@
 			            stack: '总量',
 			            label: {
 			                normal: {
-//			                    show: true
+			                    show: true,
+			                    position: 'right'
 			                }
 			            },
-			            data:[1200, 1000,302, 410,1500, 1740, 1000,1500,500, 1200]
+			           data:[1200, 1000,302, 410,1500, 1740, 1000,1500,500, 1200]
 			        },
 			        {
 			            name:'通话时长',
@@ -341,7 +356,7 @@
 			            stack: '总量',
 			            label: {
 			                normal: {
-//			                    show: true,
+			                    show: true,
 			                    position: 'left'
 			                }
 			            },
@@ -358,6 +373,7 @@
 	.content{
 		padding: 0 70px;
 		padding-bottom: 30px;
+		padding-top: 30px;
 	}
 	.content .head{
 		height: 80px;
@@ -385,7 +401,7 @@
 	}
 	.tabs-ul .li-active{
 		color: #409EFF;
-		border-bottom: 2px #409EFF solid;
+		border-bottom: 3px #409EFF solid;
 	}
 	.nav{
 		margin-top: 30px;
@@ -530,7 +546,7 @@
     	height: 600px;
     	margin: 0 auto;
     }
-     .top-div{
+    .top-div{
     	position: fixed;
     	bottom: 20px;
     	right: 20px;

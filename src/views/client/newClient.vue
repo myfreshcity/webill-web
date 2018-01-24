@@ -76,26 +76,34 @@
 			    <el-input v-model="homeAddress" class="work-input" placeholder="详细到门牌号"></el-input>
 			</div>
 		</div>
-		<div class="nav2 nav4"  v-show="isNew">
+		<div class="nav2 nav4"  v-show="step2&&isNew">
 			<p class="add-p"><span>信息更新设置</span></p>
 			<p class="nav4-p"><span>上次更新时间：</span>{{lastTime}}</p>
 			<p class="nav4-p"><span>更新信息类型：</span>{{lastType}}</p>
 			<p class="nav4-p"><span>是否更新</span><el-radio v-model="isUpdate" label="1">是</el-radio><el-radio v-model="isUpdate" label="0">否</el-radio></p>
-	    </div>
+		</div>
+		
 	    <div class="nav2 nav5" v-show="step2">
-			<p class="add-p"><span>选择获取信息内容</span></p>
-			<ul class="norm-ul">
-				<li class="norm-li1">&nbsp;&nbsp;<el-radio v-model="selectType" label="1">&nbsp;</el-radio></li>
-				<li class="norm-li2">客户信息标准版<span @click="goInformation()"><svg-icon icon-class="doubt"/></span></li>
-				<li class="norm-li2">可用次数：{{normCount}}次<span @click="goCar()"><svg-icon icon-class="shopCar" /></span></li>
-			</ul>
-			<ul class="norm-ul expert-ul">
-				<li class="norm-li1">&nbsp;&nbsp;<el-radio v-model="selectType" label="2">&nbsp;</el-radio></li>
-				<li class="norm-li2" >客户信息高级版<span @click="goInformation()"><svg-icon icon-class="doubt" /></span></li>
-				<li class="norm-li2">可用次数：{{expertCount}}次<span @click="goCar()"><svg-icon icon-class="shopCar" /></span></li>
-			</ul>
-			<el-button  type="primary" @click="lastStep(1)" class="subPwd" >上一步</el-button>
-			<el-button  type="primary" @click="nextStep()" >下一步</el-button>
+	    	<div class="tip-div" v-show="step2&&!update">
+				<p>非最新数据，可能存在风险</p>
+				<el-button  type="primary" @click="lastStep(1)" class="subPwd" >上一步</el-button>
+				<el-button type="primary" >提交</el-button>
+			</div>
+	    	<div  v-show="step2&&update">
+				<p class="add-p"><span>选择获取信息内容</span></p>
+				<ul class="norm-ul">
+					<li class="norm-li1">&nbsp;&nbsp;<el-radio v-model="selectType" label="1">&nbsp;</el-radio></li>
+					<li class="norm-li2">客户信息标准版<span @click="goInformation()"><svg-icon icon-class="doubt"/></span></li>
+					<li class="norm-li2">可用次数：{{normCount}}次<span @click="goCar()"><svg-icon icon-class="shopCar" /></span></li>
+				</ul>
+				<ul class="norm-ul expert-ul">
+					<li class="norm-li1">&nbsp;&nbsp;<el-radio v-model="selectType" label="2">&nbsp;</el-radio></li>
+					<li class="norm-li2" >客户信息高级版<span @click="goInformation()"><svg-icon icon-class="doubt" /></span></li>
+					<li class="norm-li2">可用次数：{{expertCount}}次<span @click="goCar()"><svg-icon icon-class="shopCar" /></span></li>
+				</ul>
+				<el-button  type="primary" @click="lastStep(1)" class="subPwd" >上一步</el-button>
+				<el-button  type="primary" @click="nextStep()" >下一步</el-button>
+            </div>
 	    </div>
 	    <div class="nav2 nav4 nav6" v-show="step3">
 			<p class="fillPwd"><span><svg-icon icon-class="tip" />获取身份、账单、通话信息需提交运营商服务密码进行认证</span></p>
@@ -121,7 +129,8 @@
   export default {
     data() {
       return {
-      	isNew:false,
+      	update:true,
+      	isNew:true,
       	pwdShow:true,
       	normCount:50,                 //可用标准版次数
       	expertCount:20,               //可用高级版次数
@@ -215,13 +224,15 @@
         }]
       }   
     },
-//	watch: {
-//	     relationList:function(arr){
-//	     	if(this.relationList.length==0){
-//	    		this.cancleShow=false
-//	    	}
-//	     }
-//	},
+	watch: {
+	    isUpdate:function(index){
+	     	if(this.isUpdate==0){
+	    		this.update=false
+	    	}else{
+	    		this.update=true
+	    	}
+	     }
+	},
     mounted:function(){
     	if(this.relationList.length==0){
     		this.cancleShow=false
@@ -365,11 +376,12 @@
 </script>
 <style scoped>
 	.content{
+		padding: 0 150px;
 	   padding-top: 80px;
 	}
 	.el-steps{
 		padding: 0 200px;
-		margin-bottom: 30px;
+		margin-bottom: 80px;
 	}
 	.el-form-item{
 		margin-bottom: 36px;
@@ -385,7 +397,7 @@
 		border: none;
 	}
 	.nav2{
-		border-bottom: 1px #ccc solid;
+		border-bottom: 1px #E3E7F1 solid;
 		border-width:thin;
 		margin-bottom: 50px;
 		padding-bottom: 50px;
@@ -400,6 +412,11 @@
 	.add-p{
 		padding-left: 20%;
 		padding-right: 20%;
+		margin-bottom: 40px;
+		font-weight: bold;
+	}
+	.add-p span{
+		font-weight: bold;
 	}
 	.add-span{
 		float: right;
@@ -410,7 +427,7 @@
 	.relList-ul li{
 		list-style: none;
 		margin-bottom: 20px;
-		font-size: 20px;
+		font-size: 16px;
 		padding-left: 30%;
 	}
 	.relList-ul li span{
@@ -511,5 +528,13 @@
 	}
 	.subPwd{
 		margin-left: 50%;
+	}
+	.tip-div p{
+		margin-left: 39%;
+		color: red;
+		margin-bottom: 30px;
+	}
+	.tip-div .subPwd{
+		margin-left: 40%;
 	}
 </style>

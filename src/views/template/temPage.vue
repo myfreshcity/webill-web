@@ -92,7 +92,7 @@
 		</div>
 		<div class="nav nav5" id="section-5">
 			<p class="navP-title">高级联系人(Top10)</p>
-			<div id="highChart" ></div>
+			<div id="highTimeChart" ></div>
 		</div>
 		<div class="nav nav6" id="section-6">
 			<p class="navP-title">催收风险分析</p>
@@ -240,130 +240,162 @@
 		    });
 	      },
 	      initChart2(){
-	      	this.chart = echarts.init(document.getElementById('longTimeChart'))
-	      	var colors = ['#a4d266', '#5a9dee']
-	      	this.chart.setOption({
-	      		 color: colors,
-	      		 tooltip : {
-			        trigger: 'axis',
-			        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
-			            type : 'line'        // 默认为直线，可选为：'line' | 'shadow'
-			        }
-			    },
-			    legend: {
-			        data:['通话时长', '通话次数']
-			    },
-//			    grid: {
-//			        left: '3%',
-//			        right: '4%',
-//			        bottom: '3%',
-//			        containLabel: true
-//			    },
-			    xAxis : [
-			        {
-			            type : 'value'
-			        }
-			    ],
-			    yAxis : [
-			        {
-			            type : 'category',
-			            axisTick : {show: false},
-			            data : ['15696324365','15696324365','15696324365','15696324365','15696324365','15696324365','15696324365','15696324365','15696324365','15696324365',]
-			        }
-			    ],
-			    series : [
-			        {
-			            name:'通话次数',
-			            type:'bar',
-			            barWidth:20,
-			            barCategoryGap:50,
-			            stack: '总量',
-			            splitNumber:0,
-			            label: {
-			                normal: {
-			                    show: true,
-			                    position: 'right'
-			                }
-			            },
-			            data:[1200, 1000,302, 410,1500, 1740, 1000,1500,500, 1200]
-			        },
-			        {
-			            name:'通话时长',
-			            type:'bar',
-			            stack: '总量',
-			            splitNumber:0,
-			            label: {
-			                normal: {
-			                    show: true,
-			                    position: 'left'
-			                }
-			            },
-			            data:[-900, -1000,-1320, -2010,-2500, -2840, -3000,-3500,-3900, -4200]
-			        }
-			    ]
-	      	})
+	      	Highcharts.chart(document.getElementById('longTimeChart'),{
+		    	colors : ['#a4d266', '#5a9dee', '#333'],
+		    	chart: {
+		            type: 'bar'
+		        },
+		        title: {
+		            text: ''
+		        },
+		        subtitle: {
+		            text: ''
+		        },
+		        xAxis: {
+		            categories: ['<div style="color:red;border:1px #ccc solid">互联网金融</div>15093082635', '18574172635', '18574172635','18574172635','18574172635','18574172635','18574172635','18574172635','18574172635','18574172635'],
+		            title: {
+		                text: null
+		            }
+		        },
+		        yAxis: [{
+		            min: 0,
+		            title: {
+		                text: '通话次数 (次)',
+		                align: 'high'
+		            },
+		            labels: {
+		                overflow: 'justify',
+		                enabled: true
+		            }
+		        },{
+		            min: 0,
+		            title: {
+		                text: '通话时长 (min)',
+		                align: 'high'
+		            },
+		            labels: {
+		                overflow: 'justify',
+		                enabled: true
+		            },
+		            opposite: true
+		        }],
+		        
+		        plotOptions: {
+		            bar: {
+		                dataLabels: {
+		                    enabled: true,
+		                    allowOverlap: true
+		                }
+		            }
+		        },
+		        legend: {
+		            layout: 'vertical',
+		            align: 'right',
+		            verticalAlign: 'top',
+		            x: -40,
+		            y: 100,
+		            floating: true,
+		            borderWidth: 1,
+		            backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+		            shadow: true
+		        },
+		        credits: {
+		            enabled: false
+		        },
+		        series: [{
+		            yAxis: 1,
+		            name: '通话时长',
+		            data: [2000, 1800, 1500, 1100, 1000,800,700,500,450,350],
+		            tooltip: {
+		                        valueSuffix: '分钟'
+		                     }
+		        }, {
+		            name: '通话次数',
+		            data: [133, 156, 94, 40, 60,180,90,200,20,110],
+		             tooltip: {
+		                        valueSuffix: '次数'
+		                     }
+		        }]
+		    })
 	      },
 	      initChart3(){
-	      	this.chart = echarts.init(document.getElementById('highChart'))
-	      	var colors = ['#a4d266', '#5a9dee']
-	      	this.chart.setOption({
-	      		 color: colors,
-	      		 tooltip : {
-			        trigger: 'axis',
-			        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
-			            type : 'line'        // 默认为直线，可选为：'line' | 'shadow'
-			        }
-			    },
-			    legend: {
-			        data:['通话时长', '通话次数']
-			    },
-			    grid: {
-			        left: '3%',
-			        right: '4%',
-			        bottom: '3%',
-			        containLabel: true
-			    },
-			    xAxis : [
-			        {
-			            type : 'value'
-			        }
-			    ],
-			    yAxis : [
-			        {
-			            type : 'category',
-			            axisTick : {show: false},
-			            data : ['15696324365','15696324365','15696324365','15696324365','15696324365','15696324365','15696324365','15696324365','15696324365','15696324365',]
-			        }
-			    ],
-			    series : [
-			        {
-			            name:'通话次数',
-			            type:'bar',
-			            barWidth:20,
-			            barCategoryGap:50,
-			            stack: '总量',
-			            label: {
-			                normal: {
-			                    show: true,
-			                    position: 'right'
-			                }
-			            },
-			           data:[1200, 1000,302, 410,1500, 1740, 1000,1500,500, 1200]
+	      	 Highcharts.chart(document.getElementById('highTimeChart'),{
+			    	colors : ['#a4d266', '#5a9dee', '#333'],
+			    	chart: {
+			            type: 'bar'
 			        },
-			        {
-			            name:'通话时长',
-			            type:'bar',
-			            stack: '总量',
-			            label: {
-			                normal: {
-			                    show: true,
-			                    position: 'left'
-			                }
+			        title: {
+			            text: ''
+			        },
+			        subtitle: {
+			            text: ''
+			        },
+			        xAxis: {
+			            categories: ['<div style="color:red;border:1px #ccc solid">互联网金融</div>15093082635', '18574172635', '18574172635','18574172635','18574172635','18574172635','18574172635','18574172635','18574172635','18574172635'],
+			            title: {
+			                text: null
+			            }
+			        },
+			        yAxis: [{
+			            min: 0,
+			            title: {
+			                text: '通话次数 (次)',
+			                align: 'high'
 			            },
-			            data:[-900, -1000,-1320, -2010,-2500, -2840, -3000,-3500,-3900, -4200]
-			        }
-			    ]
-	      	})
+			            labels: {
+			                overflow: 'justify',
+			                enabled: true
+			            }
+			        },{
+			            min: 0,
+			            title: {
+			                text: '通话时长 (min)',
+			                align: 'high'
+			            },
+			            labels: {
+			                overflow: 'justify',
+			                enabled: true
+			            },
+			            opposite: true
+			        }],
+			        
+			        plotOptions: {
+			            bar: {
+			                dataLabels: {
+			                    enabled: true,
+			                    allowOverlap: true
+			                }
+			            }
+			        },
+			        legend: {
+			            layout: 'vertical',
+			            align: 'right',
+			            verticalAlign: 'top',
+			            x: -40,
+			            y: 100,
+			            floating: true,
+			            borderWidth: 1,
+			            backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+			            shadow: true
+			        },
+			        credits: {
+			            enabled: false
+			        },
+			        series: [{
+			            yAxis: 1,
+			            name: '通话时长',
+			            data: [2000, 1800, 1500, 1100, 1000,800,700,500,450,350],
+			            tooltip: {
+			                        valueSuffix: '分钟'
+			                     }
+			        }, {
+			            name: '通话次数',
+			            data: [133, 156, 94, 40, 60,180,90,200,20,110],
+			             tooltip: {
+			                        valueSuffix: '次数'
+			                     }
+			        }]
+			    })
 	      }
 	    }
 	  };
@@ -391,11 +423,12 @@
 		height: 0;
 	}
 	.tabs-ul{
-		margin-bottom: 100px;
+		margin-bottom: 50px;
+		display: flex;
 	}
 	.tabs-ul li{
-		float: left;
-		margin: 10px 20px;
+		
+		margin: 10px 10px;
 		padding: 0 5px;
 		padding-bottom: 20px;
 	}
@@ -541,7 +574,7 @@
     	height: 600px;
     	margin: 0 auto;
     }
-     #highChart{
+     #highTimeChart{
     	width: 100%;
     	height: 600px;
     	margin: 0 auto;

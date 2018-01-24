@@ -547,6 +547,9 @@
     .contact-ul .contact-li{
     	background: #F1F2F8;
     }
+    .contact-ul .contact-li span{
+    	font-weight: bold;
+    }
     .contact-ul li span{
     	flex: 1;
     	display: inline-block;

@@ -271,8 +271,12 @@
 		border-bottom: 1px #E3E7F1 solid;
 	}
 	.content ul .msg-li1{
-		background: #000;
-		color: #fff;
+		background: #F1F2F8;
+		color: #333;
+		
+	}
+	.content ul .msg-li1 span{
+		font-weight: bold;
 	}
 	.content ul .msg-li2{
 		height: 80px;

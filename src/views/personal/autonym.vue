@@ -21,7 +21,7 @@
 			    <el-input v-model="ruleForm.code" class="nav-input"></el-input>
 			  </el-form-item>
 			   <el-form-item>
-			    <el-button type="primary" @click="submitForm('ruleForm')"  v-if="!realShow">去认证</el-button>
+			    <el-button type="primary" @click="submitForm('ruleForm')"  v-if="!realShow">立即认证</el-button>
 			  </el-form-item>
 			</el-form>
 		</div>

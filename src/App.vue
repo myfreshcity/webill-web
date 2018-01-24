@@ -19,6 +19,13 @@ export default {
 		border-radius: 5px;
 		margin-right: 5px;
 	}*/
+	.client-steps .is-process{
+		color: #ccc;
+		border-color: #ccc;
+	}
+	.client-steps .is-process .is-text{
+		/*border: none;*/
+	}
 	.client-serach{
 		padding-left: 20px;
 		padding-top: 10px;

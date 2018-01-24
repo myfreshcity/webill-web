@@ -429,6 +429,7 @@
 		font-size: 20px;
 		color: #333;
 		font-weight: bold;
+		margin-top: 50px;
 		margin-bottom: 30px;
 	}
 	.nav .navP-head{
@@ -531,6 +532,9 @@
     }
     .contact-ul .contact-li{
     	background: #F1F2F8;
+    }
+    .contact-ul .contact-li span{
+    	font-weight: bold;
     }
     .contact-ul li span{
     	flex: 1;

@@ -270,6 +270,9 @@
 		font-size: 16px;
 		font-weight: bold;
 	}
+	.content .client-ul .client-li span{
+		font-weight: bold;
+	}
 	.content .client-ul li span{
 		flex: 1;
 		text-align: center;
@@ -283,7 +286,7 @@
 		border-radius: 3px;
 		background: #409EFF;
 		color: #fff;
-		padding: 5px 3px;
+		padding: 6px 6px;
 		margin-right: 10px;
 		font-size: 12px;
 	}
@@ -291,7 +294,7 @@
 		border-radius: 3px;
 		border:1px #409EFF solid;
 		color: #409EFF;
-		padding: 5px 2px;
+		padding: 6px 6px;
 		font-size: 12px;
 	}
 </style>

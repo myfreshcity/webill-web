@@ -219,6 +219,8 @@
 	.content .client-ul .client-li{
 		background: #F1F2F8;
 		font-size: 16px;
+	}
+	.content .client-ul .client-li span{
 		font-weight: bold;
 	}
 	.content .client-ul li span{
@@ -230,18 +232,5 @@
 	.content .client-ul li .client-span{
 		flex: 1.5;
 	}
-	.content .client-ul li span .checkMsg{
-		/*display: inline-block;*/
-		border-radius: 3px;
-		background: #409EFF;
-		color: #fff;
-		padding: 5px 2px;
-		margin-right: 10px;
-	}
-	.content .client-ul li span .getMsg{
-		border-radius: 3px;
-		border:1px #409EFF solid;
-		color: #409EFF;
-		padding: 5px 2px;
-	}
+	
 </style>

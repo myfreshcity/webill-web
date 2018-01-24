@@ -2,7 +2,7 @@
 
 <template>
 	<div class="content">
-		<el-steps :active="active"  align-center class="step">
+		<el-steps :active="active"  align-center  class="client-steps">
 		  <el-step title="创建客户"></el-step>
 		  <el-step title="完善基本信息"></el-step>
 		  <el-step title="填写运营商服务密码"></el-step>
@@ -23,12 +23,33 @@
 			  </el-form-item>
 			</el-form>
 		</div>
+		
+		<div class="nav2 nav3"  v-show="step2">
+			<p class="add-p"><span>添加地址信息</span></p>
+			<div class="nav3-form">
+				<span class="nav3-span">工作地址</span><el-cascader
+				    placeholder="请选择省市区"
+				    :options="options"
+				    filterable
+				     @change="handleChange"
+				>
+				</el-cascader>
+			    <el-input v-model="workAddress" class="work-input" placeholder="详细到门牌号"></el-input><br />
+			    <span class="nav3-span">家庭地址</span><el-cascader
+				    placeholder="请选择省市区"
+				    :options="options"
+				    filterable
+				>
+				</el-cascader>
+			    <el-input v-model="homeAddress" class="work-input" placeholder="详细到门牌号"></el-input>
+			</div>
+		</div>
 		<div class="nav2"  v-show="step2">
 			<p class="add-p"><span>添加联系人信息</span><span class="add-span" @click="addRel">继续添加 <svg-icon icon-class="add" /></span></p>
 			<ul v-show="!addRelShow" class="relList-ul">
 				<li v-for="(ele,k) in relationList"><span>{{ele.relation|relationFilter}}</span><span>{{ele.name}}</span><span>{{ele.mobile}}</span><span class="svg-span" @click="redactRel(ele,k)"><svg-icon icon-class="redact" /></span><span class="svg-span" @click="removeRel(k)"><svg-icon icon-class="remove" /></span></li>
 			</ul>
-			<el-form :model="relForm" :rules="rules" ref="relForm" label-width="100px" class="demo-ruleForm" label-position="left" v-show="addRelShow">
+			<el-form :model="relForm" :rules="rules" ref="relForm" label-width="90px" class="demo-ruleForm" label-position="left" v-show="addRelShow">
 			   <el-form-item label="关系" prop="relation">
 			    <el-select v-model="relForm.relation" placeholder="请选择与本人关系">
 			      <el-option label="配偶" value="0"></el-option>
@@ -56,26 +77,6 @@
 			</el-form>
 			<!--<el-button :plain="true" class="">消息</el-button>-->
 		</div>
-		<div class="nav2 nav3"  v-show="step2">
-			<p class="add-p"><span>添加地址信息</span></p>
-			<div class="nav3-form">
-				<span class="nav3-span">工作地址</span><el-cascader
-				    placeholder="请选择省市区"
-				    :options="options"
-				    filterable
-				     @change="handleChange"
-				>
-				</el-cascader>
-			    <el-input v-model="workAddress" class="work-input" placeholder="详细到门牌号"></el-input><br />
-			    <span class="nav3-span">家庭地址</span><el-cascader
-				    placeholder="请选择省市区"
-				    :options="options"
-				    filterable
-				>
-				</el-cascader>
-			    <el-input v-model="homeAddress" class="work-input" placeholder="详细到门牌号"></el-input>
-			</div>
-		</div>
 		<div class="nav2 nav4"  v-show="step2&&isNew">
 			<p class="add-p"><span>信息更新设置</span></p>
 			<p class="nav4-p"><span>上次更新时间：</span>{{lastTime}}</p>
@@ -86,7 +87,7 @@
 	    <div class="nav2 nav5" v-show="step2">
 	    	<div class="tip-div" v-show="step2&&!update">
 				<p>非最新数据，可能存在风险</p>
-				<el-button  type="primary" @click="lastStep(1)" class="subPwd" >上一步</el-button>
+				<el-button   @click="lastStep(1)" class="subPwd" >上一步</el-button>
 				<el-button type="primary" >提交</el-button>
 			</div>
 	    	<div  v-show="step2&&update">
@@ -101,7 +102,7 @@
 					<li class="norm-li2" >客户信息高级版<span @click="goInformation()"><svg-icon icon-class="doubt" /></span></li>
 					<li class="norm-li2">可用次数：{{expertCount}}次<span @click="goCar()"><svg-icon icon-class="shopCar" /></span></li>
 				</ul>
-				<el-button  type="primary" @click="lastStep(1)" class="subPwd" >上一步</el-button>
+				<el-button  @click="lastStep(1)" class="subPwd" >上一步</el-button>
 				<el-button  type="primary" @click="nextStep()" >下一步</el-button>
             </div>
 	    </div>
@@ -111,7 +112,7 @@
 			<p class="nav4-p"><span>身份证号</span>{{ruleForm.idCard}}</p>
 			<p class="nav4-p"><span>手机号</span>{{ruleForm.mobile}}</p>
 			<p class="nav4-p" v-show="pwdShow"><span>服务密码</span><el-input class="nav-input" placeholder="请输入服务密码"></el-input> <span class="forgetPwd" @click="forgetPwd()">忘记密码</span></p>
-			<el-button type="primary" @click="lastStep(2)" class="subPwd" v-show="pwdShow">上一步</el-button>
+			<el-button  @click="lastStep(2)" class="subPwd" v-show="pwdShow">上一步</el-button>
 			<el-button type="primary" @click="submitPwd()" v-show="pwdShow">提交</el-button>
 	        <div v-show="!pwdShow">
 	        	<p class="nav4-p"><span>验证码</span><el-input class="nav-input" placeholder="请输入服务密码"></el-input></p>
@@ -376,11 +377,11 @@
 </script>
 <style scoped>
 	.content{
-		padding: 0 150px;
+		padding: 0 200px;
 	   padding-top: 80px;
 	}
 	.el-steps{
-		padding: 0 200px;
+		padding: 0 100px;
 		margin-bottom: 80px;
 	}
 	.el-form-item{
@@ -503,7 +504,9 @@
 		margin-bottom: 40px;
 	}
 	.fillPwd{
-		padding: 0 30%;
+		width: 500px;
+		margin: 0 auto;
+		/*padding: 0 20%;*/
 		margin-bottom: 50px;
 		text-align: center;
 	}

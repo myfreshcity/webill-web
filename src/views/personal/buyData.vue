@@ -85,7 +85,7 @@
 	}
 	.nav2{
 		overflow: hidden;
-		margin-bottom: 50px;
+		margin-bottom: 80px;
 	}
 	.content .p-head{
 		height: 60px;
@@ -162,10 +162,10 @@
 	}
 	.content button{
 		display: block;
-		width: 170px;
-		height: 70px;
+		width: 120px;
+		height: 50px;
 		text-align: center;
-		line-height: 70px;
+		line-height: 50px;
 		color: #fff;
 		margin: 0 auto;
 		background: #409EFF;

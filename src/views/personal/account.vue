@@ -5,10 +5,10 @@
 		<p class="p-head">欢迎，用户名</p>
 		<div class="nav">
 			<ul>
-				<li>会员等级 : {{level}}</li>
-				<li>用户类型 : {{type}}</li>
-				<li>手机号码 : {{mobile}}</li>
-				<li>实名认证 : <span v-show="isReal">已认证</span><span v-show="!isReal" class="realSpan" @click="goAutonym">去认证</span></li>
+				<li>会员等级&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;{{level}}</li>
+				<li>用户类型&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;{{type}}</li>
+				<li>手机号码&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;{{mobile}}</li>
+				<li>实名认证&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;<span v-show="isReal">已认证</span><el-button type="primary" @click="goAutonym"  v-show="!isReal">去认证</el-button></li>
 			</ul>
 		</div>
 	</div>
@@ -41,7 +41,7 @@
 		margin-bottom: 20px;
 	}
 	.content .nav{
-		border: 1px #E3E7F1 solid;
+		/*border: 1px #E3E7F1 solid;*/
 		height: 500px;
 	}
 	.content .nav ul{
@@ -55,7 +55,7 @@
 		height: 30px;
 		line-height: 30px;
 		padding: 15px 0;
-		margin-bottom: 15px;
+		margin-bottom: 25px;
 	}
 	.content .nav ul li .realSpan{
 		display: inline-block;

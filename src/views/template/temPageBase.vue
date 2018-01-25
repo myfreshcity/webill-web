@@ -1,6 +1,12 @@
+<!--模板页面-->
+
 <template>
 	<div class="content">
-		<p class="head">客户信息标准版</p>
+		<p class="msgType">
+			<el-button >基础版</el-button>
+			<el-button type="primary" @click="changeType()">标准版</el-button>
+		</p>
+		<p class="head">{{msgTitle}}</p>
 		<!--<el-tabs v-model="activeName" @tab-click="handleClick" class="report-tabs">
 		    <el-tab-pane label="用户基本信息" name="first"></el-tab-pane>
 		    <el-tab-pane label="金融类通话信息" name="second"></el-tab-pane>
@@ -8,26 +14,30 @@
 		    <el-tab-pane label="长时间联系人" name="fourth"></el-tab-pane>
 		    <el-tab-pane label="高级联系人" name="five"></el-tab-pane>
 		    <el-tab-pane label="催收风险分析" name="six"></el-tab-pane>
-		    <el-tab-pane label="出行数据分析" name="seven"></el-tab-pane>
+		    <el-tab-pane label="出行数据分析" name="seven" ><a href="#section-7">111</a></el-tab-pane>
 		</el-tabs>-->
+		<sticky className="sub-navbar">
 		<ul class="tabs-ul">
-			<li :class="{'li-active':liActive==1}" @click="changeLi(1)"><a href="#section-1">用户基本信息</a></li>
-			<li :class="{'li-active':liActive==2}" @click="changeLi(2)"><a href="#section-2">金融类通话信息</a></li>
-			<li :class="{'li-active':liActive==3}" @click="changeLi(3)"><a href="#section-3">联系人区域汇总</a></li>
-			<li :class="{'li-active':liActive==4}" @click="changeLi(4)"><a href="#section-4">长时间联系人</a></li>
-			<li :class="{'li-active':liActive==5}" @click="changeLi(5)"><a href="#section-5">高级联系人</a></li>
-			<li :class="{'li-active':liActive==6}" @click="changeLi(6)"><a href="#section-6">催收风险分析</a></li>
-			<li :class="{'li-active':liActive==7}" @click="changeLi(7)"><a href="#section-7">出行数据分析</a></li>
+			<li :class="{'li-active':liActive==1}" @click="changeLi(1)">用户基本信息</li>
+			<li :class="{'li-active':liActive==2}" @click="changeLi(2)">金融类通话信息</li>
+			<li :class="{'li-active':liActive==3}" @click="changeLi(3)">联系人区域汇总</li>
+			<li :class="{'li-active':liActive==4}" @click="changeLi(4)">长时间联系人</li>
+			<li :class="{'li-active':liActive==5}" @click="changeLi(5)">高级联系人</li>
+			<li :class="{'li-active':liActive==6}" @click="changeLi(6)">催收风险分析</li>
+			<li :class="{'li-active':liActive==7}" @click="changeLi(7)">出行数据分析</li>
 		</ul>
+		</sticky>
 		<div class="nav nav1" id="section-1">
 			<p class="navP-title">用户基本信息</p>
 			<p class="navP-head">基本信息</p>
 			<ul class="nav1-ul">
 				<li><span class="tabName"><b>登记姓名</b></span><span class="tabValue">尹燕强</span><span class="tabName"><b>性别</b></span><span class="tabValue">男</span></li>
 				<li><span class="tabName"><b>年龄</b></span><span class="tabValue">30</span><span class="tabName"><b>户籍地址</b></span><span class="tabValue">山东省济南市平阴县</span></li>
-				<li><span class="tabName"><b>居住地址</b></span><span class="tabValue tabValue2">山东省济南市平阴县<b>高级版可验真</b></span></li>
-				<li><span class="tabName"><b>工作地址</b></span><span class="tabValue tabValue2">山东省济南市平阴县<b>高级版可验真</b></span></li>
-				<li><span class="tabName"><b>身份证</b></span><span class="tabValue tabValue2">370124198701263011<b>高级版可验真</b></span></li>
+				<li>
+					<span class="tabName"><b>居住地址</b></span><span class="tabValue tabValue2">山东省济南市平阴县<b>标准版可验真</b><br /></span>
+				</li>
+				<li><span class="tabName"><b>工作地址</b></span><span class="tabValue tabValue2">山东省济南市平阴县<b>标准版可验真</b></span></li>
+				<li><span class="tabName"><b>身份证</b></span><span class="tabValue tabValue2">370124198701263011<b>标准版可验真</b></span></li>
 				<li class="mobile-li"><span class="tabName tabMobile"><b>手机号</b></span><span class="tabValue tabValue2 tabValue3">
 						<p class="mobile-p1">山东移动<span>未实名认证</span></p>
 						<p class="mobile-p2">
@@ -56,24 +66,24 @@
 			<p class="navP-head">黑名单</p>
 			<ul class="contact-ul blacklist-ul">
 				<li class="contact-li"><span>检查项</span><span>结果</span><span class="blacklist-span">依据</span></li>
-			    <li ><span>黑中介分数</span><span>14</span><span class="blacklist-span">分数范围0-100，参考分为10，分数越低关系越紧密</span></li>
-			    <li ><span>直接联系人中黑名单人数</span><span>1</span><span class="blacklist-span">分数范围0-100，参考分为10，分数越低关系越紧密</span></li>
-			    <li ><span>间接联系人中黑名单人数</span><span>298</span><span class="blacklist-span">间接联系人：和被查询号码的直接联系人有通话记录</span></li>
-			    <li ><span>直接联系人数量</span><span>329</span><span class="blacklist-span">直接联系人：和被查询号码有通话记录</span></li>
-			    <li ><span>引起黑名单的直接联系人数量</span><span>104</span><span class="blacklist-span">直接联系人有和黑名单用户的通话记录的号码数量</span></li>
-			    <li ><span>直接联系人中引起间接黑名单占比</span><span>32%</span><span class="blacklist-span">直接联系人有和黑名单用户的通话记录的号码数量在直接联系人数量中的百分比</span></li>
+			    <li ><span>黑中介分数</span><span class="notNorm"></span><span class="blacklist-span">分数范围0-100，参考分为10，分数越低关系越紧密</span></li>
+			    <li ><span>直接联系人中黑名单人数</span><span class="notNorm"></span><span class="blacklist-span">分数范围0-100，参考分为10，分数越低关系越紧密</span></li>
+			    <li ><span>间接联系人中黑名单人数</span><span class="notNorm">高级版可查看</span><span class="blacklist-span">间接联系人：和被查询号码的直接联系人有通话记录</span></li>
+			    <li ><span>直接联系人数量</span><span class="notNorm"></span><span class="blacklist-span">直接联系人：和被查询号码有通话记录</span></li>
+			    <li ><span>引起黑名单的直接联系人数量</span><span class="notNorm"></span><span class="blacklist-span">直接联系人有和黑名单用户的通话记录的号码数量</span></li>
+			    <li ><span>直接联系人中引起间接黑名单占比</span><span></span><span class="blacklist-span">直接联系人有和黑名单用户的通话记录的号码数量在直接联系人数量中的百分比</span></li>
 			</ul>
 		</div>
 		<div class="nav nav2" id="section-2">
 			<p class="navP-title">金融类通话信息</p>
 			<ul class="contact-ul blacklist-ul">
 				<li class="contact-li"><span>检查项</span><span>结果</span><span class="blacklist-span">依据</span></li>
-			     <li ><span>黑中介分数</span><span>14</span><span class="blacklist-span">分数范围0-100，参考分为10，分数越低关系越紧密</span></li>
-			    <li ><span>直接联系人中黑名单人数</span><span>1</span><span class="blacklist-span">分数范围0-100，参考分为10，分数越低关系越紧密</span></li>
-			    <li ><span>间接联系人中黑名单人数</span><span>298</span><span class="blacklist-span">间接联系人：和被查询号码的直接联系人有通话记录</span></li>
-			    <li ><span>直接联系人数量</span><span>329</span><span class="blacklist-span">直接联系人：和被查询号码有通话记录</span></li>
-			    <li ><span>引起黑名单的直接联系人数量</span><span>104</span><span class="blacklist-span">直接联系人有和黑名单用户的通话记录的号码数量</span></li>
-			    <li ><span>直接联系人中引起间接黑名单占比</span><span>32%</span><span class="blacklist-span">直接联系人有和黑名单用户的通话记录的号码数量在直接联系人数量中的百分比</span></li>
+			    <li ><span>澳门电话</span><span>无通话记录</span><span class="blacklist-span">分数范围0-100，参考分为10，分数越低关系越紧密</span></li>
+			    <li ><span>110</span><span>无通话记录</span><span class="blacklist-span">分数范围0-100，参考分为10，分数越低关系越紧密</span></li>
+			    <li ><span>120</span><span>无通话记录</span><span class="blacklist-span">间接联系人：和被查询号码的直接联系人有通话记录</span></li>
+			    <li ><span>律师号码</span><span>无通话记录</span><span class="blacklist-span">直接联系人：和被查询号码有通话记录</span></li>
+			    <li ><span>法院号码</span><span>无通话记录</span><span class="blacklist-span">直接联系人有和黑名单用户的通话记录的号码数量</span></li>
+			    <li ><span>贷款类号码</span><span>无通话记录</span><span class="blacklist-span">直接联系人有和黑名单用户的通话记录的号码数量在直接联系人数量中的百分比</span></li>
 			</ul>
 		</div>
 		<div class="nav nav3" id="section-3">
@@ -85,7 +95,7 @@
 			<div id="longTimeChart" ></div>
 		</div>
 		<div class="nav nav5" id="section-5">
-			<p class="navP-title">高频联系人(Top10)</p>
+			<p class="navP-title">高级联系人(Top10)</p>
 			<div id="highTimeChart" ></div>
 		</div>
 		<div class="nav nav6" id="section-6">
@@ -104,9 +114,8 @@
 			<p class="navP-title">出行数据分析</p>
 			<ul class="contact-ul trip-ul">
 				<li class="contact-li"><span>时间段</span><span>出发地</span><span>目的地</span><span class="trip-span">出行开始时间</span><span class="trip-span">出行结束时间</span></li>
-			    <li ><span>双休日</span><span>山东</span><span>北京</span><span class="trip-span">2010-07-02 15：23：20</span><span class="trip-span">2010-07-02 15：23：20</span></li>
-			    <li ><span>工作日</span><span>北京</span><span>山东</span><span class="trip-span">2010-07-02 15：23：20</span><span class="trip-span">2010-07-02 15：23：20</span></li>
-			    <li ><span>双休日</span><span>山东</span><span>湖南</span><span class="trip-span">2010-07-02 15：23：20</span><span class="trip-span">2010-07-02 15：23：20</span></li>
+			    <li ><span class="notNorm2">高级版可查看</span></li>
+			    
 			</ul>
 		</div>
 		<div class="top-div" @click="goTop">
@@ -117,13 +126,16 @@
 </template>
 
 <script>
-	import echarts from 'echarts'
+	import Sticky from '@/components/Sticky'
+	import $ from 'jquery'
 	import Highcharts from 'highCharts'
 	 export default {
+	 	components: { Sticky },
 	    data() {
 	      return {
 	      	liActive:1,
-	        activeName: 'first'
+	      	msgTitle:'客户信息基础版',
+	        activeName: 'first',
 	      };
 	    },
 	    mounted:function(){
@@ -131,19 +143,36 @@
 	    	this.initChart2()
 	    	this.initChart3()
 	    },
+	    beforeUpdate:function(){
+             var _this=this
+             $(window).scroll(function(){
+ 			     //为页面添加页面滚动监听事件
+                  var wst =  $(window).scrollTop() //滚动条距离顶端值
+				 for (var i=1; i<8; i++){             //加循环
+				  if(($("#section-"+i).offset().top-100)<=wst){ //判断滚动条位置
+					  _this.liActive=i
+					  _this.$forceUpdate()
+					 }
+				 }
+	        })
+	    },
 	    methods: {
-	      goTop(){
+    	  goTop(){
     		window.scrollTo(0, 0); 
     		this.liActive=1
     	  },
 	      changeLi(index){
 	      	this.liActive=index
+	      	window.scrollTo(0, $("#section-"+index).offset().top)
 	      },
 	      handleClick(tab, event) {
 	        console.log(tab, event);
 	      },
+	      changeType(){
+	      	this.$router.push({path:'/template/temPageNorm'})
+	      },
 	      initChart1(){
-	      	Highcharts.chart(document.getElementById('myChart'),{
+		    Highcharts.chart(document.getElementById('myChart'),{
 		    	colors : ['#a4d266', '#5a9dee', '#333'],
 		        chart: {
 		            zoomType: 'xy'
@@ -238,7 +267,7 @@
 		            text: ''
 		        },
 		        xAxis: {
-		            categories: ['<div style="color:red;border:1px #ccc solid">互联网金融</div>15093082635', '18574172635', '18574172635','18574172635','18574172635','18574172635','18574172635','18574172635','18574172635','18574172635'],
+		            categories: ['<span style="color:#5a9dee;">互联网金融</span>15093082635', '18574172635', '18574172635','18574172635','18574172635','18574172635','18574172635','18574172635','18574172635','18574172635'],
 		            title: {
 		                text: null
 		            }
@@ -305,7 +334,7 @@
 		    })
 	      },
 	      initChart3(){
-	            Highcharts.chart(document.getElementById('highTimeChart'),{
+	      	 Highcharts.chart(document.getElementById('highTimeChart'),{
 			    	colors : ['#a4d266', '#5a9dee', '#333'],
 			    	chart: {
 			            type: 'bar'
@@ -317,7 +346,7 @@
 			            text: ''
 			        },
 			        xAxis: {
-			            categories: ['<div style="color:red;border:1px #ccc solid">互联网金融</div>15093082635', '18574172635', '18574172635','18574172635','18574172635','18574172635','18574172635','18574172635','18574172635','18574172635'],
+			            categories: ['<span style="color:#5a9dee;">互联网金融</span>15093082635', '18574172635', '18574172635','18574172635','18574172635','18574172635','18574172635','18574172635','18574172635','18574172635'],
 			            title: {
 			                text: null
 			            }
@@ -390,7 +419,13 @@
 <style scoped>
 	.content{
 		padding: 0 70px;
-		padding-bottom: 30px;
+		padding-bottom: 700px;
+		padding-top: 30px;
+	}
+	#labelSpan{
+		display: inline-block;
+		color: #0BB1FF;
+		border: 1px #0BB1FF solid;
 	}
 	.content .head{
 		height: 80px;
@@ -410,26 +445,27 @@
 	.tabs-ul{
 		margin-bottom: 50px;
 		display: flex;
+		background: #fff;
+		padding-top: 10px;
 	}
 	.tabs-ul li{
-		float: left;
+		
 		margin: 10px 10px;
 		padding: 0 5px;
 		padding-bottom: 20px;
 	}
 	.tabs-ul .li-active{
 		color: #409EFF;
-		border-bottom: 2px #409EFF solid;
+		border-bottom: 3px #409EFF solid;
 	}
 	.nav{
-		margin-top: 30px;
+		padding-top: 70px;
 	}
 	.nav .navP-title{
 		text-align: center;
 		font-size: 20px;
 		color: #333;
 		font-weight: bold;
-		margin-top: 50px;
 		margin-bottom: 30px;
 	}
 	.nav .navP-head{
@@ -501,6 +537,13 @@
 		color: #fff;
 		background: #ED5543;
 	}
+    .nav .nav1-ul .label{
+        margin-left: 30px;
+		padding: 5px;
+		border-radius: 3px;
+		color: #fff;
+		background: #ED5543;
+    }
 	.nav .nav1-ul  .mobile-li .mobile-p4{
 		border-bottom: none;
 		padding-bottom: 0;
@@ -544,6 +587,14 @@
     	border-right: 1px #E3E7F1 solid;
     	border-bottom: 1px #E3E7F1 solid;
     }
+    .contact-ul li .notNorm{
+    	border-bottom: none;
+    	color: #0BB1FF;
+    }
+    .contact-ul li .notNorm2{
+    	text-align: center;
+    	color: #0BB1FF;
+    }
     .contact-ul li .contact-span{
     	flex: 1.5;
     }
@@ -568,7 +619,7 @@
     	height: 600px;
     	margin: 0 auto;
     }
-     .top-div{
+    .top-div{
     	position: fixed;
     	bottom: 20px;
     	right: 20px;

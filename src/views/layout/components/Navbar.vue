@@ -55,7 +55,7 @@ export default {
       })
     },
     goReport(){
-    	this.$router.push({path:'/template/temPage'})
+    	this.$router.push({path:'/template/temPageBase'})
     }
   }
 }

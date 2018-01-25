@@ -3,39 +3,24 @@
 		<div class="head">
 			<span class="head-left">微账房</span>
 		</div>
-		<div class="box2">
-			<p class="box2-p1">无忧放贷、尽在掌握</p>
-			<p class="box2-p2">一站式解决贷前、贷中、贷后管理</p>
-		</div>
 		<div class="box">
 			<div class="loginTab">
-				<div class="login-p" @click="changeTab(1)" :class="{'p-active':passwordLogin}">
-					<span>密码登录</span>
-				</div>
-				<span class="line"></span>
-				<div class="login-t" @click="changeTab(2)" :class="{'t-active':!passwordLogin}">
-					<span>快捷登录</span>
-				</div>
+				<p>重置密码</p>
 			</div>
 			<div class="nav">
-				<p class="p-tel"><input placeholder="请输入手机号" v-model="mobileNo" maxlength="11" @blur="onBlurMobile"/><img src="../../../static/images/login/qingchu.png" v-show="mobileNoClear" @click="clearMobile()"/></p>
-				<p class="p-password" v-show="passwordLogin">
-					<input placeholder="密码6-20位、字母组合" v-if="passwordShow" type='text' v-model="password" maxlength="20" @blur="onBlurPassword">
-					<input placeholder="密码6-20位、字母组合" v-if="!passwordShow" type='password' v-model="password" maxlength="20" @blur="onBlurPassword">
+				<p class="p-tel"><input placeholder="请输入手机号码" v-model="mobileNo" maxlength="11" @blur="onBlurMobile"/><img src="../../../static/images/login/qingchu.png" v-show="mobileNoClear" @click="clearMobile()"/></p>
+				<p class="p-code"><input placeholder="请输入短信验证码" v-model="code" maxlength="6" @blur="onBlurCode"/><span @click="getCode()" :class="{'time-active':!disabled1}">{{codeText|msgTime}}</span><img src="../../../static/images/login/qingchu.png" v-show="codeClear" v-on:click="clearCode()"/></p>
+			    <p class="p-password">
+					<input placeholder="请输入新密码，密码6-20位、字母组合" v-if="passwordShow" type='text' v-model="password" maxlength="20" @blur="onBlurPassword">
+					<input placeholder="请输入新密码，密码6-20位、字母组合" v-if="!passwordShow" type='password' v-model="password" maxlength="20" @blur="onBlurPassword">
 					<span @click="showPassword()">
 						<img src="../../../static/images/login/mimakejian.png"  v-show="passwordShow"/>
 						<img src="../../../static/images/login/mimabukejian.png" v-show="!passwordShow"/>
 					</span>
 					<img src="../../../static/images/login/qingchu.png" v-show="passwordClear" @click="clearPassword()"/>
 				</p>
-				<p class="p-code" v-show="!passwordLogin"><input placeholder="请输入短信验证码" v-model="code" maxlength="6" @blur="onBlurCode"/><span @click="getCode()" :class="{'time-active':!disabled1}">{{codeText|msgTime}}</span><img src="../../../static/images/login/qingchu.png" v-show="codeClear" v-on:click="clearCode()"/></p>
 			</div>
-			<p class="p-forget" v-show="passwordLogin"><span @click="goRegister()" class="span-left">注册新用户</span><span @click="forgetPassword()" class="span-right">忘记密码？</span></p>
-			<el-button type="primary" style="width:80%;" :loading="loading" @click.native.prevent="loginP()">
-                                  登录
-            </el-button>
-			<!--<button class="btn-password" v-show="passwordLogin" @click="loginP()" :disabled="disabled" :class="{'btn-active':!disabled}" >会员登录</button>-->
-			<!--<button class="btn-msg" v-show="!passwordLogin" @click="loginM()" :disabled="disabled" :class="{'btn-active':!disabled}">会员登录</button>-->
+			<button class="btn-password"  @click="loginP()" :disabled="disabled" :class="{'btn-active':!disabled}">确认修改</button>
 	    </div>
 	</div>
 </template>
@@ -46,7 +31,7 @@
 		  	return{
 		  		title:"会员登录",
 		  		disabled:true,
-		  		mobile:"18888888888",
+		  		mobile:"",
 		  		code:"",
 		  		codeText:"获取验证码",
 		  		disabled1:true,
@@ -54,17 +39,12 @@
 		  		message:"",
 		  		passwordShow:false,
 		  		passwordLogin:true,
-		  		password:"a111111",
-		  		mobileNo:"18888888888",
+		  		password:"",
+		  		mobileNo:"",
 		  		passwordClear:false,
 		  		mobileNoClear:false,
 		  		codeClear:false,
-		  		openId:"",
-		  		loginForm: {
-			        username: 'admin',
-			        password: '111111'
-			    },
-			    loading: false,
+		  		openId:""
 		  	}
 		 },
 		  filters: {
@@ -185,46 +165,37 @@
 		  		this.code=""
 		  	},
 		  	forgetPassword(){
-		  		this.$router.push({path:'/reset'})
+		  		this.$router.push({path:'/changePassword'})
 		  	},
 		  	goRegister(){
-		  		 this.$router.push({path:'/register'})
+		  		this.$router.push({path:'/register'})
 		  	},
 		  	loginP(){
-		  		this.loading=true
-		  		console.log(222)
 		  		 const part=/^(?!(?:\d*$))(?!(?:[a-zA-Z]*$))[A-Za-z0-9]{6,20}$/   //密码6-20位且为数字与字母组合
 		  		 const result=part.test(this.password)
 		  		 if(result){
-		  		 	console.log(111)
-//			  		 const url=this.$backStage('/api/user/userLogin')
-//				     this.$http.post(url,{"mobile":this.mobileNo,"password":md5(this.password),'checkFlag':"pwd","openId":this.openId})
-//				      .then((response) => { 
-//				          console.log(response)
-//				          if(response.data.status==200){
-//				          		this.setLoginUser(response.data.obj)
-//				          		 setCookie('username',response.data.obj.mobile)
-//								 setCookie('password',response.data.obj.password,7)
-//				                sessionStorage.setItem('login',1);
-//				                if(this.getProductCode){
-//						          	this.$router.push({path:'/productDetail'})
-//						          }else{
-//						          	this.$router.push({path:'/personal'})
-//						          }
-//				          }else{
-//				          	 this.showTip=true
-//							 this.message=response.data.msg
-//				          }
-//		
-//				      }).catch(function(response){
-//			              
-//			          })
-						       this.$store.dispatch('Login', this.loginForm).then(() => {
-						       	    this.loading = false
-						            this.$router.push({ path: '/' })
-						          }).catch(() => {
-						            this.loading = false
-						          })
+			  		 const url=this.$backStage('/api/user/userLogin')
+				     this.$http.post(url,{"mobile":this.mobileNo,"password":md5(this.password),'checkFlag':"pwd","openId":this.openId})
+				      .then((response) => { 
+				          console.log(response)
+				          if(response.data.status==200){
+				          		this.setLoginUser(response.data.obj)
+				          		 setCookie('username',response.data.obj.mobile)
+								 setCookie('password',response.data.obj.password,7)
+				                sessionStorage.setItem('login',1);
+				                if(this.getProductCode){
+						          	this.$router.push({path:'/productDetail'})
+						          }else{
+						          	this.$router.push({path:'/personal'})
+						          }
+				          }else{
+				          	 this.showTip=true
+							 this.message=response.data.msg
+				          }
+		
+				      }).catch(function(response){
+			              
+			          })
 			      }else{
 		  		 	this.showTip=true
 				    this.message="密码必须为6-20位字母加数字"
@@ -300,8 +271,8 @@
 	.content{
 		@include relative;
 	    height: 100vh;
-	    padding-top: 10%;
 	    background:url(../../../static/images/login/loginbg.png);
+	    padding-top: 10%;
 	}
 	.head{
 		width: 100%;
@@ -316,28 +287,11 @@
 		margin-left: 10%;
 		font-size: 20px;
 	}
-	.box2{
-		position: absolute;
-		padding-top: 50px;
-		top: 20%;
-		left: 10%;
-	}
-	.box2-p1{
-		font-size: 45px;
-		color: #fff;
-		margin-bottom: 50px;
-	}
-	.box2-p2{
-		font-size: 33px;
-		color: #fff;
-	}
 	.box{
 		width: 400px;
-		height: 500px;
+		height: 400px;
 		border: 1px #E3E7F1 solid;
-		position: absolute;
-		top: 20%;
-		right: 10%;
+		margin: 0 auto;
 		background: #fff;
 	}
 	.nav{
@@ -354,19 +308,11 @@
 		height: 58px;
 		display: flex;
 		background: #fff;
-		padding-bottom: 1px;
-		position: relative;
 	}
-	.loginTab:before{
-		content: '';
-		position: absolute;
-		width: 200%;
-		height: 1px;
-		bottom: 0;
-		border-bottom: 1px solid #DEEBE3;
-		transform-origin: 0 0;
-		transform: scale(.5,.5);
-		box-sizing: border-box;
+	.loginTab p{
+		padding-left: 30px;
+		line-height: 58px;
+		font-size: 20px;
 	}
 	.loginTab .line{
 		height: 20px;
@@ -456,7 +402,7 @@
 	   border:none;	
 	}
 	.p-password img{
-		position: absolute;
+	    position: absolute;
 		right: 80px;
 		top: 25px;
 		width: 16px;

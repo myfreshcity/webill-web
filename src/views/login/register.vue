@@ -1,5 +1,8 @@
 <template>
 	<div class="content">
+		<div class="head">
+			<span class="head-left">微账房</span>
+		</div>
 		<div class="box">
 			<div class="loginTab">
 				<p>欢迎注册</p>
@@ -18,6 +21,7 @@
 				<p class="p-code"><input placeholder="请输入短信验证码" v-model="code" maxlength="6" @blur="onBlurCode"/><span @click="getCode()" :class="{'time-active':!disabled1}">{{codeText|msgTime}}</span><img src="../../../static/images/login/qingchu.png" v-show="codeClear" v-on:click="clearCode()"/></p>
 			</div>
 			<button class="btn-password"  @click="loginP()" :disabled="disabled" :class="{'btn-active':!disabled}">会员注册</button>
+			<p class="p-login">已有账号，<span @click="toLogin()">立即登录</span></p>
 	    </div>
 	</div>
 </template>
@@ -161,11 +165,8 @@
 		  	clearCode(){
 		  		this.code=""
 		  	},
-		  	forgetPassword(){
-		  		this.$router.push({path:'/changePassword'})
-		  	},
-		  	goRegister(){
-		  		this.$router.push({path:'/register'})
+		  	toLogin(){
+		  		this.$router.push({path:'/wzfLogin'})
 		  	},
 		  	loginP(){
 		  		 const part=/^(?!(?:\d*$))(?!(?:[a-zA-Z]*$))[A-Za-z0-9]{6,20}$/   //密码6-20位且为数字与字母组合
@@ -271,8 +272,21 @@
 	    background:url(../../../static/images/login/loginbg.png);
 	    padding-top: 10%;
 	}
+    .head{
+		width: 100%;
+		height: 80px;
+		line-height: 80px;
+		position: fixed;
+		top: 0;
+		left: 0;
+		background: #fff;
+	}
+	.head .head-left{
+		margin-left: 10%;
+		font-size: 20px;
+	}
 	.box{
-		width: 20%;
+		width: 400px;
 		height: 400px;
 		border: 1px #E3E7F1 solid;
 		margin: 0 auto;
@@ -286,17 +300,7 @@
 		padding: 14px 0;
 		height: 42px;
 		position: relative;
-	}
-	.nav p:before{
-		content: '';
-		position: absolute;
-		width: 200%;
-		height: 1px;
-		bottom: 0;
-		border-bottom: 1px solid #DEEBE3;
-		transform-origin: 0 0;
-		transform: scale(.5,.5);
-		box-sizing: border-box;
+		margin-bottom: 20px;
 	}
 	.loginTab{
 		height: 58px;
@@ -339,14 +343,18 @@
 		color: #0BB1FF;
 	}
 	.nav p input{
-		width: 70%;   
+		width: 90%;
+		font-size: 14px;   
 		outline: none;
+		border: 1px #ccc solid;
+		padding: 10px 8px;
 	}
 	.p-tel img{
-		float: right;
+		position: absolute;
+		right: 50px;
+		top: 25px;
 		width: 16px;
 		height: 16px;
-		margin-right: 30px;
 	}
 	.nav .p-password span{
 		float: right;
@@ -354,49 +362,49 @@
 		width: 20px;
 		margin-right: 20px;
 	}
-	.nav .p-code input{
-		width: 55%;  
-		position: relative;
-	}
 	.nav .p-code span{
-		float: right;
-		margin-right: 20px;
-		border-left:1px #deebe3 solid ;
-		color: #0BB1FF;
+		position: absolute;
+		right: 10%;
+		top: 14px;
+		text-align: center;
+		color: #333;
+		line-height: 39px;
+		background: #D3D3D3;
+		opacity: 1;
 		padding-left: 10px;
-		line-height: 20px;
-		opacity: .5;
+		width: 120px;
+		height: 38px;
 		font-size: 14px;
 	}
 	.nav .p-code .time-active{
 		opacity: 1;
 	}
 	.nav .p-code img{
-		display: block;
+		position: absolute;
+		right: 140px;
+		top: 25px;
 		width: 16px;
 		height: 16px;
-		position: absolute;
-		right: 110px;
-		top: 14px;
-		z-index: 10000;
 	}
 	.nav .p-code:before{
 		border: none;
 	}
 	.nav .p-password span img{
+		position: absolute;
+		right: 50px;
+		top: 29px;
 		width: 18px;
 		height: 10px;
-		margin: 0 auto;
-		margin-top: 5px;
 	}
 	.nav .p-password:before{
 	   border:none;	
 	}
 	.p-password img{
-		float: right;
+	    position: absolute;
+		right: 80px;
+		top: 25px;
 		width: 16px;
 		height: 16px;
-		margin-right: 10px;
 	}
 	button{
 		width: 80%;
@@ -409,7 +417,7 @@
 		border-radius: 5px;
 		color: #fff;
 		margin-top: 33px;
-		margin-bottom: 37px;
+		margin-bottom: 15px;
 		outline:none;
 		opacity: 1;
 		font-size: 16px;
@@ -420,23 +428,12 @@
 	.btn-active{
 		opacity: 1;
 	}
-	.p-login{
-		color: #0BB1FF;
+	.box .p-login{
 		text-align: center;
+		font-size: 12px;
+		margin-bottom: 20px;
 	}
-	.p-forget{
-		margin-top: 20px;
-		font-size: 14px;
-		padding:0 30px;
+	.p-login span{
 		color: #0BB1FF;
-		padding-bottom: 20px;
-	}
-	.p-forget .span-left{
-		color: #0BB1FF;
-		float: left;
-	}
-	.p-forget .span-right{
-		color: #999;
-		float: right;
 	}
 </style>

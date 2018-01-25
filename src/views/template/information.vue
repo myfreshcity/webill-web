@@ -3,7 +3,7 @@
 <template>
 	<div class="content">
 		<ul>
-			<li class="msg-li1"><span class="msg-span1">对比项</span><span class="msg-span2">客户信息标准版</span><span class="msg-span3">客户信息高级版</span></li>
+			<li class="msg-li1"><span class="msg-span1">对比项</span><span class="msg-span2">客户信息基础版</span><span class="msg-span3">客户信息标准版</span></li>
 			<li class="msg-li2">
 				<span class="msg-span4">身份证号</span>
 				<span class="msg-span5">

@@ -2,38 +2,29 @@
 
 <template>
 	<div class="content">
-		<p class="msgType">
-			<el-button type="primary" @click="changeType(1)">标准版</el-button>
-			<el-button type="primary" @click="changeType(2)">高级版</el-button>
-		</p>
 		<p class="head">{{msgTitle}}</p>
-		<!--<el-tabs v-model="activeName" @tab-click="handleClick" class="report-tabs">
-		    <el-tab-pane label="用户基本信息" name="first"></el-tab-pane>
-		    <el-tab-pane label="金融类通话信息" name="second"></el-tab-pane>
-		    <el-tab-pane label="联系人区域汇总" name="third"></el-tab-pane>
-		    <el-tab-pane label="长时间联系人" name="fourth"></el-tab-pane>
-		    <el-tab-pane label="高级联系人" name="five"></el-tab-pane>
-		    <el-tab-pane label="催收风险分析" name="six"></el-tab-pane>
-		    <el-tab-pane label="出行数据分析" name="seven" ><a href="#section-7">111</a></el-tab-pane>
-		</el-tabs>-->
-		<ul class="tabs-ul">
-			<li :class="{'li-active':liActive==1}" @click="changeLi(1)"><a href="#section-1">用户基本信息</a></li>
-			<li :class="{'li-active':liActive==2}" @click="changeLi(2)"><a href="#section-2">金融类通话信息</a></li>
-			<li :class="{'li-active':liActive==3}" @click="changeLi(3)"><a href="#section-3">联系人区域汇总</a></li>
-			<li :class="{'li-active':liActive==4}" @click="changeLi(4)"><a href="#section-4">长时间联系人</a></li>
-			<li :class="{'li-active':liActive==5}" @click="changeLi(5)"><a href="#section-5">高级联系人</a></li>
-			<li :class="{'li-active':liActive==6}" @click="changeLi(6)"><a href="#section-6">催收风险分析</a></li>
-			<li :class="{'li-active':liActive==7}" @click="changeLi(7)"><a href="#section-7">出行数据分析</a></li>
-		</ul>
+		<sticky className="sub-navbar">
+			<ul class="tabs-ul">
+				<li :class="{'li-active':liActive==1}" @click="changeLi(1)">用户基本信息</li>
+				<li :class="{'li-active':liActive==2}" @click="changeLi(2)">金融类通话信息</li>
+				<li :class="{'li-active':liActive==3}" @click="changeLi(3)">联系人区域汇总</li>
+				<li :class="{'li-active':liActive==4}" @click="changeLi(4)">长时间联系人</li>
+				<li :class="{'li-active':liActive==5}" @click="changeLi(5)">高级联系人</li>
+				<li :class="{'li-active':liActive==6}" @click="changeLi(6)">催收风险分析</li>
+				<li :class="{'li-active':liActive==7}" @click="changeLi(7)">出行数据分析</li>
+			</ul>
+		</sticky>
 		<div class="nav nav1" id="section-1">
 			<p class="navP-title">用户基本信息</p>
 			<p class="navP-head">基本信息</p>
 			<ul class="nav1-ul">
 				<li><span class="tabName"><b>登记姓名</b></span><span class="tabValue">尹燕强</span><span class="tabName"><b>性别</b></span><span class="tabValue">男</span></li>
 				<li><span class="tabName"><b>年龄</b></span><span class="tabValue">30</span><span class="tabName"><b>户籍地址</b></span><span class="tabValue">山东省济南市平阴县</span></li>
-				<li><span class="tabName"><b>居住地址</b></span><span class="tabValue tabValue2">山东省济南市平阴县<b>高级版可验真</b></span></li>
-				<li><span class="tabName"><b>工作地址</b></span><span class="tabValue tabValue2">山东省济南市平阴县<b>高级版可验真</b></span></li>
-				<li><span class="tabName"><b>身份证</b></span><span class="tabValue tabValue2">370124198701263011<b>高级版可验真</b></span></li>
+				<li>
+					<span class="tabName"><b class="tabName-b">居住地址</b></span><span class="tabValue tabValue2">山东省济南市平阴县<br /><b class="detail-b"><svg-icon icon-class="dian" />居住地址可通过地图定位技术精确定位到，坐标(108.2132132E，36.56246465N)</b></span>
+				</li>
+				<li><span class="tabName"><b class="tabName-b">工作地址</b></span><span class="tabValue tabValue2">山东省济南市平阴县<br /><b class="detail-b"><svg-icon icon-class="dian" />居住地址可通过地图定位技术精确定位到，坐标(108.2132132E，36.56246465N)</b></span></li>
+				<li><span class="tabName"><b>身份证</b></span><span class="tabValue tabValue2">370124198701263011<b class="label" >在法院黑名单</b></span></li>
 				<li class="mobile-li"><span class="tabName tabMobile"><b>手机号</b></span><span class="tabValue tabValue2 tabValue3">
 						<p class="mobile-p1">山东移动<span>未实名认证</span></p>
 						<p class="mobile-p2">
@@ -123,20 +114,36 @@
 </template>
 
 <script>
-	import echarts from 'echarts'
+	import Sticky from '@/components/Sticky'
+	import $ from 'jquery'
 	import Highcharts from 'highCharts'
 	 export default {
+	 	components: { Sticky },
 	    data() {
 	      return {
 	      	liActive:1,
 	      	msgTitle:'客户信息标准版',
-	        activeName: 'first'
+	        activeName: 'first',
+	        versions:1,            //1=>基础版   2=>标准版
 	      };
 	    },
 	    mounted:function(){
 	    	this.initChart1()
 	    	this.initChart2()
 	    	this.initChart3()
+	    },
+	     beforeUpdate:function(){
+             var _this=this
+             $(window).scroll(function(){
+ 			     //为页面添加页面滚动监听事件
+                  var wst =  $(window).scrollTop() //滚动条距离顶端值
+				 for (var i=1; i<8; i++){             //加循环
+				  if(($("#section-"+i).offset().top-100)<=wst){ //判断滚动条位置
+					  _this.liActive=i
+					  _this.$forceUpdate()
+					 }
+				 }
+	        })
 	    },
 	    methods: {
     	  goTop(){
@@ -145,16 +152,13 @@
     	  },
 	      changeLi(index){
 	      	this.liActive=index
+	      	window.scrollTo(0, $("#section-"+index).offset().top)
 	      },
 	      handleClick(tab, event) {
 	        console.log(tab, event);
 	      },
-	      changeType(index){
-	      	if(index==1){
-	      		this.msgTitle="客户信息标准版"
-	      	}else{
-	      		this.msgTitle="客户信息高级版"
-	      	}
+	      changeType(){
+	      	this.$router.push({path:'/template/temPageBase'})
 	      },
 	      initChart1(){
 		    Highcharts.chart(document.getElementById('myChart'),{
@@ -404,7 +408,7 @@
 <style scoped>
 	.content{
 		padding: 0 70px;
-		padding-bottom: 30px;
+		padding-bottom: 700px;
 		padding-top: 30px;
 	}
 	.content .head{
@@ -425,9 +429,11 @@
 	.tabs-ul{
 		margin-bottom: 50px;
 		display: flex;
+		background: #fff;
+		padding-top: 10px;
 	}
 	.tabs-ul li{
-		
+		font-size: 14px;
 		margin: 10px 10px;
 		padding: 0 5px;
 		padding-bottom: 20px;
@@ -437,7 +443,7 @@
 		border-bottom: 3px #409EFF solid;
 	}
 	.nav{
-		margin-top: 30px;
+		padding-top: 70px;
 	}
 	.nav .navP-title{
 		text-align: center;
@@ -472,6 +478,9 @@
 	.nav .tabName b{
 		padding-left: 30%;
 	}
+	.nav .tabName .tabName-b{
+		float: left;
+	}
 	.nav .tabMobile{
 		float: left;
 		margin-top: 100px;
@@ -488,8 +497,12 @@
 		width: 90%;
 	}
 	.nav .tabValue2 b{
-		margin-left: 30px;
-		color: #409EFF;
+		color: #999;
+	}
+	.nav .tabValue2 .detail-b{
+		display: inline-block;
+		margin-top: 10px;
+		font-size: 12px;
 	}
 	.nav .tabValue3{
 		padding-left: 0;
@@ -515,6 +528,13 @@
 		color: #fff;
 		background: #ED5543;
 	}
+    .nav .nav1-ul .label{
+        margin-left: 30px;
+		padding: 5px;
+		border-radius: 3px;
+		color: #fff;
+		background: #ED5543;
+    }
 	.nav .nav1-ul  .mobile-li .mobile-p4{
 		border-bottom: none;
 		padding-bottom: 0;

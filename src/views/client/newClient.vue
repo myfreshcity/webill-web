@@ -33,14 +33,14 @@
 				    filterable
 				     @change="handleChange"
 				>
-				</el-cascader>
+				</el-cascader><br  />
 			    <el-input v-model="workAddress" class="work-input" placeholder="详细到门牌号"></el-input><br />
 			    <span class="nav3-span">家庭地址</span><el-cascader
 				    placeholder="请选择省市区"
 				    :options="options"
 				    filterable
 				>
-				</el-cascader>
+				</el-cascader><br  />
 			    <el-input v-model="homeAddress" class="work-input" placeholder="详细到门牌号"></el-input>
 			</div>
 		</div>
@@ -80,7 +80,7 @@
 		<div class="nav2 nav4"  v-show="step2&&isNew">
 			<p class="add-p"><span>信息更新设置</span></p>
 			<p class="nav4-p"><span>上次更新时间：</span>{{lastTime}}</p>
-			<p class="nav4-p"><span>更新信息类型：</span>{{lastType}}</p>
+			<p class="nav4-p"><span>更新信息类型：</span>{{lastType|typeFilter}}</p>
 			<p class="nav4-p"><span>是否更新</span><el-radio v-model="isUpdate" label="1">是</el-radio><el-radio v-model="isUpdate" label="0">否</el-radio></p>
 		</div>
 		
@@ -88,18 +88,18 @@
 	    	<div class="tip-div" v-show="step2&&!update">
 				<p>非最新数据，可能存在风险</p>
 				<el-button   @click="lastStep(1)" class="subPwd" >上一步</el-button>
-				<el-button type="primary" >提交</el-button>
+				<el-button type="primary" >下一步</el-button>
 			</div>
 	    	<div  v-show="step2&&update">
 				<p class="add-p"><span>选择获取信息内容</span></p>
 				<ul class="norm-ul">
 					<li class="norm-li1">&nbsp;&nbsp;<el-radio v-model="selectType" label="1">&nbsp;</el-radio></li>
-					<li class="norm-li2">客户信息标准版<span @click="goInformation()"><svg-icon icon-class="doubt"/></span></li>
+					<li class="norm-li2">客户信息基础版<span @click="goInformation()"><svg-icon icon-class="doubt"/></span></li>
 					<li class="norm-li2">可用次数：{{normCount}}次<span @click="goCar()"><svg-icon icon-class="shopCar" /></span></li>
 				</ul>
 				<ul class="norm-ul expert-ul">
 					<li class="norm-li1">&nbsp;&nbsp;<el-radio v-model="selectType" label="2">&nbsp;</el-radio></li>
-					<li class="norm-li2" >客户信息高级版<span @click="goInformation()"><svg-icon icon-class="doubt" /></span></li>
+					<li class="norm-li2" >客户信息标准版<span @click="goInformation()"><svg-icon icon-class="doubt" /></span></li>
 					<li class="norm-li2">可用次数：{{expertCount}}次<span @click="goCar()"><svg-icon icon-class="shopCar" /></span></li>
 				</ul>
 				<el-button  @click="lastStep(1)" class="subPwd" >上一步</el-button>
@@ -127,18 +127,19 @@
 </template>
 
 <script>
+  import { formatTime } from '@/utils/index'
   export default {
     data() {
       return {
       	update:true,
       	isNew:true,
       	pwdShow:true,
-      	normCount:50,                 //可用标准版次数
-      	expertCount:20,               //可用高级版次数
-      	selectType:"1",               // 1=>标准版 2=>高级版
+      	normCount:50,                 //可用基础版次数
+      	expertCount:20,               //可用标准版次数
+      	selectType:"1",               // 1=>基础版 2=>标准版
       	isUpdate:"1",                 //是否更新
       	lastTime:"36天前",            
-      	lastType:"客户信息标准版",
+      	lastType:"客户信息基础版",
       	step1:true,
       	step2:false,
       	step3:false,
@@ -260,6 +261,13 @@
     		}else if(index==6){
     			return "朋友"
     		}
+    	},
+    	typeFilter(index){
+    		if(index==0){
+    			return "客户信息基础版"
+    		}else{
+    			return "客户信息标准版"
+    		}
     	}
     },
     methods: {
@@ -273,17 +281,43 @@
 //      if (this.active++ > 2) this.active = 0;
 //    },
        submitForm(formName) {
-       	this.step1=false
+       	
+
+        this.$refs[formName].validate((valid) => {
+//        if (valid) {
+	    this.step1=false
        	this.step2=true
        	this.active=2
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            console.log('submit!');
-          } else {
-          	this.active=2
-            return false;
-            
-          }
+                this.$http.post("http://yadong.test.manmanh.com/webill-app/api/customer/addCusBasicInfo",{
+					"userId":1,
+					"realName":"张亚东",
+					"idNo":"341225199307088210",
+					"mobileNo":"15121193141"
+				}).then(response => {
+					        this.step1=false
+					       	this.step2=true
+					       	this.active=2
+				          	console.log(response)
+				          	if(response.data.status==210){
+				          		this.isNew=false
+				          	}else if(response.data.status==200){
+				          		this.isNew=true
+				          		for(var i=0;i<response.data.obj.contacts.length;i++){
+				          			this.relationList.push({"relation":response.data.obj.contacts[i].contactType,"name":response.data.obj.contacts[i].name,"mobile":response.data.obj.contacts[i].mobileNo})
+				          		}
+				          		this.lastType=response.data.obj.latestReportType
+				          		this.lastTime=formatTime(response.data.obj.latestReportTime)
+				          		this.options=JSON.parse(response.data.obj.areaJson)
+				          		this.addRelShow=false
+				          	}
+						    // success callback
+						  }, response => {
+						    // error callback
+						  })
+//        } else {
+//          return false;
+//          
+//        }
           
         });
       },
@@ -447,7 +481,6 @@
 	}
 	.nav3-form{
 		padding-left: 40%;
-		padding-right: 30%;
 		height: 300px;
 	}
 	.nav3-form .nav3-span{

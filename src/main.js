@@ -2,7 +2,7 @@ import Vue from 'vue'
 import axios from 'axios'
 Vue.prototype.$http = axios
 import 'normalize.css/normalize.css'// A modern alternative to CSS resets
-
+import $ from 'jquery'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 //import locale from 'element-ui/lib/locale/lang/en'

@@ -19,9 +19,10 @@ import Layout from '../views/layout/Layout'
   }
 **/
 export const constantRouterMap = [
-  { path: '/login', component: _import('login/index'), hidden: true },
-  { path: '/wzflogin', component: _import('login/login'), hidden: true },
+//{ path: '/login', component: _import('login/index'), hidden: true },
+  { path: '/login', component: _import('login/login'), hidden: true },
   { path: '/register', component: _import('login/register'), hidden: true },
+  { path: '/reset', component: _import('login/reset'), hidden: true },
   { path: '/404', component: _import('404'), hidden: true },
   
   {
@@ -76,10 +77,18 @@ export const constantRouterMap = [
         meta: { title: '客户列表', icon: '' }
       },
       {
-        path: 'reportPage',
-        name: 'ReportPage',
-        component: _import('client/reportPage'),
-        meta: { title: '报告页', icon: '' }
+        path: 'reportPageBase',
+        hidden: true,
+        name: 'ReportPageBase',
+        component: _import('client/reportPageBase'),
+        meta: { title: '基础版报告', icon: '' }
+      },
+       {
+        path: 'reportPageNorm',
+        hidden: true,
+        name: 'ReportPageNorm',
+        component: _import('client/reportPageNorm'),
+        meta: { title: '标准版报告', icon: '' }
       }
     ]
   },
@@ -125,21 +134,28 @@ export const constantRouterMap = [
    {
   	path: '/template',
     component: Layout,
-    redirect: '/template/temPage',
+    redirect: '/template/temPageBase',
     name: 'Template',
+    hidden: true,
     meta: { title: '其他', icon: 'other' },
     children: [
       {
-        path: 'temPage',
-        name: 'TemPage',
-        component: _import('template/temPage'),
-        meta: { title: '报告页模板', icon: '' }
+        path: 'temPageBase',
+        name: 'TemPageBase',
+        component: _import('template/temPageBase'),
+        meta: { title: '报告页基础版模板', icon: '' }
+      },
+       {
+        path: 'temPageNorm',
+        name: 'TemPageNorm',
+        component: _import('template/temPageNorm'),
+        meta: { title: '报告页标准版模板', icon: '' }
       },
       {
         path: 'information',
         name: 'Information',
         component: _import('template/information'),
-        meta: { title: '标准版&高级版', icon: '' }
+        meta: { title: '基础版&标准版', icon: '' }
       }
     ]
   },

@@ -2,7 +2,7 @@
 
 <template>
 	<div class="content">
-		<p class="p-head">客户信息标准版</p>
+		<p class="p-head">客户信息基础版</p>
 		<div class="nav1">
 			<div class="sel-div">
 				选择套餐
@@ -35,14 +35,14 @@
 				支付方式
 			</div>
 			<ul class="sel-ul">
-				<li @click="pay(1)" :class="{'li-active':payType==1}">
+				<!--<li @click="pay(1)" :class="{'li-active':payType==1}">
 					<span class="span1"><img src="../../../static/images/pay/zhifubao.png"/></span>
 					<img src="../../../static/images/pay/bottom.png" v-show="payType==1" class="img-bottom"/>
 				</li>
 				<li @click="pay(2)" :class="{'li-active':payType==2}">
 					<span class="span1"><img src="../../../static/images/pay/weixin.png"/></span>
 					<img src="../../../static/images/pay/bottom.png" v-show="payType==2" class="img-bottom"/>
-				</li>
+				</li>-->
 				<li @click="pay(3)" :class="{'li-active':payType==3}">
 					<span class="span1"><img src="../../../static/images/pay/yinlian2.png"/></span>
 					<img src="../../../static/images/pay/bottom.png" v-show="payType==3" class="img-bottom"/>
@@ -59,7 +59,7 @@
 		data(){
 			return{
 				selectType:1,
-				payType:1,
+				payType:3,
 			}
 		},
 		methods:{

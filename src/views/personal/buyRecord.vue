@@ -7,8 +7,8 @@
 	  	  
 		  <el-form-item label="购买类型">
 		    <el-select v-model="formSearch.latestReportType" placeholder="请选择消费类型">
-		      <el-option label="客户信息-标准版" value="0"></el-option>
-		      <el-option label="客户信息-高级版" value="1"></el-option>
+		      <el-option label="客户信息-基础版" value="0"></el-option>
+		      <el-option label="客户信息-标准版" value="1"></el-option>
 		    </el-select>
 		  </el-form-item>
 		  <el-form-item label="购买时间">
@@ -160,9 +160,9 @@
     filters:{
     	msgType(index){
     		if(index==0){
-    			return "客户信息-标准版"
+    			return "客户信息-基础版"
     		}else{
-    			return "客户信息-高级版"
+    			return "客户信息-标准版"
     		}
     	}
     },

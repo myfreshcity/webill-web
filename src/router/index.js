@@ -89,6 +89,13 @@ export const constantRouterMap = [
         name: 'ReportPageNorm',
         component: _import('client/reportPageNorm'),
         meta: { title: '标准版报告', icon: '' }
+      },
+      {
+        path: 'wait',
+        hidden: true,
+        name: 'Wait',
+        component: _import('client/wait'),
+        meta: { title: '等待页', icon: '' }
       }
     ]
   },

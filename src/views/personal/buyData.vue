@@ -2,13 +2,13 @@
 
 <template>
 	<div class="content">
-		<p class="p-head">客户信息基础版</p>
+		<p class="p-head">{{productType|typeFilter}}  <el-button  @click="changeType()"><svg-icon icon-class="change" />{{changeTitle}}</el-button></p>
 		<div class="nav1">
 			<div class="sel-div">
 				选择套餐
 			</div>
 			<ul class="sel-ul">
-				<li @click="chooseType(1)" :class="{'li-active':selectType==1}">
+				<!--<li @click="chooseType(1)" :class="{'li-active':selectType==1}">
 					<span class="span1">100次</span>
 					<span class="span2">??元</span>
 					<img src="../../../static/images/pay/bottom.png" v-show="selectType==1"/>
@@ -27,6 +27,11 @@
 					<span class="span1">500次</span>
 					<span class="span2">??元</span>
 					<img src="../../../static/images/pay/bottom.png" v-show="selectType==4"/>
+				</li>-->
+				<li v-for="(ele,k) in mealList" @click="chooseType(k,ele)" :class="{'li-active':selectType==k}">
+					<span class="span1">{{ele.times}}次</span>
+					<span class="span2">{{ele.price|priceFilter}}元</span>
+					<img src="../../../static/images/pay/bottom.png" v-show="selectType==k"/>
 				</li>
 			</ul>
 		</div>
@@ -50,26 +55,150 @@
 				
 			</ul>
 		</div>
-		<button>确认购买</button>
+		<p class="p-btn"><el-button type="primary"  :loading="loading" @click="toPay()">确认购买</el-button></p>
+		<form action="https://cashier.lianlianpay.com/payment/authpay.htm" method="post" id="sub">
+			    <input  name="version" :value='payDetail.version'/>
+                <input  name="oid_partner" :value='payDetail.oid_partner'/>
+                <input type="hidden" name="user_id" :value='payDetail.user_id'/>
+                <input type="hidden" name="sign_type" :value='payDetail.sign_type'/>
+                <input type="hidden" name="sign" :value='payDetail.sign'/>
+                <input type="hidden" name="busi_partner" :value='payDetail.busi_partner'/>
+                <input type="hidden" name="no_order" :value='payDetail.no_order'/>
+                <input type="hidden" name="dt_order" :value='payDetail.dt_order'/>
+                <input type="hidden" name="name_goods" :value='payDetail.name_goods'/>
+                <input type="hidden" name="info_order" :value='payDetail.info_order'/>
+                <input type="hidden" name="money_order" :value='payDetail.money_order'/>
+                <input type="hidden" name="notify_url" :value='payDetail.notify_url'/>
+                <input type="hidden" name="url_return" :value='payDetail.url_return'/>
+                <input type="hidden" name="userreq_ip" :value='payDetail.userreq_ip'/>
+                <input type="hidden" name="risk_item" :value='payDetail.risk_item'/>
+                <input type="hidden" name="timestamp" :value='payDetail.timestamp'/>
+                <input type="hidden" name="id_type" :value='payDetail.id_type'/>
+                <input type="hidden" name="id_no" :value='payDetail.id_no'/>
+                <input type="hidden" name="acct_name" :value='payDetail.acct_name'/>
+                <input type="hidden" name="flag_modify" :value='payDetail.flag_modify'/>
+		</form>
+		<!--<button>确认购买</button>-->
 	</div>
 </template>
 
 <script>
+	import {getUrlParams} from '@/utils/utils'
+	import { mapGetters } from 'vuex'
 	export default{
 		data(){
 			return{
-				selectType:1,
-				payType:3,
+				selectType:0,
+				payType:3,          //支付方式
+				productType:0,      
+				mealList:[],        //套餐列表
+				mealId:"",          //套餐类型
+				loading:false,
+				changeTitle:"",
+				payDetail:{},
 			}
 		},
+		mounted:function(){
+//			console.log(getUrlParams('result'))
+			if(getUrlParams('result')=="success"){
+				this.$confirm('购买数据成功', '系统提示', {
+		          confirmButtonText: '确定',
+		          cancelButtonText: '取消',
+		          type: 'success'
+		        })
+			}else if(getUrlParams('result')=="faild"){
+				this.$confirm('购买数据失败', '系统提示', {
+		          confirmButtonText: '确定',
+		          cancelButtonText: '取消',
+		          type: 'warning'
+		        })
+			}
+			if(this.msgType==0){
+				this.productType=0
+				this.changeTitle="切换标准版"
+				const url=this.$backStage('/api/infoGoods/getInfoGoods/0')
+				this.$http.get(url)
+				.then((response) => { 
+				    console.log(response)
+				    this.mealList=response.data.obj
+				    this.mealId=this.mealList[0].id
+				})
+			}else{
+				this.productType=1
+				this.changeTitle="切换基础版"
+				const url=this.$backStage('/api/infoGoods/getInfoGoods/1')
+				this.$http.get(url)
+				.then((response) => { 
+				    console.log(response)
+				    this.mealList=response.data.obj
+				    this.mealId=this.mealList[0].id
+				})
+			}
+
+		},
+		filters: {
+	    	typeFilter(index){
+	    		if(index==0){
+	    			return "客户信息基础版"
+	    		}else{
+	    			return "客户信息标准版"
+	    		}
+	    	},
+	    	priceFilter(index){
+	    		return index/100
+	    	}
+	    },
 		methods:{
-			chooseType(index){
+			chooseType(index,data){
 			      this.selectType=index
+			      this.mealId=data.id
 			},
 			pay(index){
 				this.payType=index
-			}
-		}
+			},
+			toPay(){
+				this.loading=true
+				const url=this.$backStage('/api/trade/certPay')
+					this.$http.post(url,{"userId":1, "infoGoodsId":this.mealId})
+					.then((response) => { 
+					    console.log(response)
+					    this.payDetail={"acct_name":"张亚东","busi_partner":"101001","dt_order":"20180131171858","flag_modify":"1","id_no":"341225199307088210","id_type":"0","info_order":"用户购买高级套房一间","money_order":"0.01","name_goods":"高级套房一间","no_order":"20180131171858","notify_url":"http://ip:port/authpaywepdemo/notify.htm","oid_partner":"201408071000001543","risk_item":"{\"frms_ware_category\":\"1008\",\"user_info_bind_phone\":\"15121193141\",\"user_info_dt_register\":\"201801311701829\",\"user_info_mercht_userno\":\"1\"}","sign":"LLs+eZu1byvPyZT1yKaa8KX4NbBei92hOICUMfo6NXN+wNXsLGvWONqUSx/iicXWUM5QGsUR6vz8chyUA32oPvPfT3B72txCi4QXYPNr70HacJRITpHpqRd0DqBuXs80mNcrmP7p7l3/dLgrkeNfnLJ5pvO0LBH6zj4QW9/dA+A=","sign_type":"RSA","timestamp":"20180131171858","url_return":"http://ip:port/authpaywepdemo/urlReturn.jsp","user_id":"1","userreq_ip":"127_0_0_1","version":"1.0"}
+                        const show=setTimeout(function () {
+                       	        this.loading=false
+					            document.getElementById("sub").submit()
+					    }, 100)
+					})
+			},
+			changeType(){
+				if(this.productType==0){
+					this.productType=1
+					this.changeTitle="切换基础版"
+					const url=this.$backStage('/api/infoGoods/getInfoGoods/1')
+					this.$http.get(url)
+					.then((response) => { 
+					    console.log(response)
+					    this.mealList=response.data.obj
+					     this.mealId=this.mealList[0].id
+					})
+				}else{
+					this.productType=0
+					this.changeTitle="切换标准版"
+					const url=this.$backStage('/api/infoGoods/getInfoGoods/0')
+					this.$http.get(url)
+					.then((response) => { 
+					    console.log(response)
+					    this.mealList=response.data.obj
+					    this.mealId=this.mealList[0].id
+					})
+				}
+		    },
+		},
+		
+		computed: {
+	    ...mapGetters([
+	      'msgType'
+	    ])
+  },
 	}
 </script>
 
@@ -160,17 +289,7 @@
 		margin: 0 auto;
 		margin-top: 7px;
 	}
-	.content button{
-		display: block;
-		width: 120px;
-		height: 50px;
+	.content .p-btn{
 		text-align: center;
-		line-height: 50px;
-		color: #fff;
-		margin: 0 auto;
-		background: #409EFF;
-		border-radius:6px ;
-		border: none;
-		outline: none;
 	}
 </style>

@@ -9,7 +9,7 @@
 				<li :class="{'li-active':liActive==2}" @click="changeLi(2)">金融类通话信息</li>
 				<li :class="{'li-active':liActive==3}" @click="changeLi(3)">联系人区域汇总</li>
 				<li :class="{'li-active':liActive==4}" @click="changeLi(4)">长时间联系人</li>
-				<li :class="{'li-active':liActive==5}" @click="changeLi(5)">高级联系人</li>
+				<li :class="{'li-active':liActive==5}" @click="changeLi(5)">高频联系人</li>
 				<li :class="{'li-active':liActive==6}" @click="changeLi(6)">催收风险分析</li>
 				<li :class="{'li-active':liActive==7}" @click="changeLi(7)">出行数据分析</li>
 			</ul>
@@ -82,7 +82,7 @@
 			<div id="longTimeChart" ></div>
 		</div>
 		<div class="nav nav5" id="section-5">
-			<p class="navP-title">高级联系人(Top10)</p>
+			<p class="navP-title">高频联系人(Top10)</p>
 			<div id="highTimeChart" ></div>
 		</div>
 		<div class="nav nav6" id="section-6">

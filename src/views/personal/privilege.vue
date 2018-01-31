@@ -13,11 +13,11 @@
 						<b class="b2">免费</b>
 					</span>
 					<span class="span2">
-						<b class="b1">银卡会员</b>
+						<b class="b1 silver">银卡会员</b>
 						<b class="b2">￥??元/月</b>
 					</span>
 					<span class="span2 span3">
-						<b class="b1">金卡会员</b>
+						<b class="b1 gold">金卡会员</b>
 						<b class="b2">￥??/月</b>
 					</span>
 				</li>
@@ -172,8 +172,6 @@
 	.nav ul .li1 .span1{
 		line-height: 120px;
 	}
-	.nav ul .li1 .span2{
-	}
 	.nav ul .li2{
 		height: 80px;
 	}
@@ -213,14 +211,23 @@
 	.nav ul .li1 .b1{
 		font-size: 18px;
 		font-weight: bold;
-		padding-top: 20px;
-		border-bottom: none;
-		margin-bottom: 20px;
+		height: 50px;
+		line-height: 50px;
 	}
 	.nav ul .li1 .b2{
 		font-size: 14px;
 		color: #666;
+		height: 70px;
+		line-height: 70px;
 		border-bottom: none;
+	}
+	.nav ul .li1 .silver{
+		color: #fff;
+		background: linear-gradient(to right, #D6D6E0 , #A4ABB5);
+	}
+	.nav ul .li1 .gold{
+		color: #fff;
+		background: linear-gradient(to right, #FFDE6D , #F8B52E);
 	}
 	.nav ul li span{
 		flex: 1;

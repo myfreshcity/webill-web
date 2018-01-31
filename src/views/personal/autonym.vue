@@ -15,11 +15,11 @@
 			  </el-form-item>
 			  <el-form-item label="预留手机号" prop="mobileNo" class="nav-mobile">
 			    <el-input v-model="ruleForm.mobileNo" class="nav-input"  v-if="!realShow"></el-input><span v-if="realShow">{{}}</span>
-			    <span class="getCode">获取验证码</span>
+			    <!--<span class="getCode">获取验证码</span>-->
 			  </el-form-item>
-			   <el-form-item label="短信验证码" prop="code" v-if="!realShow">
+			   <!--<el-form-item label="短信验证码" prop="code" v-if="!realShow">
 			    <el-input v-model="ruleForm.code" class="nav-input"></el-input>
-			  </el-form-item>
+			  </el-form-item>-->
 			   <el-form-item>
 			    <el-button type="primary" @click="submitForm('ruleForm')"  v-if="!realShow">立即认证</el-button>
 			  </el-form-item>
@@ -56,11 +56,14 @@
 		           bankNo: [
 		            { required: true, message: '请填写银行卡号码', trigger: 'blur'},
 		          ],
-		           code: [
-		            { required: true, message: '请填写短信验证码', trigger: 'blur' },
-		          ],
+//		           code: [
+//		            { required: true, message: '请填写短信验证码', trigger: 'blur' },
+//		          ],
 		        },
 			}
+		},
+		mounted:function(){
+//			console.log(this.$backStage('/api/product/getRecommendProdList'))
 		},
 		methods:{
 			submitForm(formName){
@@ -68,9 +71,6 @@
 		          if (valid) {
 		            alert('submit!');
 		          } else {
-		          	this.active=2
-		          	console.log(this.active)
-		            console.log('error submit!!');
 		            return false;
 		          }
 		        });

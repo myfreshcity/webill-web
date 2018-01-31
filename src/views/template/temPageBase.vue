@@ -22,9 +22,10 @@
 			<li :class="{'li-active':liActive==2}" @click="changeLi(2)">金融类通话信息</li>
 			<li :class="{'li-active':liActive==3}" @click="changeLi(3)">联系人区域汇总</li>
 			<li :class="{'li-active':liActive==4}" @click="changeLi(4)">长时间联系人</li>
-			<li :class="{'li-active':liActive==5}" @click="changeLi(5)">高级联系人</li>
-			<li :class="{'li-active':liActive==6}" @click="changeLi(6)">催收风险分析</li>
-			<li :class="{'li-active':liActive==7}" @click="changeLi(7)">出行数据分析</li>
+			<li :class="{'li-active':liActive==5}" @click="changeLi(5)">高频联系人</li>
+			<li :class="{'li-active':liActive==6}" @click="changeLi(6)">多平台借贷分析</li>
+			<li :class="{'li-active':liActive==7}" @click="changeLi(7)">催收风险分析</li>
+			<li :class="{'li-active':liActive==8}" @click="changeLi(8)">出行数据分析</li>
 		</ul>
 		</sticky>
 		<div class="nav nav1" id="section-1">
@@ -82,8 +83,8 @@
 			    <li ><span>110</span><span>无通话记录</span><span class="blacklist-span">分数范围0-100，参考分为10，分数越低关系越紧密</span></li>
 			    <li ><span>120</span><span>无通话记录</span><span class="blacklist-span">间接联系人：和被查询号码的直接联系人有通话记录</span></li>
 			    <li ><span>律师号码</span><span>无通话记录</span><span class="blacklist-span">直接联系人：和被查询号码有通话记录</span></li>
-			    <li ><span>法院号码</span><span>无通话记录</span><span class="blacklist-span">直接联系人有和黑名单用户的通话记录的号码数量</span></li>
-			    <li ><span>贷款类号码</span><span>无通话记录</span><span class="blacklist-span">直接联系人有和黑名单用户的通话记录的号码数量在直接联系人数量中的百分比</span></li>
+			    <li ><span class="span-mid"><b>法院号码</b></span><span class="span-mid"><b>无通话记录</b></span><span class="blacklist-span">直接联系人有和黑名单用户的通话记录的号码数量</span></li>
+			    <li ><span class="span-mid"><b>贷款类号码</b></span><span class="span-mid"><b>无通话记录</b></span><span class="blacklist-span">直接联系人有和黑名单用户的通话记录的号码数量在直接联系人数量中的百分比</span></li>
 			</ul>
 		</div>
 		<div class="nav nav3" id="section-3">
@@ -95,22 +96,53 @@
 			<div id="longTimeChart" ></div>
 		</div>
 		<div class="nav nav5" id="section-5">
-			<p class="navP-title">高级联系人(Top10)</p>
+			<p class="navP-title">高频联系人(Top10)</p>
 			<div id="highTimeChart" ></div>
 		</div>
-		<div class="nav nav6" id="section-6">
+		<div class="nav nav5" id="section-6">
+			<p class="navP-title">多平台借贷分析</p>
+			<ul class="contact-ul blacklist-ul">
+				<li class="contact-li"><span>检查项</span><span>结果</span><span class="blacklist-span">依据</span></li>
+			    <li >
+			    	<span class="span-mid"><b>身份证在多个网贷平台进行借款申请</b></span>
+			    	<span class="span-mid"><b>建议拒绝</b></span>
+			    	<span class="blacklist-span">
+			    		<b>风险等级：高</b>
+			    		<b>总个数：30</b>
+			    		<b><svg-icon icon-class="dian" />互联网金融门户：1</b>
+			    	</span>
+			    </li>
+			    <li >
+			    	<span class="span-mid"><b>手机号在多个网贷平台进行借款申请</b></span>
+			    	<span class="span-mid"><b>建议拒绝</b></span>
+			    	<span class="blacklist-span">
+			    		<b>风险等级：高</b>
+			    		<b>总个数：30</b>
+			    		<b><svg-icon icon-class="dian" />互联网金融门户：1</b>
+			    	</span>
+			    </li>
+			</ul>
+		</div>
+		<div class="nav nav6" id="section-7">
 			<p class="navP-title">催收风险分析</p>
 			<ul class="contact-ul blacklist-ul">
 				<li class="contact-li"><span>检查项</span><span>催收信息</span><span>疑似催收信息</span></li>
-			    <li ><span>号码个数</span><span>6个</span><span>2个</span></li>
-			    <li ><span>被叫次数</span><span>1次</span><span>2次</span></li>
-			    <li ><span>被叫时长</span><span>2次</span><span>27秒</span></li>
-			    <li ><span>被叫时长15s以下的次数</span><span>3次</span><span>3次</span></li>
-			    <li ><span>被同一号码呼叫的最多次数</span><span>10次</span><span>5次</span></li>
-			    <li ><span>被同一号码呼叫2次以上的号码个数</span><span>32个</span><span>3个</span></li>
+			    <li ><span>号码个数</span><span class="notNorm"></span><span class="notNorm"></span></li>
+			    <li ><span>被叫次数</span><span class="notNorm"></span><span class="notNorm"></span></li>
+			    <li ><span>被叫时长</span><span class="notNorm"></span><span class="notNorm"></span></li>    
+			    <li ><span>被叫时长15s以下的次数</span><span class="notNorm"></span><span class="notNorm"></span></li>
+			    <li ><span>被同一号码呼叫的最多次数</span><span class="notNorm"></span><span class="notNorm"></span></li>
+			    <li ><span>被同一号码呼叫2次以上的号码个数</span><span class="notNorm">高级版可查看</span><span class="notNorm">高级版可查看</span></li>
+			    <li ><span>主叫次数</span><span class="notNorm"></span><span class="notNorm"></span></li>
+			    <li ><span>主叫时长</span><span class="notNorm"></span><span class="notNorm"></span></li>
+			    <li ><span>近7天被催收呼叫次数</span><span class="notNorm"></span><span class="notNorm"></span></li>
+			    <li ><span>近7-30天被催收呼叫次数</span><span class="notNorm"></span><span class="notNorm"></span></li>
+			    <li ><span>近30-60天被催收呼叫次数</span><span class="notNorm"></span><span class="notNorm"></span></li>
+			    <li ><span>近60-90天被催收呼叫次数</span><span class="notNorm"></span><span class="notNorm"></span></li>
+			    <li ><span>近90-120天被催收呼叫次数</span><span></span><span></span></li>
 			</ul>
 		</div>
-		<div class="nav nav7" id="section-7">
+		<div class="nav nav7" id="section-8">
 			<p class="navP-title">出行数据分析</p>
 			<ul class="contact-ul trip-ul">
 				<li class="contact-li"><span>时间段</span><span>出发地</span><span>目的地</span><span class="trip-span">出行开始时间</span><span class="trip-span">出行结束时间</span></li>
@@ -142,13 +174,24 @@
 	    	this.initChart1()
 	    	this.initChart2()
 	    	this.initChart3()
+	    	 var _this=this
+             $(window).scroll(function(){
+ 			     //为页面添加页面滚动监听事件
+                  var wst =  $(window).scrollTop() //滚动条距离顶端值
+				 for (var i=1; i<9; i++){             //加循环
+				  if(($("#section-"+i).offset().top-100)<=wst){ //判断滚动条位置
+					  _this.liActive=i
+					  _this.$forceUpdate()
+					 }
+				 }
+	        })
 	    },
 	    beforeUpdate:function(){
              var _this=this
              $(window).scroll(function(){
  			     //为页面添加页面滚动监听事件
                   var wst =  $(window).scrollTop() //滚动条距离顶端值
-				 for (var i=1; i<8; i++){             //加循环
+				 for (var i=1; i<9; i++){             //加循环
 				  if(($("#section-"+i).offset().top-100)<=wst){ //判断滚动条位置
 					  _this.liActive=i
 					  _this.$forceUpdate()
@@ -415,7 +458,7 @@
 	    }
 	  };
 </script>
-
+ 
 <style scoped>
 	.content{
 		padding: 0 70px;
@@ -450,7 +493,7 @@
 	}
 	.tabs-ul li{
 		
-		margin: 10px 10px;
+		margin: .1rem .1rem;
 		padding: 0 5px;
 		padding-bottom: 20px;
 	}
@@ -492,7 +535,8 @@
 		width: 10%;
 	}
 	.nav .tabName b{
-		padding-left: 30%;
+		padding-left: .3rem;
+		
 	}
 	.nav .tabMobile{
 		float: left;
@@ -579,6 +623,7 @@
     .contact-ul .contact-li span{
     	font-weight: bold;
     }
+    
     .contact-ul li span{
     	flex: 1;
     	display: inline-block;
@@ -586,6 +631,17 @@
     	padding-left: 30px;
     	border-right: 1px #E3E7F1 solid;
     	border-bottom: 1px #E3E7F1 solid;
+    }
+    .contact-ul li .span-mid:before{
+    	content: '';
+    	display: inline-block;
+		vertical-align: middle;
+		width: 0;
+		height: 100%;
+    }
+    .contact-ul li .span-mid b{
+    	display: inline-block;
+    	vertical-align: middle;
     }
     .contact-ul li .notNorm{
     	border-bottom: none;
@@ -600,6 +656,11 @@
     }
     .blacklist-ul li .blacklist-span{
     	flex: 2.5;
+    }
+     .blacklist-ul li .blacklist-span b{
+    	display: block;
+    	margin-bottom: 5px;
+    	color: red;
     }
     .trip-ul li .trip-span{
     	flex: 1.5;

@@ -11,6 +11,7 @@ export default {
 </script>
 <style>
 	/*客户列表页面样式*/
+	html,body,#app {height: 100%;min-width: 1100px;min-height: 600px;font-size: .16rem;}
 	.client-table .cell{
 		text-align: center;
 	}

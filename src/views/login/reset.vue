@@ -276,8 +276,8 @@
 	}
 	.head{
 		width: 100%;
-		height: 80px;
-		line-height: 80px;
+		height: 50px;
+		line-height: 50px;
 		position: fixed;
 		top: 0;
 		left: 0;

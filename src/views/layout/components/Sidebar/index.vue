@@ -31,8 +31,9 @@ export default {
 	.title-head{
 		text-align: center;
 		color: #409EFF;
-		height: 56px;
-		line-height: 56px;
-		border-bottom:1px #fff solid ;
+		height: 50px;
+		font-size:20px ;
+		line-height: 50px;
+		border-bottom:.01rem #999 solid ;
 	}
 </style>

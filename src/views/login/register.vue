@@ -20,13 +20,14 @@
 				</p>
 				<p class="p-code"><input placeholder="请输入短信验证码" v-model="code" maxlength="6" @blur="onBlurCode"/><span @click="getCode()" :class="{'time-active':!disabled1}">{{codeText|msgTime}}</span><img src="../../../static/images/login/qingchu.png" v-show="codeClear" v-on:click="clearCode()"/></p>
 			</div>
-			<button class="btn-password"  @click="loginP()" :disabled="disabled" :class="{'btn-active':!disabled}">会员注册</button>
+			<button class="btn-password"  @click="regist()" :disabled="disabled" :class="{'btn-active':!disabled}">会员注册</button>
 			<p class="p-login">已有账号，<span @click="toLogin()">立即登录</span></p>
 	    </div>
 	</div>
 </template>
 
 <script>
+	import md5 from 'js-md5';
 	export default {
 		 data(){
 		  	return{
@@ -121,13 +122,6 @@
 		    }
 		  },
 		  methods: {
-		  	changeTab(index){
-		  		if(index==1){
-		  			this.passwordLogin=true
-		  		}else{
-		  			this.passwordLogin=false
-		  		}
-		  	},
 		  	showPassword(){
 		  		if(this.passwordShow){
 		  			this.passwordShow=false
@@ -166,73 +160,36 @@
 		  		this.code=""
 		  	},
 		  	toLogin(){
-		  		this.$router.push({path:'/wzfLogin'})
+		  		this.$router.push({path:'/login'})
 		  	},
-		  	loginP(){
+		  	regist(){
 		  		 const part=/^(?!(?:\d*$))(?!(?:[a-zA-Z]*$))[A-Za-z0-9]{6,20}$/   //密码6-20位且为数字与字母组合
 		  		 const result=part.test(this.password)
 		  		 if(result){
-			  		 const url=this.$backStage('/api/user/userLogin')
-				     this.$http.post(url,{"mobile":this.mobileNo,"password":md5(this.password),'checkFlag':"pwd","openId":this.openId})
+			  		 const url=this.$backStage('/api/user/register')
+				     this.$http.post(url,{"mobileNo":this.mobileNo,"password":md5(this.password),"inCode":this.code,})
 				      .then((response) => { 
 				          console.log(response)
-				          if(response.data.status==200){
-				          		this.setLoginUser(response.data.obj)
-				          		 setCookie('username',response.data.obj.mobile)
-								 setCookie('password',response.data.obj.password,7)
-				                sessionStorage.setItem('login',1);
-				                if(this.getProductCode){
-						          	this.$router.push({path:'/productDetail'})
-						          }else{
-						          	this.$router.push({path:'/personal'})
-						          }
-				          }else{
-				          	 this.showTip=true
-							 this.message=response.data.msg
-				          }
-		
+				          Cookies.set('Admin-Token', "admin")
+					      this.$router.push({ path: '/' })
 				      }).catch(function(response){
 			              
 			          })
 			      }else{
-		  		 	this.showTip=true
-				    this.message="密码必须为6-20位字母加数字"
+		  		 	
 		  		 }
 		  	},
-		  	loginM(){
-		  		const url=this.$backStage('/api/user/userLogin')
-							    this.$http.post(url,{"mobile":this.mobileNo,"inCode":this.code,'checkFlag':"quick","openId":this.openId})
-							      .then((response) => { 
-							          console.log(response)
-							          if(response.data.status==200){
-								          this.setLoginUser(response.data.obj)
-								          setCookie('username',response.data.obj.mobile)
-								          setCookie('password',response.data.obj.password,7)
-								          
-								          sessionStorage.setItem('login',1);
-								          if(this.getProductCode){
-								          	this.$router.push({path:'/productDetail'})
-								          }else{
-								          	this.$router.push({path:'/personal'})
-								          }
-							          }else{
-							              this.showTip=true
-									      this.message=response.data.msg
-							          }
-							      }).catch(function(response){
-			                          
-			                      })
-		  	},
 		  	getCode(){
-		  		if(!this.disabled1){
-				    	        this.disabled1=true
+		  		if(this.codeText=="获取验证码"&&!this.disabled1){
+				      	this.$alert('验证码发送成功,请不要重复点击', '系统提示', {
+					          confirmButtonText: '确定',
+					    });
+					    this.disabled1=true
 							    const url=this.$backStage('/api/verifyCode/sendVerifyCode')
-							    this.$http.post(url,{'mobile':this.mobileNo,'checkFlag':"quick"})
+							    this.$http.post(url,{'mobile':this.mobileNo,'checkFlag':"register"})
 							    .then((response) => { 
 							    	   console.log(response)
 							    	   if(response.data.status==200){
-							    	   	      this.showTip=true
-											  this.message="验证码发送成功"
 							    		      let self = this
 							    		      self.codeText=60
 						                 const show=setInterval(function () {
@@ -248,12 +205,7 @@
 						                     }
 									              }
 						                 }, 1000)
-							    	   }else if(response.data.status==400){
-							          	  this.showTip=true
-									      this.message="该手机号未注册请去注册"
-							          }else{
-							    	   	         this.showTip=true
-											     this.message="验证码发送失败"
+							    	   }else{
 											     self.disabled1=false
 							    	   }
 			             }).catch(function(response){
@@ -261,7 +213,7 @@
 			             })
 			       }
 		  	},
-		  }
+		}
 	}
 </script>
 
@@ -274,8 +226,8 @@
 	}
     .head{
 		width: 100%;
-		height: 80px;
-		line-height: 80px;
+		height: 50px;
+		line-height: 50px;
 		position: fixed;
 		top: 0;
 		left: 0;

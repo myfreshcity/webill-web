@@ -2,13 +2,23 @@
 
 <template>
 	<div class="content">
-		<p class="p-head">欢迎，用户名</p>
+		<p class="p-head">我的数据</p>
 		<div class="nav">
-			<ul>
-				<li>会员等级&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;{{level}}</li>
+			<ul class="dataMsg-ul">
+				<li class="li1">
+					<p class="p1">客户信息基础版</p>
+					<p class="p2">剩余次数：100次<span @click="toBuy(0)">购买</span></p>
+				</li>
+				<li>
+					<p class="p1">客户信息标准版</p>
+					<p class="p2">剩余次数：50次<span @click="toBuy(1)">购买</span></p>
+				</li>
+			</ul>
+			<ul class="userMsg-ul">
+				<li>用户手机&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;{{mobile}}</li>
 				<li>用户类型&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;{{type}}</li>
-				<li>手机号码&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;{{mobile}}</li>
-				<li>实名认证&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;<span v-show="isReal">已认证</span><el-button type="primary" @click="goAutonym"  v-show="!isReal">去认证</el-button></li>
+				<li>用户等级&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;{{level}}</li>
+				<li>真实姓名&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;{{realName}}<span v-show="isReal" class="userMsg-ul-span1">已认证</span><span v-show="!isReal" class="userMsg-ul-span2" @click="goAutonym()">未认证</span></li>
 			</ul>
 		</div>
 	</div>
@@ -21,14 +31,19 @@
 				level:"试用会员",
 				type:"个人",
 				mobile:"18721267525",
-				isReal:false,
+				isReal:true,
+				realName:"张亚东"
 			}
 		},
 		methods:{
 			goAutonym(){
 				this.$router.push({path:'/personal/autonym'})
+			},
+			toBuy(index){
+				this.$store.dispatch('MsgType', index)
+				this.$router.push({path:'/personal/buyData'})
 			}
-		}
+		},
 	}
 </script>
 
@@ -40,26 +55,53 @@
 		font-size: 20px;
 		margin-bottom: 20px;
 	}
-	.content .nav{
-		/*border: 1px #E3E7F1 solid;*/
-		height: 500px;
+	
+	.content .nav .dataMsg-ul{
+		width: 80%;
+		display: flex;
+		margin-bottom: .8rem;
 	}
-	.content .nav ul{
-		font-size: 16px;
-		width: 200px;
-		margin: 0 auto;
-		color: #666;
-		padding-top: 30px;
+	.content .nav .dataMsg-ul li{
+		padding: .3rem;
+		flex: 1;
+		border: 1px #E3E7F1 solid;
+		height: 1.5rem;
 	}
-	.content .nav ul li{
-		height: 30px;
-		line-height: 30px;
-		padding: 15px 0;
-		margin-bottom: 25px;
+	.content .nav .dataMsg-ul .li1{
+		margin-right:1rem ;
 	}
-	.content .nav ul li .realSpan{
-		display: inline-block;
-		border: 1px #0BB1FF solid;
-		padding: 0 10px;
+	.content .nav .dataMsg-ul  li .p1{
+		font-size: .2rem;
+		margin-bottom: .3rem;
+	}
+	.content .nav .dataMsg-ul  li .p2{
+		text-align: center;
+		position: relative;
+	}
+	.content .nav .dataMsg-ul  li span{
+		background: #0BB1FF;
+		color: #fff;
+		padding: .1rem .2rem;
+		position: absolute;
+		right: .2rem;
+		top: -.1rem;
+		font-size: .16rem;
+	}
+	.content .nav .userMsg-ul{
+		width: 80%;
+		border: 1px #E3E7F1 solid;
+		padding: .3rem;
+		padding-bottom: 0;
+	}
+	.content .nav .userMsg-ul li{
+		margin-bottom: .5rem;
+	}
+	.content .nav .userMsg-ul li .userMsg-ul-span1{
+		margin-left: .2rem;
+		color: #3cc477;
+	}
+	.content .nav .userMsg-ul li .userMsg-ul-span2{
+		margin-left: .2rem;
+		color: red;
 	}
 </style>

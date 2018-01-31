@@ -1,5 +1,8 @@
 const getters = {
   sidebar: state => state.app.sidebar,
+  msgType:state =>state.app.msgtype,
+  msgDetail:state =>state.app.msgdetail,
+  userInfo: state =>state.app.userInfo,
   token: state => state.user.token,
   avatar: state => state.user.avatar,
   name: state => state.user.name,

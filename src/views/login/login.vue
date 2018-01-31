@@ -3,10 +3,10 @@
 		<div class="head">
 			<span class="head-left">微账房</span>
 		</div>
-		<div class="box2">
+		<!--<div class="box2">
 			<p class="box2-p1">无忧放贷、尽在掌握</p>
 			<p class="box2-p2">一站式解决贷前、贷中、贷后管理</p>
-		</div>
+		</div>-->
 		<div class="box">
 			<div class="loginTab">
 				<div class="login-p" @click="changeTab(1)" :class="{'p-active':passwordLogin}">
@@ -28,12 +28,12 @@
 					</span>
 					<img src="../../../static/images/login/qingchu.png" v-show="passwordClear" @click="clearPassword()"/>
 				</p>
-				<p class="p-code" v-show="!passwordLogin"><input placeholder="请输入短信验证码" v-model="code" maxlength="6" @blur="onBlurCode"/><span @click="getCode()" :class="{'time-active':!disabled1}">{{codeText|msgTime}}</span><img src="../../../static/images/login/qingchu.png" v-show="codeClear" v-on:click="clearCode()"/></p>
+				<p class="p-code" v-show="!passwordLogin"><input placeholder="请输入短信验证码" v-model="code" maxlength="6" @blur="onBlurCode"/><span @click="getCode()">{{codeText|msgTime}}</span><img src="../../../static/images/login/qingchu.png" v-show="codeClear" v-on:click="clearCode()"/></p>
 			</div>
-			<p class="p-forget" v-show="passwordLogin"><span @click="goRegister()" class="span-left">注册新用户</span><span @click="forgetPassword()" class="span-right">忘记密码？</span></p>
-			<el-button type="primary" style="width:80%;" :loading="loading" @click.native.prevent="loginP()">
+			<el-button type="primary" style="width:80%;" :loading="loading" @click.native.prevent="login()">
                                   登录
             </el-button>
+            <p class="p-forget" v-show="passwordLogin"><span @click="goRegister()" class="span-left">注册新用户</span><span @click="forgetPassword()" class="span-right">忘记密码？</span></p>
 			<!--<button class="btn-password" v-show="passwordLogin" @click="loginP()" :disabled="disabled" :class="{'btn-active':!disabled}" >会员登录</button>-->
 			<!--<button class="btn-msg" v-show="!passwordLogin" @click="loginM()" :disabled="disabled" :class="{'btn-active':!disabled}">会员登录</button>-->
 	    </div>
@@ -41,6 +41,8 @@
 </template>
 
 <script>
+	import Cookies from 'js-cookie'
+    import md5 from 'js-md5';
 	export default {
 		 data(){
 		  	return{
@@ -190,80 +192,63 @@
 		  	goRegister(){
 		  		 this.$router.push({path:'/register'})
 		  	},
-		  	loginP(){
+		  	login(){
 		  		this.loading=true
-		  		console.log(222)
-		  		 const part=/^(?!(?:\d*$))(?!(?:[a-zA-Z]*$))[A-Za-z0-9]{6,20}$/   //密码6-20位且为数字与字母组合
-		  		 const result=part.test(this.password)
-		  		 if(result){
-		  		 	console.log(111)
-//			  		 const url=this.$backStage('/api/user/userLogin')
-//				     this.$http.post(url,{"mobile":this.mobileNo,"password":md5(this.password),'checkFlag':"pwd","openId":this.openId})
-//				      .then((response) => { 
-//				          console.log(response)
-//				          if(response.data.status==200){
-//				          		this.setLoginUser(response.data.obj)
-//				          		 setCookie('username',response.data.obj.mobile)
-//								 setCookie('password',response.data.obj.password,7)
-//				                sessionStorage.setItem('login',1);
-//				                if(this.getProductCode){
-//						          	this.$router.push({path:'/productDetail'})
-//						          }else{
-//						          	this.$router.push({path:'/personal'})
-//						          }
-//				          }else{
-//				          	 this.showTip=true
-//							 this.message=response.data.msg
-//				          }
-//		
-//				      }).catch(function(response){
-//			              
-//			          })
-						       this.$store.dispatch('Login', this.loginForm).then(() => {
-						       	    this.loading = false
-						            this.$router.push({ path: '/' })
-						          }).catch(() => {
-						            this.loading = false
-						          })
-			      }else{
-		  		 	this.showTip=true
-				    this.message="密码必须为6-20位字母加数字"
-		  		 }
-		  	},
-		  	loginM(){
-		  		const url=this.$backStage('/api/user/userLogin')
-							    this.$http.post(url,{"mobile":this.mobileNo,"inCode":this.code,'checkFlag':"quick","openId":this.openId})
+		  		if(this.passwordLogin){
+			  		 const part=/^(?!(?:\d*$))(?!(?:[a-zA-Z]*$))[A-Za-z0-9]{6,20}$/   //密码6-20位且为数字与字母组合
+			  		 const result=part.test(this.password)
+			  		 if(result){
+			  		 	console.log(111)
+			  		 	 Cookies.set('Admin-Token', "admin")
+					     this.$router.push({ path: '/' })
+				  		 const url=this.$backStage('/api/user/login')
+					     this.$http.post(url,{"mobileNo":this.mobileNo,"password":md5(this.password),'checkFlag':"pwd"})
+					      .then((response) => { 
+					      	  this.loading=false
+					          console.log(response)
+					          Cookies.set('Admin-Token', 123456)
+					          this.$router.push({ path: '/' })
+					      }).catch(function(response){
+				              this.loading=false
+				          })
+//							       this.$store.dispatch('Login', this.loginForm).then(() => {
+//							       	    this.loading = false
+//							            this.$router.push({ path: '/' })
+//							          }).catch(() => {
+//							            this.loading = false
+//							          })
+				      }else{
+				      	this.$alert('密码格式不正确', '系统提示', {
+					          confirmButtonText: '确定',
+					    });
+			  		  }
+			     }else{
+			     	const url=this.$backStage('/api/user/login')
+							    this.$http.post(url,{"mobileNo":this.mobileNo,"inCode":this.code,'checkFlag':"quick"})
 							      .then((response) => { 
+							      	 this.loading=false
 							          console.log(response)
 							          if(response.data.status==200){
-								          this.setLoginUser(response.data.obj)
-								          setCookie('username',response.data.obj.mobile)
-								          setCookie('password',response.data.obj.password,7)
-								          
-								          sessionStorage.setItem('login',1);
-								          if(this.getProductCode){
-								          	this.$router.push({path:'/productDetail'})
-								          }else{
-								          	this.$router.push({path:'/personal'})
-								          }
+							          
 							          }else{
-							              this.showTip=true
-									      this.message=response.data.msg
+							             
 							          }
 							      }).catch(function(response){
-			                          
+			                          this.loading=false
 			                      })
+			     }
 		  	},
 		  	getCode(){
-		  		if(!this.disabled1){
-				    	        this.disabled1=true
+		  		if(this.codeText=="获取验证码"&&!this.disabled1){
+				      	this.$alert('验证码发送成功,请不要重复点击', '系统提示', {
+					          confirmButtonText: '确定',
+					    });
+					    this.disabled1=true
 							    const url=this.$backStage('/api/verifyCode/sendVerifyCode')
 							    this.$http.post(url,{'mobile':this.mobileNo,'checkFlag':"quick"})
 							    .then((response) => { 
 							    	   console.log(response)
 							    	   if(response.data.status==200){
-							    	   	      this.showTip=true
-											  this.message="验证码发送成功"
 							    		      let self = this
 							    		      self.codeText=60
 						                 const show=setInterval(function () {
@@ -280,11 +265,8 @@
 									              }
 						                 }, 1000)
 							    	   }else if(response.data.status==400){
-							          	  this.showTip=true
-									      this.message="该手机号未注册请去注册"
+							    	   	
 							          }else{
-							    	   	         this.showTip=true
-											     this.message="验证码发送失败"
 											     self.disabled1=false
 							    	   }
 			             }).catch(function(response){
@@ -292,7 +274,7 @@
 			             })
 			       }
 		  	},
-		  }
+		}
 	}
 </script>
 
@@ -301,12 +283,12 @@
 		@include relative;
 	    height: 100vh;
 	    padding-top: 10%;
-	    background:url(../../../static/images/login/loginbg.png);
+	    background:url(../../../static/images/login/bg.png);
 	}
 	.head{
 		width: 100%;
-		height: 80px;
-		line-height: 80px;
+		height: 50px;
+		line-height: 50px;
 		position: fixed;
 		top: 0;
 		left: 0;
@@ -463,7 +445,7 @@
 		height: 16px;
 	}
 	button{
-		width: 80%;
+		width: 82%;
 		height: 40px;
 		text-align: center;
 		background: #0BB1FF;
@@ -472,8 +454,8 @@
 		border: none;
 		border-radius: 5px;
 		color: #fff;
-		margin-top: 33px;
-		margin-bottom: 37px;
+		margin-top: 45px;
+		margin-bottom: 15px;
 		outline:none;
 		opacity: 1;
 		font-size: 16px;
@@ -489,11 +471,12 @@
 		text-align: center;
 	}
 	.p-forget{
-		margin-top: 20px;
+		/*margin-top: 20px;*/
 		font-size: 14px;
-		padding:0 30px;
+		padding:0 40px;
 		color: #0BB1FF;
 		padding-bottom: 20px;
+		
 	}
 	.p-forget .span-left{
 		color: #0BB1FF;

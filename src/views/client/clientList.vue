@@ -23,8 +23,8 @@
 		  </el-form-item>
 		  <el-form-item label="">
 		    <el-select v-model="formSearch.latestReportType" placeholder="信息类型">
-		      <el-option label="标准" value="0"></el-option>
-		      <el-option label="高级" value="1"></el-option>
+		      <el-option label="基础" value="0"></el-option>
+		      <el-option label="标准" value="1"></el-option>
 		    </el-select>
 		  </el-form-item>
 		  <el-form-item label="">
@@ -42,8 +42,8 @@
 	  <ul class="client-ul">
 	  	<li class="client-li"><span>序号</span><span>最近更新时间</span><span>客户姓名</span><span class="client-span">手机号</span><span class="client-span">身份证号</span><span>信息类型</span><span>查询次数</span><span>信息状态</span><span class="client-span">操作</span></li>
 	  	<li v-for="(ele,k) in clientList">
-	  		<span>{{ele.count}}</span>
-	  		<span>{{ele.latestReportTimeDatetime}}</span>
+	  		<span>{{ele.id}}</span>
+	  		<span>{{ele.latestReportTimeStr}}</span>
 	  		<span>{{ele.realName}}</span>
 	  		<span class="client-span">{{ele.mobileNo}}</span>
 	  		<span class="client-span">{{ele.idNo}}</span>
@@ -51,8 +51,8 @@
 	  		<span>{{ele.refreshTimes}}</span>
 	  		<span>{{ele.latestReportStatus|msgStatus}}</span>
 	  		<span class="client-span">
-	  			<b class="checkMsg">查看信息</b>
-	  			<b class="getMsg">重新获取</b>
+	  			<b class="checkMsg" v-show="ele.latestReportStatus==1||(ele.latestReportStatus==2&&ele.refreshTimes>0)" @click="checkMsg(ele)">查看信息</b>
+	  			<b class="getMsg" v-show="ele.latestReportStatus==1||ele.latestReportStatus==2">重新获取</b>
 	  		</span>
 	  	</li>
 	  </ul>
@@ -68,6 +68,7 @@
 </template>
 
 <script>
+  import { mapGetters } from 'vuex'
   import { getClientList } from '@/api/client'
   export default {
     data() {
@@ -83,117 +84,9 @@
       		latestReportType:"",
       		latestReportStatus:"",
       		start:0,
-      		length:10
+      		length:10,
+      		sortWay:""
       	},
-        tableData: [{
-          count:1,
-          latestReportTimeDatetime: '2016-05-03',
-          realName: '王小虎',
-          mobileNo: '18888888888',
-          idNo: '411102199105080059',
-          latestReportType: '0',
-          refreshTimes: 1,
-          latestReportStatus:"0"
-        }, {
-          count:2,
-          latestReportTimeDatetime: '2016-05-03',
-          realName: '王小虎',
-          mobileNo: '18888888888',
-          idNo: '411102199105080059',
-          latestReportType: '0',
-          refreshTimes: 1,
-          latestReportStatus:"1"
-        },{
-          count:3,
-          latestReportTimeDatetime: '2016-05-03',
-          realName: '王小虎',
-          mobileNo: '18888888888',
-          idNo: '411102199105080059',
-          latestReportType: '1',
-          refreshTimes: 1,
-          latestReportStatus:"2"
-        },{
-          count:4,
-          latestReportTimeDatetime: '2016-05-03',
-          realName: '王小虎',
-          mobileNo: '18888888888',
-          idNo: '411102199105080059',
-          latestReportType: '0',
-          refreshTimes: 1,
-          latestReportStatus:"0"
-        },{
-          count:5,
-          latestReportTimeDatetime: '2016-05-03',
-          realName: '王小虎',
-          mobileNo: '18888888888',
-          idNo: '411102199105080059',
-          latestReportType: '1',
-          refreshTimes: 1,
-          latestReportStatus:"1"
-        },{
-          count:6,
-          latestReportTimeDatetime: '2016-05-03',
-          realName: '王小虎',
-          mobileNo: '18888888888',
-          idNo: '411102199105080059',
-          latestReportType: '0',
-          refreshTimes: 1,
-          latestReportStatus:"2"
-        },{
-          count:7,
-          latestReportTimeDatetime: '2016-05-03',
-          realName: '王小虎',
-          mobileNo: '18888888888',
-          idNo: '411102199105080059',
-          latestReportType: '0',
-          refreshTimes: 1,
-          latestReportStatus:"1"
-        },{
-          count:8,
-          latestReportTimeDatetime: '2016-05-03',
-          realName: '王小虎',
-          mobileNo: '18888888888',
-          idNo: '411102199105080059',
-          latestReportType: '0',
-          refreshTimes: 1,
-          latestReportStatus:"1"
-        },{
-          count:9,
-          latestReportTimeDatetime: '2016-05-03',
-          realName: '王小虎',
-          mobileNo: '18888888888',
-          idNo: '411102199105080059',
-          latestReportType: '1',
-          refreshTimes: 1,
-          latestReportStatus:"0"
-        },{
-          count:10,
-          latestReportTimeDatetime: '2016-05-03',
-          realName: '王小虎',
-          mobileNo: '18888888888',
-          idNo: '411102199105080059',
-          latestReportType: '0',
-          refreshTimes: 1,
-          latestReportStatus:"2"
-        },{
-          count:11,
-          latestReportTimeDatetime: '2016-05-03',
-          realName: '王小虎',
-          mobileNo: '18888888888',
-          idNo: '411102199105080059',
-          latestReportType: '0',
-          refreshTimes: 1,
-          latestReportStatus:"2"
-        },{
-          count:12,
-          latestReportTimeDatetime: '2016-05-03',
-          realName: '王小虎',
-          mobileNo: '18888888888',
-          idNo: '411102199105080059',
-          latestReportType: '1',
-          refreshTimes: 1,
-          latestReportStatus:"1"
-        }],
          currentPage4: 4
       }
     },
@@ -216,42 +109,109 @@
     	}
     },
     mounted:function(){
-    	this.totalCount=this.tableData.length
-    	for(let i=0;i<this.tableData.length;i++){
-    		if(i<10){
-    			this.clientList.push(this.tableData[i])
-    		}
-    	}
+           var data = new FormData();
+           data.append('userId', 1);
+           data.append('start', 1);
+           data.append('length', 10);
+           data.append('realName', this.formSearch.realName);
+           data.append('mobileNo', this.formSearch.mobileNo);
+           data.append('idNo', this.formSearch.idNo);
+           data.append('latestReportStatus', this.formSearch.latestReportStatus);
+           data.append('latestReportType', this.formSearch.latestReportType);
+           data.append('sortWay', this.formSearch.sortWay);
+           const url=this.$backStage('/api/customer/list')
+           this.$http.post(url, data).then((response) => {
+                        // success callback
+                        console.log(response)
+                        this.clientList=response.data.records
+                        this.totalCount=response.data.total
+                    }, (response) => {
+                        // error callback
+                    });
+           
+    	
     },
      methods: {
-      handleClick(row) {
-        console.log(row);
+      checkMsg(data){
+      	console.log(data)
+      	const url=this.$backStage('/api/customer/selectReport')
+      	this.$http.post(url, {"reportKey":data.latestReportKey,"name":data.realName,"idCard":data.idNo,"mobile":data.mobileNo})
+      	.then((response) => {
+                        // success callback
+                        console.log(response)
+                        this.$store.dispatch('MsgDetail', response.data.obj)
+                        if(this.msgType==0){
+                        	this.$router.push({path:'/client/reportPageBase'})
+                        }else{
+                            this.$router.push({path:'/client/reportPageNorm'})
+                        }
+                    }, (response) => {
+                        // error callback
+                    });
       },
       handleCurrentChange(val) {
-      	this.clientList=[]
-          this.$http.post("http://yadong.test.manmanh.com/webill-app/api/customer/list",this.formSearch)
-          .then(response => {
-          	console.log(response)
-		    // success callback
-		  }, response => {
-		    // error callback
-		  })
-      	for(let i=0;i<this.tableData.length;i++){
-      		if((val-1)*10-1<i&&i<val*10){
-      			this.clientList.push(this.tableData[i])
-      		}
-      	}
+      	   var data = new FormData();
+           data.append('userId', 1);
+           data.append('start', (val-1)*10);
+           data.append('length', 10);
+           data.append('realName', this.formSearch.realName);
+           data.append('mobileNo', this.formSearch.mobileNo);
+           data.append('idNo', this.formSearch.idNo);
+           data.append('latestReportStatus', this.formSearch.latestReportStatus);
+           data.append('latestReportType', this.formSearch.latestReportType);
+           data.append('sortWay', this.formSearch.sortWay);
+            const url=this.$backStage('/api/customer/list')
+           this.$http.post(url, data).then((response) => {
+                        // success callback
+                        console.log(response)
+                        this.clientList=response.data.records
+                        this.totalCount=response.data.total
+                    }, (response) => {
+                        // error callback
+                    });
       },
       onSearch(){
-      	console.log(this.formSearch)
+      	var data = new FormData();
+           data.append('userId', 1);
+           data.append('start', 1);
+           data.append('length', 10);
+           data.append('realName', this.formSearch.realName);
+           data.append('mobileNo', this.formSearch.mobileNo);
+           data.append('idNo', this.formSearch.idNo);
+           data.append('latestReportStatus', this.formSearch.latestReportStatus);
+           data.append('latestReportType', this.formSearch.latestReportType);
+           data.append('sortWay', this.formSearch.sortWay);
+            const url=this.$backStage('/api/customer/list')
+           this.$http.post(url, data).then((response) => {
+                        // success callback
+                        console.log(response)
+                        this.clientList=response.data.records
+                        this.totalCount=response.data.total
+                    }, (response) => {
+                        // error callback
+                    });
       }
     },
+    computed: {
+	    ...mapGetters([
+	      'msgType'
+	    ])
+	}
   }
 </script>
 
 <style scoped>
 	.content {
 		padding-top: 10px;
+	}
+	.client-serach .el-input{
+		width: 140px;
+	}
+	.client-serach .el-select{
+		width: 140px;
+	}
+	.el-button--primary{
+		margin-left: 20px;
 	}
 	.content .client-ul{
 		margin: 0 20px;

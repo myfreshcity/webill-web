@@ -8,7 +8,7 @@
 		  <el-step title="填写运营商服务密码"></el-step>
 		</el-steps>
 		<div class="nav">
-			<p class="p-load" v-loading="loading">
+			<p class="p-load">
 				
 			</p>
 			<p class="p1">客户信息获取中</p>
@@ -22,12 +22,20 @@
 </template>
 
 <script>
+	import { mapGetters } from 'vuex'
 	export default{
 		data(){
 			return{
 				loading:true,
 				active: 3,
 			}
+		},
+		mounted:function(){
+			if(this.userInfo.mobileNo){
+				
+			}else{
+	    		this.$router.push({path:'/client/clientList'})
+	    	}
 		},
 		methods:{
 			goClient(){
@@ -36,8 +44,12 @@
 			goList(){
 				this.$router.push({path:'/client/clientList'})
 			}
-		}
-		
+		},
+		 computed: {
+		    ...mapGetters([
+		      'userInfo'
+		    ])
+		  }
 	}
 </script>
 

@@ -57,7 +57,7 @@
 			<p class="navP-head">联系人</p>
 			<ul class="contact-ul">
 				<li class="contact-li"><span>关系</span><span>姓名</span><span class="contact-span">手机号码</span><span class="contact-span">是否为临时小号</span><span class="contact-span">通话时长排名</span><span class="contact-span">联系次数(6个月)</span><span>通话时长</span></li>
-			    <li ><span>父母</span><span>王玉梅</span><span class="contact-span">15966335913</span><span class="contact-span">非临时小号</span><span class="contact-span">1</span><span class="contact-span">379</span><span>459.20</span></li>
+			    <li ><span>父母</span><span>王玉梅</span><span class="contact-span">15966335913</span><span class="contact-span xiaohaoSpan"><b>临时小号</b></span><span class="contact-span">1</span><span class="contact-span">379</span><span>459.20</span></li>
 			    <li ><span>父母</span><span>王玉梅</span><span class="contact-span">15966335913</span><span class="contact-span">非临时小号</span><span class="contact-span">1</span><span class="contact-span">379</span><span>459.20</span></li>
 			    <li ><span>父母</span><span>王玉梅</span><span class="contact-span">15966335913</span><span class="contact-span">非临时小号</span><span class="contact-span">1</span><span class="contact-span">379</span><span>459.20</span></li>
 			    <li ><span>父母</span><span>王玉梅</span><span class="contact-span">15966335913</span><span class="contact-span">非临时小号</span><span class="contact-span">1</span><span class="contact-span">379</span><span>459.20</span></li>
@@ -69,7 +69,7 @@
 				<li class="contact-li"><span>检查项</span><span>结果</span><span class="blacklist-span">依据</span></li>
 			    <li ><span>黑中介分数</span><span class="notNorm"></span><span class="blacklist-span">分数范围0-100，参考分为10，分数越低关系越紧密</span></li>
 			    <li ><span>直接联系人中黑名单人数</span><span class="notNorm"></span><span class="blacklist-span">分数范围0-100，参考分为10，分数越低关系越紧密</span></li>
-			    <li ><span>间接联系人中黑名单人数</span><span class="notNorm">高级版可查看</span><span class="blacklist-span">间接联系人：和被查询号码的直接联系人有通话记录</span></li>
+			    <li ><span>间接联系人中黑名单人数</span><span class="notNorm">标准版可查看</span><span class="blacklist-span">间接联系人：和被查询号码的直接联系人有通话记录</span></li>
 			    <li ><span>直接联系人数量</span><span class="notNorm"></span><span class="blacklist-span">直接联系人：和被查询号码有通话记录</span></li>
 			    <li ><span>引起黑名单的直接联系人数量</span><span class="notNorm"></span><span class="blacklist-span">直接联系人有和黑名单用户的通话记录的号码数量</span></li>
 			    <li ><span>直接联系人中引起间接黑名单占比</span><span></span><span class="blacklist-span">直接联系人有和黑名单用户的通话记录的号码数量在直接联系人数量中的百分比</span></li>
@@ -88,38 +88,40 @@
 			</ul>
 		</div>
 		<div class="nav nav3" id="section-3">
-			<p class="navP-title">联系人区域汇总</p>
+			<p class="navP-title">联系人区域汇总<el-button type="primary" @click="derive()">导出所有</el-button></p>
 			<div id="myChart" ></div>
 		</div>
 		<div class="nav nav4" id="section-4">
-			<p class="navP-title">长时间联系人(Top10)</p>
+			<p class="navP-title">长时间联系人</p>
 			<div id="longTimeChart" ></div>
 		</div>
 		<div class="nav nav5" id="section-5">
-			<p class="navP-title">高频联系人(Top10)</p>
+			<p class="navP-title">高频联系人</p>
 			<div id="highTimeChart" ></div>
 		</div>
 		<div class="nav nav5" id="section-6">
 			<p class="navP-title">多平台借贷分析</p>
 			<ul class="contact-ul blacklist-ul">
-				<li class="contact-li"><span>检查项</span><span>结果</span><span class="blacklist-span">依据</span></li>
-			    <li >
+				<li class="contact-li"><span>检查项</span><span>检查结果</span><span class="blacklist-span tongdun-span">依据</span><span>综合结果</span></li>
+				<li >
+			    	<span class="span-mid"><b>客户行为检测</b></span>
 			    	<span class="span-mid"><b>身份证在多个网贷平台进行借款申请</b></span>
-			    	<span class="span-mid"><b>建议拒绝</b></span>
-			    	<span class="blacklist-span">
+			    	<span class="blacklist-span tongdun-span">
 			    		<b>风险等级：高</b>
 			    		<b>总个数：30</b>
 			    		<b><svg-icon icon-class="dian" />互联网金融门户：1</b>
 			    	</span>
+			    	<span class="span-mid"><b>建议拒绝</b></span>
 			    </li>
 			    <li >
-			    	<span class="span-mid"><b>手机号在多个网贷平台进行借款申请</b></span>
-			    	<span class="span-mid"><b>建议拒绝</b></span>
-			    	<span class="blacklist-span">
+			    	<span class="span-mid"><b>客户行为检测</b></span>
+			    	<span class="span-mid"><b>身份证在多个网贷平台进行借款申请</b></span>
+			    	<span class="blacklist-span tongdun-span">
 			    		<b>风险等级：高</b>
 			    		<b>总个数：30</b>
 			    		<b><svg-icon icon-class="dian" />互联网金融门户：1</b>
 			    	</span>
+			    	<span class="span-mid"><b>建议拒绝</b></span>
 			    </li>
 			</ul>
 		</div>
@@ -132,7 +134,7 @@
 			    <li ><span>被叫时长</span><span class="notNorm"></span><span class="notNorm"></span></li>    
 			    <li ><span>被叫时长15s以下的次数</span><span class="notNorm"></span><span class="notNorm"></span></li>
 			    <li ><span>被同一号码呼叫的最多次数</span><span class="notNorm"></span><span class="notNorm"></span></li>
-			    <li ><span>被同一号码呼叫2次以上的号码个数</span><span class="notNorm">高级版可查看</span><span class="notNorm">高级版可查看</span></li>
+			    <li ><span>被同一号码呼叫2次以上的号码个数</span><span class="notNorm">标准版可查看</span><span class="notNorm">标准版可查看</span></li>
 			    <li ><span>主叫次数</span><span class="notNorm"></span><span class="notNorm"></span></li>
 			    <li ><span>主叫时长</span><span class="notNorm"></span><span class="notNorm"></span></li>
 			    <li ><span>近7天被催收呼叫次数</span><span class="notNorm"></span><span class="notNorm"></span></li>
@@ -146,7 +148,7 @@
 			<p class="navP-title">出行数据分析</p>
 			<ul class="contact-ul trip-ul">
 				<li class="contact-li"><span>时间段</span><span>出发地</span><span>目的地</span><span class="trip-span">出行开始时间</span><span class="trip-span">出行结束时间</span></li>
-			    <li ><span class="notNorm2">高级版可查看</span></li>
+			    <li ><span class="notNorm2">标准版可查看</span></li>
 			    
 			</ul>
 		</div>
@@ -186,20 +188,23 @@
 				 }
 	        })
 	    },
-	    beforeUpdate:function(){
-             var _this=this
-             $(window).scroll(function(){
- 			     //为页面添加页面滚动监听事件
-                  var wst =  $(window).scrollTop() //滚动条距离顶端值
-				 for (var i=1; i<9; i++){             //加循环
-				  if(($("#section-"+i).offset().top-100)<=wst){ //判断滚动条位置
-					  _this.liActive=i
-					  _this.$forceUpdate()
-					 }
-				 }
-	        })
-	    },
+//	    beforeUpdate:function(){
+//           var _this=this
+//           $(window).scroll(function(){
+// 			     //为页面添加页面滚动监听事件
+//                var wst =  $(window).scrollTop() //滚动条距离顶端值
+//				 for (var i=1; i<9; i++){             //加循环
+//				  if(($("#section-"+i).offset().top-100)<=wst){ //判断滚动条位置
+//					  _this.liActive=i
+//					  _this.$forceUpdate()
+//					 }
+//				 }
+//	        })
+//	    },
 	    methods: {
+	      derive(){
+	      	
+	      },
     	  goTop(){
     		window.scrollTo(0, 0); 
     		this.liActive=1
@@ -209,7 +214,6 @@
 	      	window.scrollTo(0, $("#section-"+index).offset().top)
 	      },
 	      handleClick(tab, event) {
-	        console.log(tab, event);
 	      },
 	      changeType(){
 	      	this.$router.push({path:'/template/temPageNorm'})
@@ -310,7 +314,7 @@
 		            text: ''
 		        },
 		        xAxis: {
-		            categories: ['<span style="color:#5a9dee;">互联网金融</span>15093082635', '18574172635', '18574172635','18574172635','18574172635','18574172635','18574172635','18574172635','18574172635','18574172635'],
+		            categories: ['<span style="color:red;">互联网金融</span>15093082635', '18574172635', '18574172635','18574172635','18574172635','18574172635','18574172635','18574172635','18574172635','18574172635'],
 		            title: {
 		                text: null
 		            }
@@ -389,7 +393,7 @@
 			            text: ''
 			        },
 			        xAxis: {
-			            categories: ['<span style="color:#5a9dee;">互联网金融</span>15093082635', '18574172635', '18574172635','18574172635','18574172635','18574172635','18574172635','18574172635','18574172635','18574172635'],
+			            categories: ['<span style="color:red;">互联网金融</span>15093082635', '18574172635', '18574172635','18574172635','18574172635','18574172635','18574172635','18574172635','18574172635','18574172635'],
 			            title: {
 			                text: null
 			            }
@@ -490,6 +494,7 @@
 		display: flex;
 		background: #fff;
 		padding-top: 10px;
+		/*box-shadow: 0px 10px 5px #888888;*/
 	}
 	.tabs-ul li{
 		
@@ -654,8 +659,17 @@
     .contact-ul li .contact-span{
     	flex: 1.5;
     }
+     .contact-ul li .xiaohaoSpan b{
+     	background: #eca521;
+     	padding: 3px 5px;
+     	border-radius: 5px;
+     	color: #fff;
+     }
     .blacklist-ul li .blacklist-span{
     	flex: 2.5;
+    }
+    .blacklist-ul li .tongdun-span{
+    	flex: 1;
     }
      .blacklist-ul li .blacklist-span b{
     	display: block;
@@ -698,5 +712,9 @@
     .top-div:hover{
     	background: #409EFF;
     	color: #fff;
+    }
+    .navP-title button{
+    	float: right;
+    	margin-top: -10px;
     }
 </style>

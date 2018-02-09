@@ -23,6 +23,7 @@ export const constantRouterMap = [
   { path: '/login', component: _import('login/login'), hidden: true },
   { path: '/register', component: _import('login/register'), hidden: true },
   { path: '/reset', component: _import('login/reset'), hidden: true },
+  { path: '/agreement', component: _import('login/agreement'), hidden: true },
   { path: '/404', component: _import('404'), hidden: true },
   
   {

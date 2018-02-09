@@ -5,9 +5,10 @@ const app = {
     sidebar: {
       opened: !+Cookies.get('sidebarStatus')
     },
-    msgtype:0,   //0=>基础版  1=>标准版
+    msgType:0,   //0=>基础版  1=>标准版
     msgdetail:{},    //报告详情
     userInfo:{},     //用户信息
+    clientMsg:{},     //客户信息
   },
   mutations: {
     TOGGLE_SIDEBAR: state => {
@@ -19,13 +20,16 @@ const app = {
       state.sidebar.opened = !state.sidebar.opened
     },
     MSG_TYPE:(state,data) => {
-      state.msgtype = data
+      state.msgType = data
     },
      MSG_DETAIL:(state,obj) => {
       state.msgdetail = obj
     },
      USER_INFO:(state,obj) => {
       state.userInfo = obj
+    },
+    CLIENT_MSG:(state,obj) => {
+      state.clientMsg = obj
     },
   },
   actions: {
@@ -40,6 +44,9 @@ const app = {
     },
      UserInfo: ({ commit },userInfo) => {
       commit('USER_INFO',userInfo)
+    },
+     ClientMsg: ({ commit },clientMsg) => {
+      commit('CLIENT_MSG',clientMsg)
     }
   }
 }

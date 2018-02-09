@@ -8,30 +8,11 @@
 				选择套餐
 			</div>
 			<ul class="sel-ul">
-				<!--<li @click="chooseType(1)" :class="{'li-active':selectType==1}">
-					<span class="span1">100次</span>
-					<span class="span2">??元</span>
-					<img src="../../../static/images/pay/bottom.png" v-show="selectType==1"/>
-				</li>
-				<li @click="chooseType(2)" :class="{'li-active':selectType==2}">
-					<span class="span1">200次</span>
-					<span class="span2">??元</span>
-					<img src="../../../static/images/pay/bottom.png" v-show="selectType==2"/>
-				</li>
-				<li @click="chooseType(3)" :class="{'li-active':selectType==3}">
-					<span class="span1">300次</span>
-					<span class="span2">??元</span>
-					<img src="../../../static/images/pay/bottom.png" v-show="selectType==3"/>
-				</li>
-				<li @click="chooseType(4)" :class="{'li-active':selectType==4}">
-					<span class="span1">500次</span>
-					<span class="span2">??元</span>
-					<img src="../../../static/images/pay/bottom.png" v-show="selectType==4"/>
-				</li>-->
 				<li v-for="(ele,k) in mealList" @click="chooseType(k,ele)" :class="{'li-active':selectType==k}">
 					<span class="span1">{{ele.times}}次</span>
 					<span class="span2">{{ele.price|priceFilter}}元</span>
 					<img src="../../../static/images/pay/bottom.png" v-show="selectType==k"/>
+					<img src="../../../static/images/pay/zhekou.png" class="zhe-img"/>
 				</li>
 			</ul>
 		</div>
@@ -99,42 +80,42 @@
 			}
 		},
 		mounted:function(){
-//			console.log(getUrlParams('result'))
-			if(getUrlParams('result')=="success"){
-				this.$confirm('购买数据成功', '系统提示', {
-		          confirmButtonText: '确定',
-		          cancelButtonText: '取消',
-		          type: 'success'
-		        })
-			}else if(getUrlParams('result')=="faild"){
-				this.$confirm('购买数据失败', '系统提示', {
-		          confirmButtonText: '确定',
-		          cancelButtonText: '取消',
-		          type: 'warning'
-		        })
+			if(this.userInfo.mobileNo){
+				if(getUrlParams('result')=="success"){
+					this.$confirm('购买数据成功', '系统提示', {
+			          confirmButtonText: '确定',
+			          cancelButtonText: '取消',
+			          type: 'success'
+			        })
+				}else if(getUrlParams('result')=="faild"){
+					this.$confirm('购买数据失败', '系统提示', {
+			          confirmButtonText: '确定',
+			          cancelButtonText: '取消',
+			          type: 'warning'
+			        })
+				}
+				if(this.msgType==0){
+					this.productType=0
+					this.changeTitle="切换标准版"
+					const url=this.$backStage('/api/infoGoods/getInfoGoods/0')
+					this.$http.get(url)
+					.then((response) => { 
+					    this.mealList=response.data.obj
+					    this.mealId=this.mealList[0].id
+					})
+				}else{
+					this.productType=1
+					this.changeTitle="切换基础版"
+					const url=this.$backStage('/api/infoGoods/getInfoGoods/1')
+					this.$http.get(url)
+					.then((response) => { 
+					    this.mealList=response.data.obj
+					    this.mealId=this.mealList[0].id
+					})
+				}
+            }else{
+				this.$router.push({path:'/personal/account'})
 			}
-			if(this.msgType==0){
-				this.productType=0
-				this.changeTitle="切换标准版"
-				const url=this.$backStage('/api/infoGoods/getInfoGoods/0')
-				this.$http.get(url)
-				.then((response) => { 
-				    console.log(response)
-				    this.mealList=response.data.obj
-				    this.mealId=this.mealList[0].id
-				})
-			}else{
-				this.productType=1
-				this.changeTitle="切换基础版"
-				const url=this.$backStage('/api/infoGoods/getInfoGoods/1')
-				this.$http.get(url)
-				.then((response) => { 
-				    console.log(response)
-				    this.mealList=response.data.obj
-				    this.mealId=this.mealList[0].id
-				})
-			}
-
 		},
 		filters: {
 	    	typeFilter(index){
@@ -157,17 +138,16 @@
 				this.payType=index
 			},
 			toPay(){
-				this.loading=true
-				const url=this.$backStage('/api/trade/certPay')
-					this.$http.post(url,{"userId":1, "infoGoodsId":this.mealId})
-					.then((response) => { 
-					    console.log(response)
-					    this.payDetail={"acct_name":"张亚东","busi_partner":"101001","dt_order":"20180131171858","flag_modify":"1","id_no":"341225199307088210","id_type":"0","info_order":"用户购买高级套房一间","money_order":"0.01","name_goods":"高级套房一间","no_order":"20180131171858","notify_url":"http://ip:port/authpaywepdemo/notify.htm","oid_partner":"201408071000001543","risk_item":"{\"frms_ware_category\":\"1008\",\"user_info_bind_phone\":\"15121193141\",\"user_info_dt_register\":\"201801311701829\",\"user_info_mercht_userno\":\"1\"}","sign":"LLs+eZu1byvPyZT1yKaa8KX4NbBei92hOICUMfo6NXN+wNXsLGvWONqUSx/iicXWUM5QGsUR6vz8chyUA32oPvPfT3B72txCi4QXYPNr70HacJRITpHpqRd0DqBuXs80mNcrmP7p7l3/dLgrkeNfnLJ5pvO0LBH6zj4QW9/dA+A=","sign_type":"RSA","timestamp":"20180131171858","url_return":"http://ip:port/authpaywepdemo/urlReturn.jsp","user_id":"1","userreq_ip":"127_0_0_1","version":"1.0"}
-                        const show=setTimeout(function () {
-                       	        this.loading=false
-					            document.getElementById("sub").submit()
-					    }, 100)
-					})
+//				this.loading=true
+//				const url=this.$backStage('/api/trade/certPay')
+//					this.$http.post(url,{"userId":this.userInfo.id, "infoGoodsId":this.mealId})
+//					.then((response) => { 
+//					    this.payDetail={"acct_name":"张亚东","busi_partner":"101001","dt_order":"20180131171858","flag_modify":"1","id_no":"341225199307088210","id_type":"0","info_order":"用户购买高级套房一间","money_order":"0.01","name_goods":"高级套房一间","no_order":"20180131171858","notify_url":"http://ip:port/authpaywepdemo/notify.htm","oid_partner":"201408071000001543","risk_item":"{\"frms_ware_category\":\"1008\",\"user_info_bind_phone\":\"15121193141\",\"user_info_dt_register\":\"201801311701829\",\"user_info_mercht_userno\":\"1\"}","sign":"LLs+eZu1byvPyZT1yKaa8KX4NbBei92hOICUMfo6NXN+wNXsLGvWONqUSx/iicXWUM5QGsUR6vz8chyUA32oPvPfT3B72txCi4QXYPNr70HacJRITpHpqRd0DqBuXs80mNcrmP7p7l3/dLgrkeNfnLJ5pvO0LBH6zj4QW9/dA+A=","sign_type":"RSA","timestamp":"20180131171858","url_return":"http://ip:port/authpaywepdemo/urlReturn.jsp","user_id":"1","userreq_ip":"127_0_0_1","version":"1.0"}
+//                      const show=setTimeout(function () {
+//                     	        this.loading=false
+//					            document.getElementById("sub").submit()
+//					    }, 100)
+//					})
 			},
 			changeType(){
 				if(this.productType==0){
@@ -176,7 +156,6 @@
 					const url=this.$backStage('/api/infoGoods/getInfoGoods/1')
 					this.$http.get(url)
 					.then((response) => { 
-					    console.log(response)
 					    this.mealList=response.data.obj
 					     this.mealId=this.mealList[0].id
 					})
@@ -186,7 +165,6 @@
 					const url=this.$backStage('/api/infoGoods/getInfoGoods/0')
 					this.$http.get(url)
 					.then((response) => { 
-					    console.log(response)
 					    this.mealList=response.data.obj
 					    this.mealId=this.mealList[0].id
 					})
@@ -196,7 +174,8 @@
 		
 		computed: {
 	    ...mapGetters([
-	      'msgType'
+	      'msgType',
+	      'userInfo'
 	    ])
   },
 	}
@@ -251,11 +230,18 @@
 		right: 0;
 		bottom: 0;
 	}
+	.content .nav1 .sel-ul li .zhe-img{
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 40px;
+		height: 40px;
+	}
 	.content .sel-ul li span{
 		display: block;
 	}
 	.content .sel-ul li .span1{
-		font-size: 20px;
+		font-size: 24px;
 		color: #409EFF;
 		margin-bottom: 10px;
 	}
@@ -291,5 +277,12 @@
 	}
 	.content .p-btn{
 		text-align: center;
+	}
+	.content .svg-icon{
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 50px;
+		height: 50px;
 	}
 </style>

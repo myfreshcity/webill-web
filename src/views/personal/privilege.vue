@@ -136,6 +136,21 @@
 </template>
 
 <script>
+	import { mapGetters } from 'vuex'
+	export default{
+		 mounted:function(){
+		 	if(this.userInfo.mobileNo){
+		 		
+		 	}else{
+				this.$router.push({path:'/personal/account'})
+			}
+		 },
+		 computed: {
+		    ...mapGetters([
+		      'userInfo'
+		    ])
+		  }
+	}
 </script>
 
 <style scoped>

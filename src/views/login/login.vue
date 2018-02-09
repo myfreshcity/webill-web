@@ -1,71 +1,60 @@
 <template>
 	<div class="content">
 		<div class="head">
-			<span class="head-left">微账房</span>
+			<span class="head-left"><img src="../../../static/images/logo/logo.png"/></span>
 		</div>
-		<!--<div class="box2">
-			<p class="box2-p1">无忧放贷、尽在掌握</p>
-			<p class="box2-p2">一站式解决贷前、贷中、贷后管理</p>
-		</div>-->
-		<div class="box">
-			<div class="loginTab">
-				<div class="login-p" @click="changeTab(1)" :class="{'p-active':passwordLogin}">
-					<span>密码登录</span>
+		<div class="content-box">
+			<div class="box">
+				<div class="loginTab">
+					<div class="login-p" @click="changeTab(1)" :class="{'p-active':passwordLogin}">
+						<span>密码登录</span>
+					</div>
+					<span class="line"></span>
+					<div class="login-t" @click="changeTab(2)" :class="{'t-active':!passwordLogin}">
+						<span>快捷登录</span>
+					</div>
 				</div>
-				<span class="line"></span>
-				<div class="login-t" @click="changeTab(2)" :class="{'t-active':!passwordLogin}">
-					<span>快捷登录</span>
+				<div class="nav">
+					<p class="p-tel"><input placeholder="请输入手机号" v-model="mobileNo" maxlength="11" @blur="onBlurMobile"/><img src="../../../static/images/login/qingchu.png" v-show="mobileNoClear" @click="clearMobile()"/></p>
+					<p class="p-password" v-show="passwordLogin">
+						<input placeholder="密码6-20位、字母组合" v-if="passwordShow" type='text' v-model="password" maxlength="20" @blur="onBlurPassword">
+						<input placeholder="密码6-20位、字母组合" v-if="!passwordShow" type='password' v-model="password" maxlength="20" @blur="onBlurPassword">
+						<span @click="showPassword()">
+							<img src="../../../static/images/login/mimakejian.png"  v-show="passwordShow"/>
+							<img src="../../../static/images/login/mimabukejian.png" v-show="!passwordShow"/>
+						</span>
+						<img src="../../../static/images/login/qingchu.png" v-show="passwordClear" @click="clearPassword()"/>
+					</p>
+					<p class="p-code" v-show="!passwordLogin"><input placeholder="请输入短信验证码" v-model="code" maxlength="6" @blur="onBlurCode"/><span @click="getCode()">{{codeText|msgTime}}</span><img src="../../../static/images/login/qingchu.png" v-show="codeClear" v-on:click="clearCode()"/></p>
 				</div>
-			</div>
-			<div class="nav">
-				<p class="p-tel"><input placeholder="请输入手机号" v-model="mobileNo" maxlength="11" @blur="onBlurMobile"/><img src="../../../static/images/login/qingchu.png" v-show="mobileNoClear" @click="clearMobile()"/></p>
-				<p class="p-password" v-show="passwordLogin">
-					<input placeholder="密码6-20位、字母组合" v-if="passwordShow" type='text' v-model="password" maxlength="20" @blur="onBlurPassword">
-					<input placeholder="密码6-20位、字母组合" v-if="!passwordShow" type='password' v-model="password" maxlength="20" @blur="onBlurPassword">
-					<span @click="showPassword()">
-						<img src="../../../static/images/login/mimakejian.png"  v-show="passwordShow"/>
-						<img src="../../../static/images/login/mimabukejian.png" v-show="!passwordShow"/>
-					</span>
-					<img src="../../../static/images/login/qingchu.png" v-show="passwordClear" @click="clearPassword()"/>
-				</p>
-				<p class="p-code" v-show="!passwordLogin"><input placeholder="请输入短信验证码" v-model="code" maxlength="6" @blur="onBlurCode"/><span @click="getCode()">{{codeText|msgTime}}</span><img src="../../../static/images/login/qingchu.png" v-show="codeClear" v-on:click="clearCode()"/></p>
-			</div>
-			<el-button type="primary" style="width:80%;" :loading="loading" @click.native.prevent="login()">
-                                  登录
-            </el-button>
-            <p class="p-forget" v-show="passwordLogin"><span @click="goRegister()" class="span-left">注册新用户</span><span @click="forgetPassword()" class="span-right">忘记密码？</span></p>
-			<!--<button class="btn-password" v-show="passwordLogin" @click="loginP()" :disabled="disabled" :class="{'btn-active':!disabled}" >会员登录</button>-->
-			<!--<button class="btn-msg" v-show="!passwordLogin" @click="loginM()" :disabled="disabled" :class="{'btn-active':!disabled}">会员登录</button>-->
+				<el-button type="primary" style="width:80%;" :loading="loading" @click.native.prevent="login()">
+	                                  登录
+	            </el-button>
+	            <p class="p-forget" v-show="passwordLogin"><span @click="goRegister()" class="span-left">注册新用户</span><span @click="forgetPassword()" class="span-right">忘记密码？</span></p>
+		    </div>
 	    </div>
+	    <vefoot></vefoot>
 	</div>
 </template>
 
 <script>
+	import Vefoot from '@/components/Vefoot'
 	import Cookies from 'js-cookie'
     import md5 from 'js-md5';
 	export default {
+		components: { Vefoot },
 		 data(){
 		  	return{
-		  		title:"会员登录",
-		  		disabled:true,
-		  		mobile:"18888888888",
 		  		code:"",
 		  		codeText:"获取验证码",
 		  		disabled1:true,
-		  		showTip:false,
-		  		message:"",
 		  		passwordShow:false,
 		  		passwordLogin:true,
-		  		password:"a111111",
-		  		mobileNo:"18888888888",
+		  		password:"",
+		  		mobileNo:"",
 		  		passwordClear:false,
 		  		mobileNoClear:false,
 		  		codeClear:false,
-		  		openId:"",
-		  		loginForm: {
-			        username: 'admin',
-			        password: '111111'
-			    },
 			    loading: false,
 		  	}
 		 },
@@ -79,34 +68,11 @@
 				  }
 		  },
 		  mounted:function(){
-//		  	if(this.getLoginUser.openId){
-//		  		this.openId=this.getLoginUser.openId
-//		  	}
-		//	sessionStorage.setItem('login',3);
+		  	this.mobileNo=Cookies.get('_wibn')
 		  },
 		  beforeUpdate:function(){
 		  	//检测每次的输入信息
-		  	if(this.passwordLogin){
-		  		const part1=/[0-9a-zA-Z]{6,20}/;
-				const result1=part1.test(this.password);
-				const part2=/^[1][3,4,5,7,8,9]\d{9}$/
-				const result2=part2.test(this.mobileNo);
-				if(!result1||!result2){
-			  		this.disabled=true;
-			  	}else{
-			  		this.disabled=false;
-			  	}
-		  	}else{
-				const part1=/^[1][3,4,5,7,8,9]\d{9}$/
-				const result1=part1.test(this.mobileNo);
-				const part2=/[0-9]{6}/;
-				const result2=part2.test(this.code);
-			  	if(!result1||!result2){
-			  		this.disabled=true;
-			  	}else{
-			  		this.disabled=false;
-			  	}
-		  	}
+		  	
 		  },
 		  watch: {
 		     mobileNo:function(str){
@@ -193,49 +159,87 @@
 		  		 this.$router.push({path:'/register'})
 		  	},
 		  	login(){
-		  		this.loading=true
+		  		
 		  		if(this.passwordLogin){
-			  		 const part=/^(?!(?:\d*$))(?!(?:[a-zA-Z]*$))[A-Za-z0-9]{6,20}$/   //密码6-20位且为数字与字母组合
-			  		 const result=part.test(this.password)
-			  		 if(result){
-			  		 	console.log(111)
-			  		 	 Cookies.set('Admin-Token', "admin")
-					     this.$router.push({ path: '/' })
+		  			 const part2=/^[1][3,4,5,7,8,9]\d{9}$/
+					 const result2=part2.test(this.mobileNo);
+			  		 const part1=/^(?!(?:\d*$))(?!(?:[a-zA-Z]*$))[A-Za-z0-9]{6,20}$/   //密码6-20位且为数字与字母组合
+			  		 const result1=part1.test(this.password)
+			  		  if(!this.mobileNo||!this.password){
+		  		    	this.$alert('手机号、密码不能为空', '系统提示', {
+				          confirmButtonText: '确定',
+				        });
+		  		      }else if(!result2){
+			  		 	this.$alert('手机号码格式错误', '系统提示', {
+				          confirmButtonText: '确定',
+				        });
+			  		 }else if(!result1){
+			  		 	this.$alert('密码格式错误', '系统提示', {
+				          confirmButtonText: '确定',
+				        });
+			  		 }else{
+			  		 	this.loading=true
+//			  		 	 Cookies.set('Admin-Token', "admin")
+//					     this.$router.push({ path: '/' })
 				  		 const url=this.$backStage('/api/user/login')
 					     this.$http.post(url,{"mobileNo":this.mobileNo,"password":md5(this.password),'checkFlag':"pwd"})
 					      .then((response) => { 
 					      	  this.loading=false
-					          console.log(response)
-					          Cookies.set('Admin-Token', 123456)
-					          this.$router.push({ path: '/' })
+					          if(response.data.status==200){
+					          	 Cookies.set('Admin-Token', "admin")
+					          	 Cookies.set('_wibn',response.data.obj.mobileNo,7 )
+					          	 Cookies.set('_wibp',response.data.obj.password,7 )
+					             this.$store.dispatch('UserInfo', response.data.obj)
+					             if(response.data.obj.realName){
+					             	this.$router.push({ path: '/client/clientList' })
+					             }else{
+					             	this.$router.push({ path: '/' })
+					             }
+					          }else{
+					          	this.$alert(response.data.msg, '系统提示', {
+							          confirmButtonText: '确定',
+							    });
+					          }
+					         
 					      }).catch(function(response){
 				              this.loading=false
 				          })
-//							       this.$store.dispatch('Login', this.loginForm).then(() => {
-//							       	    this.loading = false
-//							            this.$router.push({ path: '/' })
-//							          }).catch(() => {
-//							            this.loading = false
-//							          })
-				      }else{
-				      	this.$alert('密码格式不正确', '系统提示', {
-					          confirmButtonText: '确定',
-					    });
-			  		  }
+				      }
 			     }else{
-			     	const url=this.$backStage('/api/user/login')
+			     	 const part2=/^[1][3,4,5,7,8,9]\d{9}$/
+					 const result2=part2.test(this.mobileNo);
+			  		 const part3=/[0-9]{6}/;
+					 const result3=part3.test(this.code);
+			     	 if(!this.mobileNo||!this.code){
+		  		    	this.$alert('手机号、验证码不能为空', '系统提示', {
+				          confirmButtonText: '确定',
+				        });
+		  		      }else if(!result2){
+			  		 	this.$alert('手机号码格式错误', '系统提示', {
+				          confirmButtonText: '确定',
+				        });
+			  		 }else if(!result3){
+			  		 	this.$alert('验证码格式错误', '系统提示', {
+				          confirmButtonText: '确定',
+				        });
+			  		 }else{
+			     	            const url=this.$backStage('/api/user/login')
 							    this.$http.post(url,{"mobileNo":this.mobileNo,"inCode":this.code,'checkFlag':"quick"})
 							      .then((response) => { 
 							      	 this.loading=false
-							          console.log(response)
 							          if(response.data.status==200){
-							          
+							              Cookies.set('Admin-Token', "admin")
+					                      this.$router.push({ path: '/' })
+					                      this.$store.dispatch('UserInfo', response.data.obj)
 							          }else{
-							             
+							             this.$alert(response.data.msg, '系统提示', {
+									          confirmButtonText: '确定',
+									    });
 							          }
 							      }).catch(function(response){
 			                          this.loading=false
 			                      })
+					}
 			     }
 		  	},
 		  	getCode(){
@@ -245,12 +249,11 @@
 					    });
 					    this.disabled1=true
 							    const url=this.$backStage('/api/verifyCode/sendVerifyCode')
-							    this.$http.post(url,{'mobile':this.mobileNo,'checkFlag':"quick"})
+							    this.$http.post(url,{'mobileNo':this.mobileNo,'checkFlag':"quick"})
 							    .then((response) => { 
-							    	   console.log(response)
+							    	   let self = this
 							    	   if(response.data.status==200){
-							    		      let self = this
-							    		      self.codeText=60
+							    		 self.codeText=60
 						                 const show=setInterval(function () {
 						                 	  if(self.codeText=="获取验证码"){
 						                 	  	        clearInterval(show)
@@ -264,9 +267,10 @@
 						                     }
 									              }
 						                 }, 1000)
-							    	   }else if(response.data.status==400){
-							    	   	
 							          }else{
+							          	        self.$alert(response.data.msg, '系统提示', {
+											          confirmButtonText: '确定',
+											    });
 											     self.disabled1=false
 							    	   }
 			             }).catch(function(response){
@@ -283,44 +287,40 @@
 		@include relative;
 	    height: 100vh;
 	    padding-top: 10%;
-	    background:url(../../../static/images/login/bg.png);
+	    background:url(../../../static/images/login/loginbg.jpg);
+	    background-size:100% 100%;  
 	}
 	.head{
 		width: 100%;
-		height: 50px;
-		line-height: 50px;
+		height: .7rem;
+		line-height: .7rem;
 		position: fixed;
 		top: 0;
 		left: 0;
 		background: #fff;
 	}
 	.head .head-left{
-		margin-left: 10%;
-		font-size: 20px;
+		display: block;
+		margin-left: 18%;
+		font-size: .2rem;
+		height: .7rem;
+		width: 1.25rem;
 	}
-	.box2{
-		position: absolute;
-		padding-top: 50px;
-		top: 20%;
-		left: 10%;
+	.head .head-left img{
+		width: 100%;
+		height: 100%;
 	}
-	.box2-p1{
-		font-size: 45px;
-		color: #fff;
-		margin-bottom: 50px;
-	}
-	.box2-p2{
-		font-size: 33px;
-		color: #fff;
+	.content-box{
+		width: 1100px;
+		height: 450px;
+		margin: 0 auto;
 	}
 	.box{
 		width: 400px;
-		height: 500px;
+		height: 430px;
 		border: 1px #E3E7F1 solid;
-		position: absolute;
-		top: 20%;
-		right: 10%;
 		background: #fff;
+		float: right;
 	}
 	.nav{
 		padding-left: 30px;
@@ -333,13 +333,14 @@
 		margin-bottom: 20px;
 	}
 	.loginTab{
-		height: 58px;
+		height: 88px;
 		display: flex;
 		background: #fff;
 		padding-bottom: 1px;
 		position: relative;
+		padding-top: 30px;
 	}
-	.loginTab:before{
+	/*.loginTab:before{
 		content: '';
 		position: absolute;
 		width: 200%;
@@ -349,7 +350,7 @@
 		transform-origin: 0 0;
 		transform: scale(.5,.5);
 		box-sizing: border-box;
-	}
+	}*/
 	.loginTab .line{
 		height: 20px;
 		margin-top: 20px;

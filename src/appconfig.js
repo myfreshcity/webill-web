@@ -1,6 +1,7 @@
 export default class AppConfig {
   install (Vue, options) {
     let basePath ='http://yadong.test.manmanh.com/webill-app'
+//  let basePath ='http://webill.test.manmanh.com/webill'
     // 1. 添加全局方法或属性
     Vue.appConstant = () => {
       return {

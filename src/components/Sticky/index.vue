@@ -32,7 +32,7 @@ export default {
       width: undefined,
       height: undefined,
       child: null,
-      stickyHeight: 0
+      stickyHeight: 0,
     }
   },
   mounted() {
@@ -61,6 +61,7 @@ export default {
       this.position = ''
       this.width = 'auto'
       this.active = false
+      this.border="none"
     },
     handleScroll() {
       this.width = this.$el.getBoundingClientRect().width

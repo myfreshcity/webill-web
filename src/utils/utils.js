@@ -1,3 +1,6 @@
+import Cookies from 'js-cookie'
+import { getToken } from '@/utils/auth' // 验权
+
 export const resetHistory = function () {
   let history = window.sessionStorage
   history.clear()
@@ -161,7 +164,7 @@ export const DateDiff = function(sDate) {  //sDate是"2002-12-18"格式
 	oDate2 = new Date(nowDate[0], nowDate[1] - 1, nowDate[2]);
 	iDays = parseInt(Math.abs(oDate1 - oDate2) / 1000 / 60 / 60 / 24);
 	if ((oDate1 - oDate2) < 0) {
-	    return "车险已";
+	    return "";
 	}
 	return iDays;
 }
@@ -187,30 +190,7 @@ export const  encryptMobile= function(data) {
 	}
 	return licenceArr.join("")
 }
-//获取
-export function getCookie(name) {
-  var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
-  if (arr = document.cookie.match(reg))
-    return (arr[2]);
-  else
-    return null;
-}
 
-//设置cookie,增加到vue实例方便全局调用
-export function setCookie (c_name, value, expiredays) {
-  var exdate = new Date();
-  exdate.setDate(exdate.getDate() + expiredays);
-  document.cookie = c_name + "=" + escape(value) + ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString());
-};
-
-//删除cookie
-export function delCookie (name) {
-  var exp = new Date();
-  exp.setTime(exp.getTime() - 1);
-  var cval = getCookie(name);
-  if (cval != null)
-   document.cookie = name + "=" + cval + ";expires=" + exp.toGMTString();
-};
 
 
 //获取n年 n天 n月前或后的日期
@@ -237,3 +217,44 @@ export function initDefaultDate(n,timeUnit) {
 export function formatNumber(value){    
     return (value < 10 ? '0' : '') + value;    
 }  
+export function getLoginUser(){    
+    if (getToken()) {
+    	         const url=('http://yadong.test.manmanh.com/webill-app/api/user/login')
+					     this.$http.post(url,{"mobileNo":Cookies.get(username),"password":Cookies.get(password),'checkFlag':"pwd"})
+					      .then((response) => { 
+					          if(response.data.status==200){
+					             this.$store.dispatch('UserInfo', response.data.obj)
+					          }else{
+					          	this.$alert("登录信息有误，请退出后重新登录", '系统提示', {
+							          confirmButtonText: '确定',
+							        });
+					          }
+					         
+					      }).catch(function(response){
+				             this.$alert("登录信息有误，请退出后重新登录", '系统提示', {
+							          confirmButtonText: '确定',
+							        });
+				        })
+    }
+} 
+ export function exportCsv(obj){
+	         var title = obj.title;
+	         var titleForKey = obj.titleForKey;
+	         var data = obj.data;
+	         var str = [];
+	         str.push(obj.title.join(",")+"\n");
+	         for(var i=0;i<data.length;i++){
+	             var temp = [];
+	             for(var j=0;j<titleForKey.length;j++){
+	                 temp.push(data[i][titleForKey[j]]);
+		          }
+		          str.push(temp.join(",")+"\n");
+			     }
+			      var uri = 'data:text/csv;charset=utf-8,' + encodeURIComponent(str.join(""));  
+			      var downloadLink = document.createElement("a");
+			      downloadLink.href = uri;
+			      downloadLink.download = "联系人列表.csv"; 
+			      document.body.appendChild(downloadLink);
+			      downloadLink.click();
+			      document.body.removeChild(downloadLink); 
+	 }

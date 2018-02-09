@@ -4,9 +4,9 @@
     <div class="dashboard-text">role:<span v-for='role in roles' :key='role'>{{role}}</span></div>-->
     <!--<p class="p-head">欢迎使用微账房</p>-->
     <div class="head">
-    	<span class="head-left">微账房</span>
+    	<span class="head-left"><img src="../../../static/images/logo/logo.png"/></span>
     	<ul class="right-title">
-      	<li>18888888888</li>
+      	<li class="li-active" @click="goAccount">{{userInfo.mobileNo}}</li>
       	<li class="line">|</li>
       	<li class="li-active" @click="goReport">报告模板</li>
       	<li class="line">|</li>
@@ -65,18 +65,23 @@
     	 	   </li>
     	 </ul>
     	 <span class="span-btn">
-    	 	<el-button  @click="goTemplate" >查看样例</el-button>
-				<el-button  type="primary" @click="toBegin" >马上体验</el-button>
+    	 	<el-button  @click="goTemplate" class="btn1">查看样例</el-button>
+				<el-button  type="primary" @click="toBegin" class="btn2">马上体验</el-button>
     	 </span>
     </div>
+    <vefoot></vefoot>
   </div>
 </template>
 
 <script>
+import Vefoot from '@/components/Vefoot'
 import { mapGetters } from 'vuex'
 
 export default {
+	components: { Vefoot },
   name: 'dashboard',
+  mounted:function(){
+  },
   methods:{
   	goTemplate(){
   		this.$router.push({path:'/template/temPageBase'})
@@ -91,33 +96,25 @@ export default {
     },
     goReport(){
     	this.$router.push({path:'/template/temPageBase'})
+    },
+    goAccount(){
+    	this.$router.push({path:'/personal/account'})
     }
   },
   computed: {
     ...mapGetters([
       'name',
-      'roles'
+      'roles',
+      'userInfo'
     ])
   }
 }
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-/*.dashboard {
-  &-container {
-    margin: 30px;
-  }
-  &-text {
-    font-size: 30px;
-    line-height: 46px;
-  }
-}
-.p-head{
-	font-size: 30px;
-}*/
 .dashboard-container{
-	background: url(../../../static/images/welcome/wel-bg.png) no-repeat;
-	background-position: center 50px; 
+	background: url(../../../static/images/welcome/welcomebg.png) no-repeat;
+	background-position: center .7rem; 
 	background-size:100% 100%; 
 	position: absolute;
 	top: 0px;
@@ -127,24 +124,31 @@ export default {
 	z-index: 10000;
 }
 .head{
-	height: 50px;
-	background: #fff;
-}
-
+		width: 100%;
+		height: .7rem;
+		line-height: .7rem;
+		position: fixed;
+		top: 0;
+		left: 0;
+		background: #fff;
+	}
 	.head .head-left{
-		display: block;
-		height: 50px;
-		margin-left: 10%;
-		float: left;
-		font-size: 20px;
-		line-height: 50px;
+		display: inline-block;
+		margin-left: 18%;
+		font-size: .2rem;
+		height: .7rem;
+		width: 1.25rem;
+	}
+	.head .head-left img{
+		width: 100%;
+		height: 100%;
 	}
 	.right-title{
 		float: right;
 		outline: none;
 		margin-right: 10%;
-		height: 50px;
-		line-height: 50px;
+		height: .7rem;
+		line-height: .7rem;
 }
 .right-title li{
 	float: left;
@@ -158,7 +162,7 @@ export default {
 	.nav .p1{
 		text-align: center;
 		font-size: .42rem;
-		margin-top: 1rem;
+		margin-top: 1.2rem;
 		color: #fff;
 		margin-bottom: 1.16rem;
 	}
@@ -224,5 +228,16 @@ export default {
 		bottom: .8rem;
 		left: 50%;
 		margin-left: -500px;
+	}
+	.span-btn .btn1{
+		background: none;
+		color: #fff;
+		border-radius: .33rem;
+		/*width: 1.4rem;*/
+		margin-right: .3rem;
+	}
+	.span-btn .btn2{
+		/*width: 1.4rem;*/
+		border-radius: .33rem;
 	}
 </style>

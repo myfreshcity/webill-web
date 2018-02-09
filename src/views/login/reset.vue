@@ -1,7 +1,8 @@
 <template>
 	<div class="content">
 		<div class="head">
-			<span class="head-left">微账房</span>
+			<span class="head-left"><img src="../../../static/images/logo/logo.png"/></span>
+			<span class="head-right" @click="goBack">返回登录</span>
 		</div>
 		<div class="box">
 			<div class="loginTab">
@@ -20,31 +21,31 @@
 					<img src="../../../static/images/login/qingchu.png" v-show="passwordClear" @click="clearPassword()"/>
 				</p>
 			</div>
-			<button class="btn-password"  @click="loginP()" :disabled="disabled" :class="{'btn-active':!disabled}">确认修改</button>
+			<el-button type="primary" style="width:80%;" :loading="loading" @click.native.prevent="reset()">
+                                          确认修改
+            </el-button>
 	    </div>
 	</div>
 </template>
 
 <script>
+	import Cookies from 'js-cookie'
+	import md5 from 'js-md5';
 	export default {
 		 data(){
 		  	return{
-		  		title:"会员登录",
-		  		disabled:true,
 		  		mobile:"",
 		  		code:"",
 		  		codeText:"获取验证码",
 		  		disabled1:true,
-		  		showTip:false,
 		  		message:"",
 		  		passwordShow:false,
-		  		passwordLogin:true,
 		  		password:"",
 		  		mobileNo:"",
 		  		passwordClear:false,
 		  		mobileNoClear:false,
 		  		codeClear:false,
-		  		openId:""
+		  		loading:false,
 		  	}
 		 },
 		  filters: {
@@ -64,27 +65,6 @@
 		  },
 		  beforeUpdate:function(){
 		  	//检测每次的输入信息
-		  	if(this.passwordLogin){
-		  		const part1=/[0-9a-zA-Z]{6,20}/;
-				const result1=part1.test(this.password);
-				const part2=/^[1][3,4,5,7,8,9]\d{9}$/
-				const result2=part2.test(this.mobileNo);
-				if(!result1||!result2){
-			  		this.disabled=true;
-			  	}else{
-			  		this.disabled=false;
-			  	}
-		  	}else{
-				const part1=/^[1][3,4,5,7,8,9]\d{9}$/
-				const result1=part1.test(this.mobileNo);
-				const part2=/[0-9]{6}/;
-				const result2=part2.test(this.code);
-			  	if(!result1||!result2){
-			  		this.disabled=true;
-			  	}else{
-			  		this.disabled=false;
-			  	}
-		  	}
 		  },
 		  watch: {
 		     mobileNo:function(str){
@@ -120,12 +100,8 @@
 		    }
 		  },
 		  methods: {
-		  	changeTab(index){
-		  		if(index==1){
-		  			this.passwordLogin=true
-		  		}else{
-		  			this.passwordLogin=false
-		  		}
+		  	goBack(){
+		  		this.$router.push({ path: '/login' })
 		  	},
 		  	showPassword(){
 		  		if(this.passwordShow){
@@ -164,79 +140,72 @@
 		  	clearCode(){
 		  		this.code=""
 		  	},
-		  	forgetPassword(){
-		  		this.$router.push({path:'/changePassword'})
-		  	},
-		  	goRegister(){
-		  		this.$router.push({path:'/register'})
-		  	},
-		  	loginP(){
-		  		 const part=/^(?!(?:\d*$))(?!(?:[a-zA-Z]*$))[A-Za-z0-9]{6,20}$/   //密码6-20位且为数字与字母组合
-		  		 const result=part.test(this.password)
-		  		 if(result){
-			  		 const url=this.$backStage('/api/user/userLogin')
-				     this.$http.post(url,{"mobile":this.mobileNo,"password":md5(this.password),'checkFlag':"pwd","openId":this.openId})
+		  	reset(){
+		  		    this.loading=true
+		  		    const part1=/^(?!(?:\d*$))(?!(?:[a-zA-Z]*$))[A-Za-z0-9]{6,20}$/;
+					const result1=part1.test(this.password);
+					const part2=/^[1][3,4,5,7,8,9]\d{9}$/
+					const result2=part2.test(this.mobileNo);
+					const part3=/[0-9]{6}/;
+					const result3=part3.test(this.code);
+		  		    if(!this.mobileNo||!this.code||!this.password){
+		  		    	this.$alert('手机号、验证码或密码不能为空', '系统提示', {
+				          confirmButtonText: '确定',
+				        });
+				        this.loading=false
+		  		    }else if(!result2){
+		  		    	this.$alert('手机号码格式错误', '系统提示', {
+				          confirmButtonText: '确定',
+				        });
+				        this.loading=false
+		  		    }else if(!result3){
+		  		    	this.$alert('验证码格式错误', '系统提示', {
+				          confirmButtonText: '确定',
+				        });
+				        this.loading=false
+		  		    }else if(!result1){
+		  		    	this.$alert('密码格式错误', '系统提示', {
+				          confirmButtonText: '确定',
+				        });
+				        this.loading=false
+		  		    }else{
+			  		 const url=this.$backStage('/api/user/updatePassword')
+				     this.$http.post(url,{"mobileNo":this.mobileNo,"password":md5(this.password),"code":this.code})
 				      .then((response) => { 
-				          console.log(response)
+				      	  this.loading=false
 				          if(response.data.status==200){
-				          		this.setLoginUser(response.data.obj)
-				          		 setCookie('username',response.data.obj.mobile)
-								 setCookie('password',response.data.obj.password,7)
-				                sessionStorage.setItem('login',1);
-				                if(this.getProductCode){
-						          	this.$router.push({path:'/productDetail'})
-						          }else{
-						          	this.$router.push({path:'/personal'})
-						          }
+				          		  Cookies.set('Admin-Token', "admin")
+				          		  Cookies.set('_wibn',response.data.obj.mobileNo,7 )
+					          	  Cookies.set('_wibp',response.data.obj.password,7 )
+			                      this.$store.dispatch('UserInfo', response.data.obj)
+			                      if(response.data.obj.realName){
+					             	this.$router.push({ path: '/client/clientList' })
+					             }else{
+					             	this.$router.push({ path: '/' })
+					             }
 				          }else{
-				          	 this.showTip=true
-							 this.message=response.data.msg
+				          	  this.$alert(response.data.msg, '系统提示', {
+							          confirmButtonText: '确定',
+							    });
 				          }
 		
 				      }).catch(function(response){
-			              
+			              this.loading=false
 			          })
-			      }else{
-		  		 	this.showTip=true
-				    this.message="密码必须为6-20位字母加数字"
-		  		 }
-		  	},
-		  	loginM(){
-		  		const url=this.$backStage('/api/user/userLogin')
-							    this.$http.post(url,{"mobile":this.mobileNo,"inCode":this.code,'checkFlag':"quick","openId":this.openId})
-							      .then((response) => { 
-							          console.log(response)
-							          if(response.data.status==200){
-								          this.setLoginUser(response.data.obj)
-								          setCookie('username',response.data.obj.mobile)
-								          setCookie('password',response.data.obj.password,7)
-								          
-								          sessionStorage.setItem('login',1);
-								          if(this.getProductCode){
-								          	this.$router.push({path:'/productDetail'})
-								          }else{
-								          	this.$router.push({path:'/personal'})
-								          }
-							          }else{
-							              this.showTip=true
-									      this.message=response.data.msg
-							          }
-							      }).catch(function(response){
-			                          
-			                      })
+				    }
 		  	},
 		  	getCode(){
-		  		if(!this.disabled1){
+		  		if(this.codeText=="获取验证码"&&!this.disabled1){
+				      	this.$alert('验证码发送成功,请不要重复点击', '系统提示', {
+					          confirmButtonText: '确定',
+					    });
 				    	        this.disabled1=true
 							    const url=this.$backStage('/api/verifyCode/sendVerifyCode')
-							    this.$http.post(url,{'mobile':this.mobileNo,'checkFlag':"quick"})
+							    this.$http.post(url,{'mobileNo':this.mobileNo,'checkFlag':"updataPwd"})
 							    .then((response) => { 
-							    	   console.log(response)
+							    	   let self = this
 							    	   if(response.data.status==200){
-							    	   	      this.showTip=true
-											  this.message="验证码发送成功"
-							    		      let self = this
-							    		      self.codeText=60
+							    		 self.codeText=60
 						                 const show=setInterval(function () {
 						                 	  if(self.codeText=="获取验证码"){
 						                 	  	        clearInterval(show)
@@ -250,13 +219,11 @@
 						                     }
 									              }
 						                 }, 1000)
-							    	   }else if(response.data.status==400){
-							          	  this.showTip=true
-									      this.message="该手机号未注册请去注册"
-							          }else{
-							    	   	         this.showTip=true
-											     this.message="验证码发送失败"
-											     self.disabled1=false
+							    	   }else{
+							    	   	     self.$alert(response.data.msg, '系统提示', {
+											          confirmButtonText: '确定',
+											 });
+											 self.disabled1=false
 							    	   }
 			             }).catch(function(response){
 			            
@@ -271,26 +238,40 @@
 	.content{
 		@include relative;
 	    height: 100vh;
-	    background:url(../../../static/images/login/loginbg.png);
+	    /*background:url(../../../static/images/login/loginbg.png);*/
 	    padding-top: 10%;
 	}
 	.head{
 		width: 100%;
-		height: 50px;
-		line-height: 50px;
+		height: .7rem;
+		line-height: .7rem;
 		position: fixed;
 		top: 0;
 		left: 0;
 		background: #fff;
+		border-bottom: 1px #E3E7F1 solid;
 	}
 	.head .head-left{
-		margin-left: 10%;
-		font-size: 20px;
+		display: inline-block;
+		margin-left: 18%;
+		font-size: .2rem;
+		height: .7rem;
+		width: 1.25rem;
+	}
+	.head .head-left img{
+		width: 100%;
+		height: 100%;
+	}
+	.head .head-right{
+		float: right;
+		margin-right: 10%;
+		font-size: .16rem;
+		color: #0BB1FF;
 	}
 	.box{
 		width: 400px;
 		height: 400px;
-		border: 1px #E3E7F1 solid;
+		/*border: 1px #E3E7F1 solid;*/
 		margin: 0 auto;
 		background: #fff;
 	}
@@ -305,14 +286,14 @@
 		margin-bottom: 20px;
 	}
 	.loginTab{
-		height: 58px;
+		height: 78px;
 		display: flex;
 		background: #fff;
 	}
 	.loginTab p{
 		padding-left: 30px;
 		line-height: 58px;
-		font-size: 20px;
+		font-size: 28px;
 	}
 	.loginTab .line{
 		height: 20px;
@@ -416,37 +397,11 @@
 		display: block;
 		margin: 0 auto;
 		border: none;
-		border-radius: 5px;
+		border-radius: 6px;
 		color: #fff;
-		margin-top: 33px;
-		margin-bottom: 37px;
+		margin-top: 60px;
 		outline:none;
 		opacity: 1;
 		font-size: 16px;
-	}
-	.btn-password{
-		margin-top: 33px;
-	}
-	.btn-active{
-		opacity: 1;
-	}
-	.p-login{
-		color: #0BB1FF;
-		text-align: center;
-	}
-	.p-forget{
-		margin-top: 20px;
-		font-size: 14px;
-		padding:0 30px;
-		color: #0BB1FF;
-		padding-bottom: 20px;
-	}
-	.p-forget .span-left{
-		color: #0BB1FF;
-		float: left;
-	}
-	.p-forget .span-right{
-		color: #999;
-		float: right;
 	}
 </style>

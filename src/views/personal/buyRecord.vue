@@ -5,7 +5,7 @@
 	  <div class="filter-container client-serach">
 	  	<el-form :inline="true" :model="formSearch" class="demo-form-inline">
 	  	  
-		  <el-form-item label="购买类型">
+		  <el-form-item label="套餐类型">
 		    <el-select v-model="formSearch.latestReportType" placeholder="请选择消费类型">
 		      <el-option label="客户信息-基础版" value="0"></el-option>
 		      <el-option label="客户信息-标准版" value="1"></el-option>
@@ -29,18 +29,19 @@
 		  </el-form-item>
 		  <el-form-item>
 		    <el-button type="primary" @click="onSearch">查询</el-button>
+		    <el-button type="primary" @click="clear" >清空</el-button>
 		  </el-form-item>
 		</el-form>
 	  </div>
 	  <ul class="client-ul">
-	  	<li class="client-li"><span>序号</span><span class="client-span">购买类型</span><span>套餐类型</span><span>有效时长</span><span>金额</span><span  class="client-span">购买时间</span></li>
+	  	<li class="client-li"><span>序号</span><span class="client-span">购买类型</span><span>套餐类型</span><span>信息次数</span><span>金额</span><span  class="client-span">购买时间</span></li>
 	  	<li v-for="(ele,k) in clientList">
-	  		<span>{{ele.count}}</span>
-	  		<span class="client-span">{{ele.buyType|msgType}}</span>
-	  		<span>{{ele.comboType}}</span>
-	  		<span>{{ele.validTime}}</span>
-	  		<span>{{ele.amount}}</span>
-	  		<span class="client-span">{{ele.buyTime}}</span>
+	  		<span>{{ele.id}}</span>
+	  		<span class="client-span">{{ele.payType|mealType}}</span>
+	  		<span>{{ele.infoLevel|msgType}}</span>
+	  		<span>{{ele.times}}</span>
+	  		<span>{{ele.price|priceFilter}}</span>
+	  		<span class="client-span">{{ele.orderTimeStr}}</span>
 	  	</li>
 	  </ul>
 	  <div class="block" id="foot-page">
@@ -55,13 +56,12 @@
 </template>
 
 <script>
-  import { getClientList } from '@/api/client'
+  import { mapGetters } from 'vuex'
   export default {
     data() {
       return {
       	totalCount:0,
       	clientList:[],
-      	latestReportType:'',
       	formSearch:{
       		latestReportType:"",
       		beginTime:"",
@@ -69,140 +69,110 @@
       		start:0,
       		length:10
       	},
-        tableData: [{
-          count:1,
-          buyType:0,
-          comboType:"500次",
-          validTime:"1年",
-          amount:"1000",
-          buyTime:"2017-12-21"
-        },{
-          count:2,
-          buyType:1,
-          comboType:"100次",
-          validTime:"1年",
-          amount:"1000",
-          buyTime:"2017-12-21"
-        },{
-          count:3,
-          buyType:1,
-          comboType:"50次",
-          validTime:"1年",
-          amount:"1000",
-          buyTime:"2017-12-21"
-        },{
-          count:4,
-          buyType:0,
-          comboType:"200次",
-          validTime:"1年",
-          amount:"1000",
-          buyTime:"2017-12-21"
-        },{
-          count:5,
-          buyType:0,
-          comboType:"500次",
-          validTime:"1年",
-          amount:"1000",
-          buyTime:"2017-12-21"
-        },{
-          count:6,
-          buyType:0,
-          comboType:"500次",
-          validTime:"1年",
-          amount:"1000",
-          buyTime:"2017-12-21"
-        },{
-          count:7,
-          buyType:1,
-          comboType:"500次",
-          validTime:"1年",
-          amount:"1000",
-          buyTime:"2017-12-21"
-        },{
-          count:8,
-          buyType:0,
-          comboType:"500次",
-          validTime:"1年",
-          amount:"1000",
-          buyTime:"2017-12-21"
-        },{
-          count:9,
-          buyType:1,
-          comboType:"500次",
-          validTime:"1年",
-          amount:"1000",
-          buyTime:"2017-12-21"
-        },{
-          count:10,
-          buyType:1,
-          comboType:"500次",
-          validTime:"1年",
-          amount:"1000",
-          buyTime:"2017-12-21"
-        },{
-          count:11,
-          buyType:1,
-          comboType:"500次",
-          validTime:"1年",
-          amount:"1000",
-          buyTime:"2017-12-21"
-        },{
-          count:12,
-          buyType:0,
-          comboType:"100次",
-          validTime:"1年",
-          amount:"1000",
-          buyTime:"2017-12-21"
-        },],
+        tableData: [],
          currentPage4: 4
       }
     },
     filters:{
     	msgType(index){
     		if(index==0){
-    			return "客户信息-基础版"
+    			return "基础版"
     		}else{
-    			return "客户信息-标准版"
+    			return "标准版"
     		}
+    	},
+    	mealType(index){
+    		if(index==0){
+    			return "客户信息"
+    		}else{
+    			return "会员"
+    		}
+    	},
+    	priceFilter(data){
+    		return data/100
     	}
     },
     mounted:function(){
-    	this.totalCount=this.tableData.length
-    	for(let i=0;i<this.tableData.length;i++){
-    		if(i<10){
-    			this.clientList.push(this.tableData[i])
-    		}
-    	}
+    	if(this.userInfo.mobileNo){
+    	   var data = new FormData();
+           data.append('userId', this.userInfo.id);
+           data.append('start', 1);
+           data.append('length', 10);
+           data.append('infoLevel', this.formSearch.latestReportType);
+           data.append('timeFrom', this.formSearch.beginTime);
+           data.append('timeTo', this.formSearch.lastTime);
+           const url=this.$backStage('/api/trade/list')
+           this.$http.post(url, data).then((response) => {
+                        // success callback
+                        this.clientList=response.data.records
+                        this.totalCount=response.data.total
+                    }, (response) => {
+                        // error callback
+                    });
+        }else{
+				this.$router.push({path:'/personal/account'})
+		}
     },
      methods: {
-      handleClick(row) {
-        console.log(row);
+      clear(){
+     		this.formSearch.latestReportType=""
+     		this.formSearch.beginTime=""
+     		this.formSearch.lastTime=""
       },
       handleCurrentChange(val) {
-      	this.clientList=[]
-          this.$http.post("http://yadong.test.manmanh.com/webill-app/api/customer/list",this.formSearch)
-          .then(response => {
-          	console.log(response)
-		    // success callback
-		  }, response => {
-		    // error callback
-		  })
-      	for(let i=0;i<this.tableData.length;i++){
-      		if((val-1)*10-1<i&&i<val*10){
-      			this.clientList.push(this.tableData[i])
-      		}
-      	}
+           var data = new FormData();
+           data.append('userId', this.userInfo.id);
+           data.append('start', (val-1)*10);
+           data.append('length', 10);
+           data.append('infoLevel', this.formSearch.latestReportType);
+           data.append('timeFrom', this.formSearch.beginTime);
+           data.append('timeTo', this.formSearch.lastTime);
+           const url=this.$backStage('/api/trade/list')
+           this.$http.post(url, data).then((response) => {
+                        // success callback
+                        this.clientList=response.data.records
+                        this.totalCount=response.data.total
+                    }, (response) => {
+                        // error callback
+                    });
       },
       onSearch(){
-      	console.log(this.formSearch)
+      	   var data = new FormData();
+           data.append('userId', this.userInfo.id);
+           data.append('start', 1);
+           data.append('length', 10);
+           data.append('infoLevel', this.formSearch.latestReportType);
+           data.append('timeFrom', this.formSearch.beginTime);
+           data.append('timeTo', this.formSearch.lastTime);
+           const url=this.$backStage('/api/trade/list')
+           this.$http.post(url, data).then((response) => {
+                        // success callback
+                        this.clientList=response.data.records
+                        this.totalCount=response.data.total
+                    }, (response) => {
+                        // error callback
+                    });
       }
     },
+     computed: {
+	    ...mapGetters([
+	      'userInfo'
+	    ])
+	  }
   }
 </script>
 
 <style scoped>
 	.content {
 		padding-top: 10px;
+	}
+	.client-serach .el-input{
+		width:3rem;
+	}
+	
+	
+	.client-serach .el-select{
+		width: 3rem;
 	}
 	.content .client-ul{
 		margin: 0 20px;

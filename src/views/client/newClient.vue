@@ -19,7 +19,7 @@
 			    <el-input v-model="ruleForm.mobile" class="nav-input"></el-input>
 			  </el-form-item>
 			   <el-form-item>
-			    <el-button type="primary" @click="submitForm('ruleForm')" class="subPwd">下一步</el-button>
+			    <el-button type="primary" @click="submitForm('ruleForm')" class="subPwd" :loading="loading1">下一步</el-button>
 			  </el-form-item>
 			</el-form>
 		</div>
@@ -32,7 +32,6 @@
 				    :options="options"
 				    filterable
 				    v-model="workSpace"
-				    @change="handleChange"
 				>
 				</el-cascader><br  />
 			    <el-input v-model="workAddress" class="work-input" placeholder="详细到门牌号"></el-input><br />
@@ -49,7 +48,7 @@
 		<div class="nav2"  v-show="step2">
 			<p class="add-p"><span>添加联系人信息</span><span class="add-span" @click="addRel">继续添加 <svg-icon icon-class="add" /></span></p>
 			<ul v-show="!addRelShow" class="relList-ul">
-				<li v-for="(ele,k) in relationList"><span>{{ele.contactType|relationFilter}}</span><span>{{ele.name}}</span><span>{{ele.mobileNo}}</span><span class="svg-span" @click="redactRel(ele,k)"><svg-icon icon-class="redact" /></span><span class="svg-span" @click="removeRel(k)"><svg-icon icon-class="remove" /></span></li>
+				<li v-for="(ele,k) in relationList"><span>{{ele.contactType|relationFilter}}</span><span>{{ele.name}}</span><span class="relList-ul-span1">{{ele.mobileNo}}</span><span class="svg-span" @click="redactRel(ele,k)"><svg-icon icon-class="redact" /></span><span class="svg-span svg-span2" @click="removeRel(k)"><svg-icon icon-class="remove" /></span></li>
 			</ul>
 			<el-form :model="relForm" :rules="rules" ref="relForm" label-width="90px" class="demo-ruleForm" label-position="left" v-show="addRelShow">
 			   <el-form-item label="关系" prop="relation">
@@ -105,7 +104,7 @@
 					<li class="norm-li2">可用次数：{{normCount}}次<span @click="goCar(2)"><svg-icon icon-class="shopCar" /></span></li>
 				</ul>
 				<p class="nav5-p"><el-button  @click="lastStep(1)" class="subPwd" >上一步</el-button>
-				<el-button  type="primary" @click="nextStep()" >下一步</el-button></p>
+				<el-button  type="primary" @click="nextStep()" :loading="loading2">下一步</el-button></p>
             </div>
 	    </div>
 	    <div class="nav2 nav4 nav6" v-show="step3">
@@ -113,33 +112,63 @@
 			<p class="nav4-p"><span>姓名</span>{{ruleForm.name}}</p>
 			<p class="nav4-p"><span>身份证号</span>{{ruleForm.idCard}}</p>
 			<p class="nav4-p"><span>手机号</span>{{ruleForm.mobile}}</p>
-			<p class="nav4-p" v-show="pwdShow"><span>服务密码</span><el-input class="nav-input" v-model="servePwd" placeholder="请输入服务密码" max="6"></el-input> <span class="forgetPwd" @click="forgetPwd()">忘记密码</span></p>
+			<p class="nav4-p nav4-pimg" v-if="imgCodeShow&&pwdShow"><span>图形验证码</span><el-input class="nav-input"  v-model="imgCode" placeholder="请输入图形验证码" max="6"></el-input><span class="img-span" @click="refreshImg"></span><img :src=imgCodeUrl /></p>
+			<p class="nav4-p" v-if="needCode&&pwdShow"><span>短信验证码</span><el-input class="nav-input"  v-model="smsCode" placeholder="请输入短信验证码" max="6"></el-input></p>
+			<p class="nav4-p" v-if="dhbSmsShow&&pwdShow"><span>短信随机码</span><el-input class="nav-input"  v-model="dhbsmsCode" placeholder="请输入4位短信随机码" max="4"></el-input></p>
+			<p class="nav4-p" v-show="pwdShow"><span>服务密码</span><el-input class="nav-input" v-model="servePwd" placeholder="请输入服务密码" max="6" type="password"></el-input> <span class="forgetPwd" @click="forgetPwd()">忘记密码</span></p>
 			<p class="nav4-p"><el-button  @click="lastStep(2)" class="subPwd" v-show="pwdShow">上一步</el-button>
-			<el-button type="primary" @click="submitPwd()" v-show="pwdShow">提交</el-button></p>
+			<el-button type="primary" @click="submitPwd()" v-show="pwdShow" :loading="loading3">{{subText}}</el-button></p>
 	        <div v-show="!pwdShow">
-	        	<p class="nav4-p"><span>验证码</span><el-input  class="nav-input" placeholder="请输入服务密码" v-model="code" :max="6"></el-input><span class="getCode" @click="getCode()">{{codeText|msgTime}}</span></p>
-	        	<p class="nav4-p"><span>重置服务密码</span><el-input class="nav-input" placeholder="请输入服务密码,6位数字" v-model="resPwd"></el-input></p>
-	        	<p class="nav4-p"><span>密码确认</span><el-input class="nav-input" placeholder="请输入服务密码,6位数字" v-model="againPwd"></el-input></p>
-	        	<p class="nav4-p"><el-button @click="pwdCancel()" class="subPwd">取消</el-button>
-			    <el-button type="primary" @click="resetPwd()">确认修改</el-button></p>
+	        	<p class="nav4-p" v-if="smsShow"><span>验证码</span><el-input  class="nav-input" placeholder="请输入短信验证码" v-model="code" :max="6"></el-input></p>
+	        	<p class="nav4-p" v-if="smsShow"><el-button @click="pwdCancel()" class="subPwd">取消</el-button>
+			    <el-button type="primary" @click="subMsg()">提交</el-button></p>
+	        	<p class="nav4-p" v-if="!smsShow"><span>重置服务密码</span><el-input class="nav-input" placeholder="请输入服务密码,6位数字" v-model="resPwd"></el-input></p>
+	        	<p class="nav4-p" v-if="!smsShow"><span>密码确认</span><el-input class="nav-input" placeholder="请输入服务密码,6位数字" v-model="againPwd"></el-input></p>
+	        	<p class="nav4-p" v-if="!smsShow"><el-button @click="pwdCancel()" class="subPwd">取消</el-button>
+			    <el-button type="primary" @click="resetPwd()" :loading="loading5">确认修改</el-button></p>
 	        </div>
+	    </div>
+	    <div class="nav2 nav4 nav6" v-show="step4">
+	    	<p class="fillPwd"><span><svg-icon icon-class="tip" />标准版需要您再次输入验证码请耐心等待</span></p>
+	    	<p class="nav4-p" ><span>短信验证码</span><el-input class="nav-input"  v-model="jxlCode" placeholder="请输入短信验证码" max="6"></el-input></p>
+	    	<p class="nav4-p"><el-button  @click="lastStep(3)" class="subPwd" v-show="pwdShow">上一步</el-button>
+			<el-button type="primary" @click="submitSms()" v-show="pwdShow" :loading="loading4">提交</el-button></p>
 	    </div>
 	</div>
 
 </template>
 
 <script>
+  import $ from 'jquery'
+  import { mapGetters } from 'vuex'
   import { formatTime } from '@/utils/index'
   export default {
     data() {
       return {
+      	imgCode:"",
+      	imgCodeShow:false,
+      	imgCodeUrl:"",       //图形验证码地址
+      	dhbsmsCode:"",       //电话邦4位短信随机码
+      	dhbSmsShow:false, 
+      	smsObj:{},       //重置密码信息
+      	smsShow:true,
+      	jxlCode:"",          //
+      	reportKey:"",
+      	subText:"提交",
+      	loading1:false,
+      	loading2:false,
+      	loading3:false,
+      	loading4:false,
+      	loading5:false,
+      	smsCode:"",
+      	needCode:false,
       	resPwd:"",
       	againPwd:"",
       	code:"",            //短信验证码
       	codeText:"获取",
       	servePwd:'',        //服务密码
-      	website:'',         //运营商类型
-      	clientToken:'',
+      	jxlObj:{},          //聚信立
+      	dhbObj:{},          //电话帮
       	clientId:'',       //客户id
       	update:true,
       	isNew:true,
@@ -153,6 +182,7 @@
       	step1:true,
       	step2:false,
       	step3:false,
+      	step4:false,
       	addRelShow:true,
       	cancleShow:true,
       	relationList:[],
@@ -193,7 +223,6 @@
           ],
            relMobile: [
             { required: true, message: '请填写联系人手机号', trigger: 'blur' },
-            { min: 11, max: 11, message: '长度为11位数字', trigger: 'blur' }
           ],
         },
         options: [],       //三级城市json
@@ -209,13 +238,29 @@
 	     }
 	},
     mounted:function(){
-    	if(this.relationList.length==0){
-    		this.cancleShow=false
-    		this.addRelShow=true
+    	$(window).unbind ('scroll');
+    	if(this.userInfo.mobileNo){
+    		if(this.clientMsg){
+	    		this.ruleForm.name=this.clientMsg.realName
+	    		this.ruleForm.idCard=this.clientMsg.idNo
+	    		this.ruleForm.mobile=this.clientMsg.mobileNo
+	    	}
     	}else{
-    		this.cancleShow=true
-    		this.addRelShow=false
+    		this.$router.push({path:'/client/clientList'})
     	}
+//  	$(window).scroll(function(){
+//  		 var _this=this
+//           $(window).scroll(function(){
+// 			     //为页面添加页面滚动监听事件
+//                var wst =  $(window).scrollTop() //滚动条距离顶端值
+//				 for (var i=1; i<9; i++){             //加循环
+//				  if(($("#section-"+i).offset().top-100)<=wst){ //判断滚动条位置
+//					  _this.liActive=i
+//					  _this.$forceUpdate()
+//					 }
+//				 }
+//	        })
+//  	})
     },
     filters: {
     	relationFilter(index){
@@ -251,6 +296,14 @@
 				  }
     },
     methods: {
+      //验证码刷新
+      refreshImg(){
+      	    const url=this.$backStage('/api/customer/refreshGraphic/'+this.dhbObj.sid)
+            this.$http.get(url)
+            .then(response => {
+            	this.imgCodeUrl=response.data.data.captcha_image
+            })
+      },
       goInformation(){
       	this.$router.push({path:'/template/information'})
       },
@@ -262,42 +315,25 @@
       	}
       	this.$router.push({path:'/personal/buyData'})
       },
-      getCode(){
-      	if(this.codeText=="获取"){
-	      	this.$alert('验证码发送成功,请不要重复点击', '系统提示', {
-		          confirmButtonText: '确定',
-		    });
-		    const url=this.$backStage('/api/customer/resetPassword')
-	      	this.$http.post(url,{"token":this.clientToken,"account":this.ruleForm.mobile,"website":this.website})
-	      	.then(response => {
-	      		 console.log(response)
-	      		 let self = this
-				 self.codeText=60
-				 const show=setInterval(function () {
-	                 	  if(self.codeText=="获取"){
-	                 	  	        clearInterval(show)
-	                 	  }else{
-				               self.codeText -= 1
-				               if(self.codeText==0){
-					             	  clearInterval(show)
-					             	  self.codeText="获取"
-	                     }
-				              }
-	                 }, 1000)
-	      	})
-	      }
-      },
-//    next() {
-//      if (this.active++ > 2) this.active = 0;
-//    },
        submitForm(formName) {
-       	
-
-        this.$refs[formName].validate((valid) => {
+       	 if(this.userInfo.isVerified==0){
+       		  this.$confirm('您还未进行实名认证，请先完成实名认证才可使用', '系统提示', {
+	          confirmButtonText: '去认证',
+	          cancelButtonText: '取消',
+	          type: 'warning'
+	        }).then(() => {
+	           this.$router.push({path:'/personal/autonym'})
+	        }).catch(() => {
+	                
+	        });
+       	}else{
+          this.$refs[formName].validate((valid) => {
 	        if (valid) {
-	                this.$http.post("http://yadong.test.manmanh.com/webill-app/api/customer/addCusBasicInfo",{"userId":1,"realName":this.ruleForm.name,"idNo":this.ruleForm.idCard,"mobileNo":this.ruleForm.mobile})
+	        	    this.loading1=true
+	        	    const url=this.$backStage('/api/customer/addCusBasicInfo')
+	                this.$http.post(url,{"userId":this.userInfo.id,"realName":this.ruleForm.name,"idNo":this.ruleForm.idCard,"mobileNo":this.ruleForm.mobile})
 	                .then(response => {
-	                	console.log(response)
+	                	this.loading1=false
 						        this.step1=false
 						       	this.step2=true
 						       	this.active=2
@@ -307,10 +343,10 @@
 					          	this.clientId=response.data.obj.id
 					          	if(response.data.status==210){
 					          		this.isNew=false
+					          		this.addRelShow=true
 					          	}else if(response.data.status==200){
 					          		this.isNew=true
 					          		if(response.data.obj.contacts){
-					          			console.log(111)
 					          			this.addRelShow=false
 						          		for(var i=0;i<response.data.obj.contacts.length;i++){
 						          			this.relationList.push({"contactType":response.data.obj.contacts[i].contactType,"name":response.data.obj.contacts[i].name,"mobileNo":response.data.obj.contacts[i].mobileNo})
@@ -327,6 +363,7 @@
 					          	}
 							    // success callback
 							  }, response => {
+							  	this.loading1=false
 							    // error callback
 							  })
 	          } else {
@@ -334,7 +371,8 @@
 	            
 	          }
           
-        });
+            });
+        }
       },
       subRelForm(formName) {
         this.$refs[formName].validate((valid) => {
@@ -342,7 +380,7 @@
           	if(this.redactIndex!=-1){
           		 this.relationList[this.redactIndex].relation=this.relForm.relation
           		 this.relationList[this.redactIndex].name=this.relForm.relName
-          		 this.relationList[this.redactIndex].mobile=this.relForm.relMobile
+          		 this.relationList[this.redactIndex].mobileNo=this.relForm.relMobile
           		 this.addRelShow=false
           		 this.redactIndex=-1
           	}else{
@@ -353,15 +391,11 @@
                     this.addRelShow=false
           		 }
           	}
-            console.log(this.relationList)
           } else {
             return false;
           }
         });
       },
-//    resetForm(formName) {
-//      this.$refs[formName].resetFields();
-//    },
       addRel(){
       	this.addRelShow=true
       	this.relForm.relation=""
@@ -381,7 +415,6 @@
       	
       },
       redactRel(data,index){
-      	console.log(data)
       	this.addRelShow=true
       	this.relForm.relation=String(data.contactType)
       	this.relForm.relName=data.name
@@ -394,25 +427,88 @@
       		this.addRelShow=true
       	}
       },
-      handleChange(value) {
-        console.log(value);
-      },
       forgetPwd(){
       	this.pwdShow=false
+      	const url=this.$backStage('/api/customer/dhbforgetPwd')
+      	this.$http.post(url,{
+			  "tel":this.ruleForm.mobile,
+			  "userName":this.ruleForm.name,
+			  "idCard":this.ruleForm.idCard
+		})
+      	.then(response => {
+      		console.log(response)
+      		this.smsObj=response.data.data
+      		if(this.smsObj.need_new_pwd==1){
+      			this.smsShow=false
+      		}else{
+      			this.smsShow=true
+      		}
+      	})
       },
       pwdCancel(){
+      	this.loading1=false
+      	this.loading2=false
+      	this.loading3=false
+      	this.loading4=false
+      	this.loading5=false
       	this.pwdShow=true
+      },
+      subMsg(){
+      	if(this.smsObj.action=="done"){
+      		this.$alert("重置密码成功", '系统提示', {
+	          confirmButtonText: '确定',
+	        });
+      		this.pwdShow=true
+      	}else{
+	      	if(this.smsObj.login_sms_duration){
+		      	const url=this.$backStage('/api/customer/dhbForgotPwdLogin')
+		      	this.$http.post(url,{"tid":this.smsObj.tid,"loginCode":this.code})
+		      	.then(response => {
+		      		if(response.data.action=="done"){
+		      			this.$alert("重置密码成功", '系统提示', {
+				          confirmButtonText: '确定',
+				        });
+			      		this.pwdShow=true
+		      		}else{
+			      		if(response.data.data.need_new_pwd==1){
+			      			this.smsShow=false
+			      		}else{
+			      			this.$alert("请输入新的验证码", '系统提示', {
+					          confirmButtonText: '确定',
+					        });
+			      		}
+		      		}
+		      	})
+	       }else if(this.smsObj.sms_duration){
+	      	 	const url=this.$backStage('/api/customer/dhbForgotPwdSms')
+		      	this.$http.post(url,{"tid":this.smsObj.tid,"smsCode":this.code})
+		      	.then(response => {
+		      		if(response.data.action=="done"){
+		      			this.$alert("重置密码成功", '系统提示', {
+				          confirmButtonText: '确定',
+				        });
+			      		this.pwdShow=true
+		      		}else{
+			      		if(response.data.data.need_new_pwd==1){
+			      			this.smsShow=false
+			      		}else{
+			      			this.$alert("请输入新的验证码", '系统提示', {
+					          confirmButtonText: '确定',
+					        });
+			      		}
+		      		}
+	      	    })
+	       }else{
+	       	  
+	       }
+       }
       },
       resetPwd(){
       	    const part=/^\d{6}$/
-		    const result1=part.test(this.code);
+//		    const result1=part.test(this.code);
 		    const result2=part.test(this.resPwd);
 		    const result3=part.test(this.againPwd);
-      	    if(!result1){
-      	    	this.$alert("验证码格式错误", '系统提示', {
-		          confirmButtonText: '确定',
-		        });
-      	    }else if(!result2||!result3){
+      	   if(!result2||!result3){
       	    	this.$alert("密码格式错误", '系统提示', {
 		          confirmButtonText: '确定',
 		        });
@@ -421,18 +517,27 @@
 		          confirmButtonText: '确定',
 		        });
       	    }else{
-	      		this.$http.post("http://yadong.test.manmanh.com/webill-app/api/customer/resetPassword",{"token":this.clientToken,"account":this.ruleForm.mobile,"website":this.website,"password":this.resPwd,"captcha":this.code,"type":"SUBMIT_RESET_PWD"})
+      	    	this.loading5=true
+      	    	const url=this.$backStage('/api/customer/dhbSetServicePwd')
+	      		this.$http.post(url,{"tid":this.smsObj.tid,"newPwd":this.resPwd})
 		      	.then(response => {
-		      		console.log(response)
-		      		this.$alert(response.data.data.content, '系统提示', {
-			           confirmButtonText: '确定',
-			        });
-		      		if(response.data.data.process_code==11000){
+		      		this.loading5=false
+		      		if(response.data.action=="done"){
+		      			this.$alert("密码重置成功", '系统提示', {
+				          confirmButtonText: '确定',
+				        });
+		      			this.smsShow=true
+		      			this.smsObj=response.data.data
 		      			this.pwdShow=true
 		      			this.resPwd=""
 		      			this.code=""
-		      			this.codeTest="获取"
 		      			this.againPwd=""
+		      		}else{
+		      			this.smsShow=true
+		      			this.smsObj=response.data.data
+		      			this.$alert(response.data.msg, '系统提示', {
+				           confirmButtonText: '确定',
+				        });
 		      		}
 		      	})
 	      	}
@@ -473,24 +578,43 @@
 	                
 	        });
       	}else{
+      		this.loading2=true
       		const work=this.workSpace.join('-')
       		const home=this.homeSpace.join('-')
-      		this.$http.post("http://yadong.test.manmanh.com/webill-app/api/customer/submitForm",{"contacts":this.relationList,"userId":1,"id":this.clientId,"latestReportType":this.selectType,"workAddrCode":work,"workAddrDetail":this.workAddress,"homeAddrCode":home,"homeAddrDetail":this.homeAddress})
+      		const url=this.$backStage('/api/customer/dhbSubmitForm')
+      		this.$http.post(url,{"contacts":this.relationList,"userId":this.userInfo.id,"id":this.clientId,"temReportType":this.selectType,"workAddrCode":work,"workAddrDetail":this.workAddress,"homeAddrCode":home,"homeAddrDetail":this.homeAddress})
 	        .then(response => {
-	             console.log(response)
-	             this.website=response.data.dataSource.website
-	             this.clientToken=response.data.token
+	        	this.loading2=false
+	             this.dhbObj=response.data.dhbGetLogin
+	             if(this.dhbObj.smsDuration){
+	             	this.needCode=true
+	             }else{
+	             	this.needCode=false
+	             }
+	             if(this.dhbObj.captchaImage){
+	             	this.imgCodeShow=true
+	             	this.imgCodeUrl=this.dhbObj.captchaImage
+	             }else{
+	             	this.imgCodeShow=false
+	             }
+	             if(this.selectType==0){
+	             	this.subText="提交"
+	             }else{
+	             	this.subText="下一步"
+	             }
 	             this.step2=false
 		      	 this.step3=true
 		      	 this.active=3
 	        })
-	      	this.step2=false
-	      	this.step3=true
-	      	this.active=3
       	}
 
       },
       lastStep(index){
+        this.loading1=false
+      	this.loading2=false
+      	this.loading3=false
+      	this.loading4=false
+      	this.loading5=false
       	if(index==1){
       		this.step1=true
       	    this.step2=false
@@ -503,19 +627,178 @@
       	}
       },
       submitPwd(){
-      	this.$http.post("http://yadong.test.manmanh.com/webill-app/api/customer/collect",{"token":this.clientToken,"account":this.ruleForm.mobile,"password":this.servePwd,"website":this.website,"cusId":this.clientId,"temReportType":this.selectType})
-	        .then(response => {
-	             console.log(response)
-	             this.$router.push({path:'/client/wait'})
-	        })
+      	this.loading3=true
+      	if(this.dhbSmsShow){
+      		const url=this.$backStage('/api/customer/dhbCollectSec')
+	      	this.$http.post(url,{
+								  "dhbLoginReq":{
+								    "sid":this.dhbObj.sid,
+								    "tel":this.ruleForm.mobile,
+								    "pinPwd":this.servePwd,
+								    "smsCode":this.dhbsmsCode,
+								    "captchaCode":this.imgCode
+								  },
+								  "customer":{
+								    "id":this.clientId,
+								    "temReportType":this.selectType
+								  }
+								},{timeout:0})
+	      	.then(response =>{
+	      		if(response.data.dhbCollect.action=="done"){
+	      			if(this.selectType==0){
+		             		this.loading3=false
+		             		this.$router.push({path:'/client/wait'})
+		             		this.$store.dispatch('ClientMsg', "")
+		             	}else{
+			             	this.reportKey=response.data.reportKey
+			             	const url=this.$backStage('/api/customer/jxlCollect')
+		      	            this.$http.post(url,{"jxlCollectReq":{
+											     "token":"",
+											     "account":this.ruleForm.mobile,
+											     "password":this.servePwd,
+											     "captcha":"",
+											     "website":""
+											  },
+											   "customer":{
+											     "id":this.clientId,
+											     "temReportType":this.selectType
+											  },
+											  "reportKey":this.reportKey
+		      	            })
+		      	             .then(response => {
+		      	             	if(response.data.jxlCollect.processCode==10008){
+		      	             		this.loading3=false
+		      	             		this.$router.push({path:'/client/wait'})
+		      	             		this.$store.dispatch('ClientMsg', "")
+		      	             	}else{
+		      	             		this.jxlObj=response.data.jxlSubmitForm
+		      	             		this.step3=false
+		      	             		this.step4=true
+		      	             	}
+		      	             }).catch(function(response){
+		      	             	this.$router.push({path:'/404'})
+		      	             })
+	      	             }
+	      		}else if(this.response.data.dhbCollect.smsDuration){
+	      			this.$alert(response.data.dhbCollect.msg, '系统提示', {
+				          confirmButtonText: '确定',
+				        });
+				        this.dhbSmsShow=true
+		             	this.loading3=false
+	      		}else{
+	      			this.$alert(response.data.dhbCollect.msg, '系统提示', {
+				          confirmButtonText: '确定',
+				    });
+				    this.loading3=false
+	      		}
+	      	})
+      	}else{
+	      	const url=this.$backStage('/api/customer/dhbCollect')
+	      	this.$http.post(url,{
+								  "dhbLoginReq":{
+								    "sid":this.dhbObj.sid,
+								    "tel":this.ruleForm.mobile,
+								    "pinPwd":this.servePwd,
+								    "smsCode":this.smsCode,
+								    "captchaCode":this.imgCode
+								  },
+								  "customer":{
+								    "id":this.clientId,
+								    "temReportType":this.selectType
+								  }
+								},{timeout:0})
+		        .then(response => {
+		             if(response.data.dhbCollect.action=="done"){
+		             	if(this.selectType==0){
+		             		this.loading3=false
+		             		this.$router.push({path:'/client/wait'})
+		             		this.$store.dispatch('ClientMsg', "")
+		             	}else{
+			             	this.reportKey=response.data.reportKey
+			             	const url=this.$backStage('/api/customer/jxlCollect')
+		      	            this.$http.post(url,{"jxlCollectReq":{
+											     "token":"",
+											     "account":this.ruleForm.mobile,
+											     "password":this.servePwd,
+											     "captcha":"",
+											     "website":""
+											  },
+											   "customer":{
+											     "id":this.clientId,
+											     "temReportType":this.selectType
+											  },
+											  "reportKey":this.reportKey
+		      	            })
+		      	             .then(response => {
+		      	             	if(response.data.jxlCollect.processCode==10008){
+		      	             		this.loading3=false
+		      	             		this.$router.push({path:'/client/wait'})
+		      	             		this.$store.dispatch('ClientMsg', "")
+		      	             	}else{
+		      	             		this.jxlObj=response.data.jxlSubmitForm
+		      	             		this.step3=false
+		      	             		this.step4=true
+		      	             	}
+		      	             })
+	      	             }
+		             }else if(response.data.dhbCollect.smsDuration){
+		             	this.$alert("请输入短信验证码", '系统提示', {
+				          confirmButtonText: '确定',
+				        });
+				        this.dhbSmsShow=true
+		             	this.loading3=false
+		             }else{
+		             	this.$alert(response.data.dhbCollect.msg, '系统提示', {
+				          confirmButtonText: '确定',
+				        });
+				        this.loading3=false
+		             }
+		        })
+	        }
+      },
+      submitSms(){
+      	 this.loading4=true
+      	  const url=this.$backStage('/api/customer/jxlCollect')
+      	            this.$http.post(url,{"jxlCollectReq":{
+									     "token":this.jxlObj.token,
+									     "account":this.ruleForm.mobile,
+									     "password":this.servePwd,
+									     "captcha":this.jxlCode,
+									     "website":this.jxlObj.website,
+									     "type":"SUBMIT_CAPTCHA"
+									  },
+									   "customer":{
+									     "id":this.clientId,
+									     "temReportType":this.selectType
+									  },
+									  "reportKey":this.reportKey
+      	            })
+      	             .then(response => {
+      	             	this.loading4=false
+      	             	if(response.data.jxlCollect.processCode==10008){
+      	             		this.$router.push({path:'/client/wait'})
+      	             		this.$store.dispatch('ClientMsg', "")
+      	             	}else{
+      	             		this.$alert(response.data.jxlCollect.msg, '系统提示', {
+					          confirmButtonText: '确定',
+					        });
+      	             	}
+      	             })
       }
-    }
+    },
+     computed: {
+	    ...mapGetters([
+	      'userInfo',
+	      'clientMsg'
+	    ])
+	  }
   }
 </script>
 <style scoped>
 	.content{
+		font-size: 16px;
 		padding: 0 200px;
-	   padding-top: 80px;
+	    padding-top: 80px;
 	}
 	.el-steps{
 		padding: 0 100px;
@@ -566,11 +849,10 @@
 	.relList-ul li{
 		list-style: none;
 		margin: 0 auto;
-		width: 600px;
-		padding-left: 50px;
+		width: 420px;
 		margin-bottom: 20px;
 		font-size: 16px;
-		
+		position: relative;
 	}
 	.relList-ul li span{
 		text-align: center;
@@ -579,10 +861,21 @@
 		line-height: 20px;
 		margin-right: 30px;
 	}
+	.relList-ul li .relList-ul-span1{
+		margin-right: 0;
+	}
 	.relList-ul li .svg-span{
 		width: 30px;
-		margin-right: 10px;
 		display: none;
+		position:absolute;
+		right:-60px;
+		top:0;
+	}
+	.relList-ul li .svg-span2{
+		display: none;
+		position:absolute;
+		right:-90px;
+		top:0;
 	}
 	.relList-ul li:hover .svg-span{
 		display: inline-block;
@@ -593,11 +886,12 @@
 		height: 300px;
 	}
 	.nav3-form .nav3-span{
+		font-size: 16px;
 		margin-right: 20px;
 	}
 	.nav3 .work-input{
-		width: 194px;
-		margin-left: 86px;
+		width: 200px;
+		margin-left: 85px;
 		margin-top: 20px;
 		margin-bottom: 30px;
 	}
@@ -692,6 +986,7 @@
 	.nav4-p .forgetPwd{
 		color: #409EFF;
 		font-size: 14px;
+		padding-left: 20px;
 	}
 	.subPwd{
 		display: inline-block;
@@ -701,5 +996,26 @@
 		margin-left: 39%;
 		color: red;
 		margin-bottom: 30px;
+	}
+	.nav4-pimg{
+		position: relative;
+	}
+	.nav2 .nav4-pimg .img-span{
+		width: 90px;
+		height: 40px;
+		position: absolute;
+		top: 0;
+		right: 0px;
+		background: #1fa3ff;
+		z-index: 1;
+		opacity: .1;
+	}
+	.nav4-p img{
+		width: 90px;
+		height: 40px;
+		position: absolute;
+		top: 0;
+		right: 10px;
+		border: 1px #eee solid;
 	}
 </style>

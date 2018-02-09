@@ -28,7 +28,7 @@ router.beforeEach((to, from, next) => {
   } else {
     if (whiteList.indexOf(to.path) !== -1) {
       next()
-    } else if(to.path === '/register'||to.path === '/reset'){
+    } else if(to.path === '/register'||to.path === '/reset'||to.path === '/agreement'){
     	  next()
     }else {
       next('/login')

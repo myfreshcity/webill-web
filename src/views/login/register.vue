@@ -1,7 +1,8 @@
 <template>
 	<div class="content">
 		<div class="head">
-			<span class="head-left">微账房</span>
+			<span class="head-left"><img src="../../../static/images/logo/logo.png"/></span>
+			<span class="head-right" @click="goBack">返回登录</span>
 		</div>
 		<div class="box">
 			<div class="loginTab">
@@ -20,25 +21,28 @@
 				</p>
 				<p class="p-code"><input placeholder="请输入短信验证码" v-model="code" maxlength="6" @blur="onBlurCode"/><span @click="getCode()" :class="{'time-active':!disabled1}">{{codeText|msgTime}}</span><img src="../../../static/images/login/qingchu.png" v-show="codeClear" v-on:click="clearCode()"/></p>
 			</div>
-			<button class="btn-password"  @click="regist()" :disabled="disabled" :class="{'btn-active':!disabled}">会员注册</button>
-			<p class="p-login">已有账号，<span @click="toLogin()">立即登录</span></p>
+			<el-button type="primary" style="width:80%;" :loading="loading" @click.native.prevent="regist()">
+                                  会员注册
+            </el-button>
+			<p class="p-login"><el-checkbox v-model="checked"></el-checkbox> 我已阅读并同意<span @click="readAgreement()">《微账房服务协议》</span></p>
 	    </div>
+	     <vefoot></vefoot>
 	</div>
 </template>
 
 <script>
+	import Vefoot from '@/components/Vefoot'
+	import Cookies from 'js-cookie'
 	import md5 from 'js-md5';
 	export default {
+		components: { Vefoot },
 		 data(){
 		  	return{
-		  		title:"会员登录",
-		  		disabled:true,
-		  		mobile:"",
+		  		checked:true,
 		  		code:"",
 		  		codeText:"获取验证码",
 		  		disabled1:true,
 		  		showTip:false,
-		  		message:"",
 		  		passwordShow:false,
 		  		passwordLogin:true,
 		  		password:"",
@@ -46,7 +50,7 @@
 		  		passwordClear:false,
 		  		mobileNoClear:false,
 		  		codeClear:false,
-		  		openId:""
+		  		loading:false,
 		  	}
 		 },
 		  filters: {
@@ -66,27 +70,6 @@
 		  },
 		  beforeUpdate:function(){
 		  	//检测每次的输入信息
-		  	if(this.passwordLogin){
-		  		const part1=/[0-9a-zA-Z]{6,20}/;
-				const result1=part1.test(this.password);
-				const part2=/^[1][3,4,5,7,8,9]\d{9}$/
-				const result2=part2.test(this.mobileNo);
-				if(!result1||!result2){
-			  		this.disabled=true;
-			  	}else{
-			  		this.disabled=false;
-			  	}
-		  	}else{
-				const part1=/^[1][3,4,5,7,8,9]\d{9}$/
-				const result1=part1.test(this.mobileNo);
-				const part2=/[0-9]{6}/;
-				const result2=part2.test(this.code);
-			  	if(!result1||!result2){
-			  		this.disabled=true;
-			  	}else{
-			  		this.disabled=false;
-			  	}
-		  	}
 		  },
 		  watch: {
 		     mobileNo:function(str){
@@ -122,6 +105,12 @@
 		    }
 		  },
 		  methods: {
+		  	readAgreement(){
+		  		this.$router.push({ path: '/agreement' })
+		  	},
+		  	goBack(){
+		  		this.$router.push({ path: '/login' })
+		  	},
 		  	showPassword(){
 		  		if(this.passwordShow){
 		  			this.passwordShow=false
@@ -163,21 +152,57 @@
 		  		this.$router.push({path:'/login'})
 		  	},
 		  	regist(){
-		  		 const part=/^(?!(?:\d*$))(?!(?:[a-zA-Z]*$))[A-Za-z0-9]{6,20}$/   //密码6-20位且为数字与字母组合
-		  		 const result=part.test(this.password)
-		  		 if(result){
+		  		    const part1=/^(?!(?:\d*$))(?!(?:[a-zA-Z]*$))[A-Za-z0-9]{6,20}$/;
+					const result1=part1.test(this.password);
+					const part2=/^[1][3,4,5,7,8,9]\d{9}$/
+					const result2=part2.test(this.mobileNo);
+					const part3=/[0-9]{6}/;
+					const result3=part3.test(this.code);
+		  		    if(!this.mobileNo||!this.code||!this.password){
+		  		    	this.$alert('手机号、验证码或密码不能为空', '系统提示', {
+				          confirmButtonText: '确定',
+				        });
+		  		    }else if(!result2){
+		  		    	this.$alert('手机号码格式错误', '系统提示', {
+				          confirmButtonText: '确定',
+				        });
+		  		    }else if(!result3){
+		  		    	this.$alert('验证码格式错误', '系统提示', {
+				          confirmButtonText: '确定',
+				        });
+		  		    }else if(!result1){
+		  		    	this.$alert('密码格式错误', '系统提示', {
+				          confirmButtonText: '确定',
+				        });
+		  		    }else if(!this.checked){
+		  		    	this.$alert('注册前请阅读并同意微账房使用协议', '系统提示', {
+				          confirmButtonText: '确定',
+				        });
+		  		    }else{
+		  		     this.loading=true
 			  		 const url=this.$backStage('/api/user/register')
 				     this.$http.post(url,{"mobileNo":this.mobileNo,"password":md5(this.password),"inCode":this.code,})
 				      .then((response) => { 
-				          console.log(response)
-				          Cookies.set('Admin-Token', "admin")
-					      this.$router.push({ path: '/' })
+				      	  this.loading=false
+				          if(response.data.status==200){
+				          	 Cookies.set('Admin-Token', "admin")
+				          	 Cookies.set('_wibn',response.data.obj.mobileNo,7)
+					         Cookies.set('_wibp',response.data.obj.password,7 )
+					         this.$store.dispatch('UserInfo', response.data.obj)
+					         if(response.data.obj.realName){
+					             	this.$router.push({ path: '/client/clientList' })
+					          }else{
+					             	this.$router.push({ path: '/' })
+					          }
+				          }else{
+				          	this.$alert(response.data.msg, '系统提示', {
+					          confirmButtonText: '确定',
+					        });
+				          }
 				      }).catch(function(response){
-			              
+			               this.loading=false
 			          })
-			      }else{
-		  		 	
-		  		 }
+			      }
 		  	},
 		  	getCode(){
 		  		if(this.codeText=="获取验证码"&&!this.disabled1){
@@ -186,12 +211,11 @@
 					    });
 					    this.disabled1=true
 							    const url=this.$backStage('/api/verifyCode/sendVerifyCode')
-							    this.$http.post(url,{'mobile':this.mobileNo,'checkFlag':"register"})
+							    this.$http.post(url,{'mobileNo':this.mobileNo,'checkFlag':"register"})
 							    .then((response) => { 
-							    	   console.log(response)
+							    	   let self = this
 							    	   if(response.data.status==200){
-							    		      let self = this
-							    		      self.codeText=60
+							    		 self.codeText=60
 						                 const show=setInterval(function () {
 						                 	  if(self.codeText=="获取验证码"){
 						                 	  	        clearInterval(show)
@@ -206,7 +230,10 @@
 									              }
 						                 }, 1000)
 							    	   }else{
-											     self.disabled1=false
+						    	   	        self.$alert(response.data.msg, '系统提示', {
+										          confirmButtonText: '确定',
+										    });
+										     self.disabled1=false
 							    	   }
 			             }).catch(function(response){
 			            
@@ -221,21 +248,34 @@
 	.content{
 		@include relative;
 	    height: 100vh;
-	    background:url(../../../static/images/login/loginbg.png);
+	    background:url(../../../static/images/login/registerbg.jpg);
 	    padding-top: 10%;
 	}
     .head{
 		width: 100%;
-		height: 50px;
-		line-height: 50px;
+		height: .7rem;
+		line-height: .7rem;
 		position: fixed;
 		top: 0;
 		left: 0;
 		background: #fff;
 	}
 	.head .head-left{
-		margin-left: 10%;
-		font-size: 20px;
+		display: inline-block;
+		margin-left: 18%;
+		font-size: .2rem;
+		height: .7rem;
+		width: 1.25rem;
+	}
+	.head .head-left img{
+		width: 100%;
+		height: 100%;
+	}
+	.head .head-right{
+		float: right;
+		margin-right: 10%;
+		font-size: .16rem;
+		color: #0BB1FF;
 	}
 	.box{
 		width: 400px;

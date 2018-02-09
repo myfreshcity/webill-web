@@ -11,9 +11,12 @@ export default {
 </script>
 <style>
 	/*客户列表页面样式*/
-	html,body,#app {height: 100%;min-width: 1100px;min-height: 600px;font-size: .16rem;}
+	html,body,#app {height: 100%;min-width: 1200px;min-height: 600px;font-size: .16rem;}
 	.client-table .cell{
 		text-align: center;
+	}
+	.client-serach .dataInp .el-input__inner{
+		padding-right: 0;
 	}
 	/*#foot-page .el-pager li{
 		border: 1px #ccc solid;

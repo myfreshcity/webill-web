@@ -8,7 +8,7 @@
         <i class="el-icon-caret-bottom"></i>-->
       <!--</div>-->
       <ul class="right-title">
-      	<li>18888888888</li>
+      	<li class="li-active" @click="goAccount">{{userInfo.mobileNo}}</li>
       	<li class="line">|</li>
       	<li class="li-active" @click="goReport">报告模板</li>
       	<li class="line">|</li>
@@ -39,8 +39,12 @@ export default {
     Breadcrumb,
     Hamburger
   },
+  mounted:function(){
+  	
+  },
   computed: {
     ...mapGetters([
+    	'userInfo',
       'sidebar',
       'avatar'
     ])
@@ -50,12 +54,24 @@ export default {
       this.$store.dispatch('ToggleSideBar')
     },
     logout() {
-      this.$store.dispatch('LogOut').then(() => {
-        location.reload() // 为了重新实例化vue-router对象 避免bug
-      })
+    	this.$confirm('确认退出系统？', '系统提示', {
+	          confirmButtonText: '退出',
+	          cancelButtonText: '取消',
+	          type: 'warning'
+	        }).then(() => {
+	           this.$store.dispatch('LogOut').then(() => {
+				        location.reload() // 为了重新实例化vue-router对象 避免bug
+				      })
+	        }).catch(() => {
+	                
+	        });
+      
     },
     goReport(){
     	this.$router.push({path:'/template/temPageBase'})
+    },
+    goAccount(){
+    	this.$router.push({path:'/personal/account'})
     }
   }
 }

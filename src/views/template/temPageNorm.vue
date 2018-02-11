@@ -23,17 +23,17 @@
 			<p class="navP-title">用户基本信息</p>
 			<p class="navP-head">基本信息</p>
 			<ul class="nav1-ul">
-				<li><span class="tabName"><b>登记姓名</b></span><span class="tabValue">尹燕强</span><span class="tabName"><b>性别</b></span><span class="tabValue">男</span></li>
+				<li><span class="tabName"><b>登记姓名</b></span><span class="tabValue">张三</span><span class="tabName"><b>性别</b></span><span class="tabValue">男</span></li>
 				<li><span class="tabName"><b>年龄</b></span><span class="tabValue">30</span><span class="tabName"><b>户籍地址</b></span><span class="tabValue">山东省济南市平阴县</span></li>
 				<li>
 					<span class="tabName"><b class="tabName-b">居住地址</b></span><span class="tabValue tabValue2">山东省济南市平阴县<br /><b class="detail-b"><svg-icon icon-class="dian" />居住地址可通过地图定位技术精确定位到，坐标(108.2132132E，36.56246465N)</b></span>
 				</li>
 				<li><span class="tabName"><b class="tabName-b">工作地址</b></span><span class="tabValue tabValue2">山东省济南市平阴县<br /><b class="detail-b"><svg-icon icon-class="dian" />居住地址可通过地图定位技术精确定位到，坐标(108.2132132E，36.56246465N)</b></span></li>
-				<li><span class="tabName"><b>身份证</b></span><span class="tabValue tabValue2">370124198701263011<b class="label" >在法院黑名单</b></span></li>
+				<li><span class="tabName"><b>身份证</b></span><span class="tabValue tabValue2">3701xxxxxxxxxx3011<b class="label" >在法院黑名单</b></span></li>
 				<li class="mobile-li"><span class="tabName tabMobile"><b>手机号</b></span><span class="tabValue tabValue2 tabValue3">
 						<p class="mobile-p1">山东移动<span>未实名认证</span></p>
 						<p class="mobile-p2">
-							<span>13553167865（已使用26个月）</span>
+							<span>135xxxx7865（已使用26个月）</span>
 							<span class="mobile-span1"><svg-icon icon-class="dian" />用户姓名与运营商提供的姓名[xx强]不匹配</span>
 							<span class="mobile-spanlast mobile-span1"><svg-icon icon-class="dian" />运营商未提供身份证号码</span>
 						</p>
@@ -48,12 +48,12 @@
 			<p class="navP-head">联系人</p>
 			<ul class="contact-ul">
 				<li class="contact-li"><span>关系</span><span>姓名</span><span class="contact-span">手机号码</span><span class="contact-span">是否为临时小号</span><span class="contact-span">通话时长排名</span><span class="contact-span">联系次数(6个月)</span><span>通话时长</span></li>
-			    <li ><span>父母</span><span>王玉梅</span><span class="contact-span">15966335913</span><span class="contact-span xiaohaoSpan"><b>临时小号</b></span><span class="contact-span">1</span><span class="contact-span">379</span><span>459.20</span></li>
-			    <li ><span>父母</span><span>王玉梅</span><span class="contact-span">15966335913</span><span class="contact-span">非临时小号</span><span class="contact-span">1</span><span class="contact-span">379</span><span>459.20</span></li>
-			    <li ><span>父母</span><span>王玉梅</span><span class="contact-span">15966335913</span><span class="contact-span">非临时小号</span><span class="contact-span">1</span><span class="contact-span">379</span><span>459.20</span></li>
-			    <li ><span>父母</span><span>王玉梅</span><span class="contact-span">15966335913</span><span class="contact-span">非临时小号</span><span class="contact-span">1</span><span class="contact-span">379</span><span>459.20</span></li>
-			    <li ><span>父母</span><span>王玉梅</span><span class="contact-span">15966335913</span><span class="contact-span">非临时小号</span><span class="contact-span">1</span><span class="contact-span">379</span><span>459.20</span></li>
-			    <li ><span>父母</span><span>王玉梅</span><span class="contact-span">15966335913</span><span class="contact-span">非临时小号</span><span class="contact-span">1</span><span class="contact-span">379</span><span>459.20</span></li>
+			    <li ><span>父母</span><span>张二</span><span class="contact-span">159xxxx5343</span><span class="contact-span xiaohaoSpan"><b>临时小号</b></span><span class="contact-span">1</span><span class="contact-span">379</span><span>459.20</span></li>
+			    <li ><span>父母</span><span>王五</span><span class="contact-span">157xxxx5967</span><span class="contact-span">非临时小号</span><span class="contact-span">7</span><span class="contact-span">345</span><span>49.10</span></li>
+			    <li ><span>兄妹</span><span>张玉梅</span><span class="contact-span">158xxxx1233</span><span class="contact-span">非临时小号</span><span class="contact-span">3</span><span class="contact-span">37</span><span>149.50</span></li>
+			    <li ><span>兄妹</span><span>张玉菊</span><span class="contact-span">188xxxx8963</span><span class="contact-span">非临时小号</span><span class="contact-span">6</span><span class="contact-span">129</span><span>259.00</span></li>
+			    <li ><span>同事</span><span>王亚东</span><span class="contact-span">133xxxx7658</span><span class="contact-span">非临时小号</span><span class="contact-span">8</span><span class="contact-span">239</span><span>49.80</span></li>
+			    <li ><span>同事</span><span>张龙飞</span><span class="contact-span">176xxxx2457</span><span class="contact-span">非临时小号</span><span class="contact-span">3</span><span class="contact-span">69</span><span>45.20</span></li>
 			</ul>
 			<p class="navP-head">黑名单</p>
 			<ul class="contact-ul blacklist-ul">

@@ -35,7 +35,9 @@ export default {
 		font-size:20px ;
 		line-height: 50px;
 		border-bottom:.01rem #999 solid ;
-		background: url(../../../../../static/images/logo/logo02.png) no-repeat center;
+		/*background: url('http://yadong.test.manmanh.com/static/images/logo/logo02.png') no-repeat center;*/
+		/*background: url('http://webill.test.manmanh.com/static/images/logo/logo02.png') no-repeat center;*/  
+		background: url('http://vbill.test.manmanh.com/static/images/logo/logo02.png') no-repeat center;
 		background-size: 89px 50px;
 	}
 </style>

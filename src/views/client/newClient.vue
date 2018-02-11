@@ -248,19 +248,6 @@
     	}else{
     		this.$router.push({path:'/client/clientList'})
     	}
-//  	$(window).scroll(function(){
-//  		 var _this=this
-//           $(window).scroll(function(){
-// 			     //为页面添加页面滚动监听事件
-//                var wst =  $(window).scrollTop() //滚动条距离顶端值
-//				 for (var i=1; i<9; i++){             //加循环
-//				  if(($("#section-"+i).offset().top-100)<=wst){ //判断滚动条位置
-//					  _this.liActive=i
-//					  _this.$forceUpdate()
-//					 }
-//				 }
-//	        })
-//  	})
     },
     filters: {
     	relationFilter(index){
@@ -436,7 +423,7 @@
 			  "idCard":this.ruleForm.idCard
 		})
       	.then(response => {
-      		console.log(response)
+//    		console.log(response)
       		this.smsObj=response.data.data
       		if(this.smsObj.need_new_pwd==1){
       			this.smsShow=false
@@ -464,6 +451,7 @@
 		      	const url=this.$backStage('/api/customer/dhbForgotPwdLogin')
 		      	this.$http.post(url,{"tid":this.smsObj.tid,"loginCode":this.code})
 		      	.then(response => {
+//		      		console.log(response)
 		      		if(response.data.action=="done"){
 		      			this.$alert("重置密码成功", '系统提示', {
 				          confirmButtonText: '确定',
@@ -473,7 +461,7 @@
 			      		if(response.data.data.need_new_pwd==1){
 			      			this.smsShow=false
 			      		}else{
-			      			this.$alert("请输入新的验证码", '系统提示', {
+			      			this.$alert(response.data.msg, '系统提示', {
 					          confirmButtonText: '确定',
 					        });
 			      		}
@@ -483,6 +471,7 @@
 	      	 	const url=this.$backStage('/api/customer/dhbForgotPwdSms')
 		      	this.$http.post(url,{"tid":this.smsObj.tid,"smsCode":this.code})
 		      	.then(response => {
+//		      		console.log(response)
 		      		if(response.data.action=="done"){
 		      			this.$alert("重置密码成功", '系统提示', {
 				          confirmButtonText: '确定',
@@ -492,7 +481,7 @@
 			      		if(response.data.data.need_new_pwd==1){
 			      			this.smsShow=false
 			      		}else{
-			      			this.$alert("请输入新的验证码", '系统提示', {
+			      			this.$alert(response.data.msg, '系统提示', {
 					          confirmButtonText: '确定',
 					        });
 			      		}
@@ -521,6 +510,7 @@
       	    	const url=this.$backStage('/api/customer/dhbSetServicePwd')
 	      		this.$http.post(url,{"tid":this.smsObj.tid,"newPwd":this.resPwd})
 		      	.then(response => {
+//		      		console.log(response)
 		      		this.loading5=false
 		      		if(response.data.action=="done"){
 		      			this.$alert("密码重置成功", '系统提示', {
@@ -584,6 +574,7 @@
       		const url=this.$backStage('/api/customer/dhbSubmitForm')
       		this.$http.post(url,{"contacts":this.relationList,"userId":this.userInfo.id,"id":this.clientId,"temReportType":this.selectType,"workAddrCode":work,"workAddrDetail":this.workAddress,"homeAddrCode":home,"homeAddrDetail":this.homeAddress})
 	        .then(response => {
+//	        	console.log(response)
 	        	this.loading2=false
 	             this.dhbObj=response.data.dhbGetLogin
 	             if(this.dhbObj.smsDuration){
@@ -644,6 +635,7 @@
 								  }
 								},{timeout:0})
 	      	.then(response =>{
+//	      		console.log(response)
 	      		if(response.data.dhbCollect.action=="done"){
 	      			if(this.selectType==0){
 		             		this.loading3=false
@@ -666,6 +658,7 @@
 											  "reportKey":this.reportKey
 		      	            })
 		      	             .then(response => {
+//		      	             	console.log(response)
 		      	             	if(response.data.jxlCollect.processCode==10008){
 		      	             		this.loading3=false
 		      	             		this.$router.push({path:'/client/wait'})
@@ -708,6 +701,7 @@
 								  }
 								},{timeout:0})
 		        .then(response => {
+//		        	console.log(response)
 		             if(response.data.dhbCollect.action=="done"){
 		             	if(this.selectType==0){
 		             		this.loading3=false
@@ -774,6 +768,7 @@
 									  "reportKey":this.reportKey
       	            })
       	             .then(response => {
+//    	             	console.log(response)
       	             	this.loading4=false
       	             	if(response.data.jxlCollect.processCode==10008){
       	             		this.$router.push({path:'/client/wait'})

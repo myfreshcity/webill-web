@@ -3,8 +3,8 @@
 <template>
 	<div class="content">
 		<p class="msgType">
-			<el-button >基础版</el-button>
-			<el-button type="primary" @click="changeType()">标准版</el-button>
+			<el-button type="primary">基础版</el-button>
+			<el-button  @click="changeType()">标准版</el-button>
 		</p>
 		<p class="head">{{msgTitle}}</p>
 		<!--<el-tabs v-model="activeName" @tab-click="handleClick" class="report-tabs">

@@ -8,13 +8,13 @@
 			    <el-input v-model="ruleForm.name" class="nav-input" v-if="!realShow"></el-input><span v-if="realShow">{{user.realName}}</span>
 			  </el-form-item>
 			  <el-form-item label="身份证号码" prop="idNo">
-			    <el-input v-model="ruleForm.idNo" class="nav-input"  v-if="!realShow"></el-input><span v-if="realShow">{{user.idNo}}</span>
+			    <el-input v-model="ruleForm.idNo" class="nav-input"  v-if="!realShow"></el-input><span v-if="realShow">{{user.idNo|encryptIdNo}}</span>
 			  </el-form-item>
 			  <el-form-item label="银行卡号码" prop="bankNo">
-			    <el-input v-model="ruleForm.bankNo" class="nav-input"  v-if="!realShow"></el-input><span v-if="realShow">{{user.bankCardNo}}</span>
+			    <el-input v-model="ruleForm.bankNo" class="nav-input"  v-if="!realShow"></el-input><span v-if="realShow">{{user.bankCardNo|encryptIdNo}}</span>
 			  </el-form-item>
 			  <el-form-item label="预留手机号" prop="mobileNo" class="nav-mobile">
-			    <el-input v-model="ruleForm.mobileNo" class="nav-input"  v-if="!realShow"></el-input><span v-if="realShow">{{user.bankMobileNo}}</span>
+			    <el-input v-model="ruleForm.mobileNo" class="nav-input"  v-if="!realShow"></el-input><span v-if="realShow">{{user.bankMobileNo|encryptMobile}}</span>
 			    <!--<span class="getCode">获取验证码</span>-->
 			  </el-form-item>
 			   <!--<el-form-item label="短信验证码" prop="code" v-if="!realShow">
@@ -30,6 +30,7 @@
 
 <script>
 	import { mapGetters } from 'vuex'
+	import { encryptIdNo,encryptMobile } from '@/utils/utils'
 	export default{
 		data(){
 			return{
@@ -62,6 +63,10 @@
 //		          ],
 		        },
 			}
+		},
+		filters:{
+			encryptIdNo,
+			encryptMobile
 		},
 		mounted:function(){
 			if(this.userInfo.mobileNo){

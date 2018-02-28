@@ -184,9 +184,10 @@
 				  		 const url=this.$backStage('/api/user/login')
 					     this.$http.post(url,{"mobileNo":this.mobileNo,"password":md5(this.password),'checkFlag':"pwd"})
 					      .then((response) => { 
+					      	  console.log(response)
 					      	  this.loading=false
 					          if(response.data.status==200){
-					          	 Cookies.set('Admin-Token', "admin")
+					          	 Cookies.set('Admin-Token', "admin",7)
 					          	 Cookies.set('_wibn',response.data.obj.mobileNo,7 )
 					          	 Cookies.set('_wibp',response.data.obj.password,7 )
 					             this.$store.dispatch('UserInfo', response.data.obj)
@@ -321,6 +322,7 @@
 		border: 1px #E3E7F1 solid;
 		background: #fff;
 		float: right;
+		font-size: 16px;
 	}
 	.nav{
 		padding-left: 30px;
@@ -420,7 +422,7 @@
 	}
 	.nav .p-code img{
 		position: absolute;
-		right: 140px;
+		right: 165px;
 		top: 25px;
 		width: 16px;
 		height: 16px;

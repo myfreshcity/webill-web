@@ -1,7 +1,9 @@
 <template>
   <scroll-bar>
     <el-menu mode="vertical" unique-opened :default-active="$route.path" :collapse="isCollapse" background-color="#304156" text-color="#fff" active-text-color="#409EFF">
-      <div class="title-head" text-color="#fff"></div>
+      <div class="title-head" text-color="#fff">
+      	<img src="../../../../../static/images/logo/logo02.png" />
+      </div>
       <sidebar-item :routes="routes"></sidebar-item>
     </el-menu>
   </scroll-bar>
@@ -30,14 +32,11 @@ export default {
 <style scoped>
 	.title-head{
 		text-align: center;
-		color: #409EFF;
 		height: 50px;
-		font-size:20px ;
-		line-height: 50px;
 		border-bottom:.01rem #999 solid ;
-		/*background: url('http://yadong.test.manmanh.com/static/images/logo/logo02.png') no-repeat center;*/
-		/*background: url('http://webill.test.manmanh.com/static/images/logo/logo02.png') no-repeat center;*/  
-		background: url('http://vbill.test.manmanh.com/static/images/logo/logo02.png') no-repeat center;
-		background-size: 89px 50px;
+	}
+	.title-head img{
+		width: 50%;
+		height: 50px;
 	}
 </style>

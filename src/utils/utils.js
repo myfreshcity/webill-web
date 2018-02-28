@@ -190,7 +190,18 @@ export const  encryptMobile= function(data) {
 	}
 	return licenceArr.join("")
 }
-
+//身份证号，银行卡号隐藏
+export const  encryptIdNo= function(data) {
+	var licenceArr=[]
+	for(var i=0;i<data.length;i++){
+			if(i==4||i==5||i==6||i==7||i==8||i==9||i==10||i==11||i==12||i==13){
+				licenceArr.push("*")
+			}else{
+				licenceArr.push(data[i])
+			}
+	}
+	return licenceArr.join("")
+}
 
 
 //获取n年 n天 n月前或后的日期

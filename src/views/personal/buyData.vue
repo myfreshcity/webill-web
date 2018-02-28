@@ -38,8 +38,8 @@
 		</div>
 		<p class="p-btn"><el-button type="primary"  :loading="loading" @click="toPay()">确认购买</el-button></p>
 		<form action="https://cashier.lianlianpay.com/payment/authpay.htm" method="post" id="sub">
-			    <input  name="version" :value='payDetail.version'/>
-                <input  name="oid_partner" :value='payDetail.oid_partner'/>
+			    <input type="hidden" name="version" :value='payDetail.version'/>
+                <input type="hidden" name="oid_partner" :value='payDetail.oid_partner'/>
                 <input type="hidden" name="user_id" :value='payDetail.user_id'/>
                 <input type="hidden" name="sign_type" :value='payDetail.sign_type'/>
                 <input type="hidden" name="sign" :value='payDetail.sign'/>
@@ -138,16 +138,18 @@
 				this.payType=index
 			},
 			toPay(){
-//				this.loading=true
-//				const url=this.$backStage('/api/trade/certPay')
-//					this.$http.post(url,{"userId":this.userInfo.id, "infoGoodsId":this.mealId})
-//					.then((response) => { 
-//					    this.payDetail={"acct_name":"张亚东","busi_partner":"101001","dt_order":"20180131171858","flag_modify":"1","id_no":"341225199307088210","id_type":"0","info_order":"用户购买高级套房一间","money_order":"0.01","name_goods":"高级套房一间","no_order":"20180131171858","notify_url":"http://ip:port/authpaywepdemo/notify.htm","oid_partner":"201408071000001543","risk_item":"{\"frms_ware_category\":\"1008\",\"user_info_bind_phone\":\"15121193141\",\"user_info_dt_register\":\"201801311701829\",\"user_info_mercht_userno\":\"1\"}","sign":"LLs+eZu1byvPyZT1yKaa8KX4NbBei92hOICUMfo6NXN+wNXsLGvWONqUSx/iicXWUM5QGsUR6vz8chyUA32oPvPfT3B72txCi4QXYPNr70HacJRITpHpqRd0DqBuXs80mNcrmP7p7l3/dLgrkeNfnLJ5pvO0LBH6zj4QW9/dA+A=","sign_type":"RSA","timestamp":"20180131171858","url_return":"http://ip:port/authpaywepdemo/urlReturn.jsp","user_id":"1","userreq_ip":"127_0_0_1","version":"1.0"}
-//                      const show=setTimeout(function () {
-//                     	        this.loading=false
-//					            document.getElementById("sub").submit()
-//					    }, 100)
-//					})
+				this.loading=true
+				const url=this.$backStage('/api/trade/certPay')
+					this.$http.post(url,{"userId":this.userInfo.id, "infoGoodsId":this.mealId})
+					.then((response) => { 
+						console.log(response)
+						var obj=response.data.obj
+					    this.payDetail={"acct_name":obj.acct_name,"busi_partner":obj.busi_partner,"dt_order":obj.dt_order,"flag_modify":obj.flag_modify,"id_no":obj.id_no,"id_type":obj.id_type,"info_order":obj.info_order,"money_order":obj.money_order,"name_goods":obj.name_goods,"no_order":obj.no_order,"notify_url":obj.notify_url,"oid_partner":obj.oid_partner,"risk_item":obj.risk_item,"sign":obj.sign,"sign_type":obj.sign_type,"timestamp":obj.timestamp,"url_return":obj.url_return,"user_id":obj.user_id,"userreq_ip":obj.userreq_ip,"version":obj.version}
+                        const show=setTimeout(function () {
+                       	        this.loading=false
+					            document.getElementById("sub").submit()
+					    }, 100)
+					})
 			},
 			changeType(){
 				if(this.productType==0){

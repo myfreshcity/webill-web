@@ -3,8 +3,8 @@
 <template>
 	<div class="content">
 		<p class="msgType">
-			<el-button type="primary" @click="changeType()">基础版</el-button>
-			<el-button >标准版</el-button>
+			<el-button  @click="changeType()">基础版</el-button>
+			<el-button type="primary">标准版</el-button>
 		</p>
 		<p class="head">{{msgTitle}}</p>
 		<sticky className="sub-navbar">

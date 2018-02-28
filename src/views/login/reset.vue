@@ -174,7 +174,7 @@
 				      .then((response) => { 
 				      	  this.loading=false
 				          if(response.data.status==200){
-				          		  Cookies.set('Admin-Token', "admin")
+				          		  Cookies.set('Admin-Token', "admin",7)
 				          		  Cookies.set('_wibn',response.data.obj.mobileNo,7 )
 					          	  Cookies.set('_wibp',response.data.obj.password,7 )
 			                      this.$store.dispatch('UserInfo', response.data.obj)

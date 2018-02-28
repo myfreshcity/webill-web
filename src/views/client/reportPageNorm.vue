@@ -211,6 +211,7 @@
 	    },
 	    mounted:function(){
 	    	if(this.userInfo.mobileNo){
+	    		console.log(this.msgDetail)
 		    	this.msg=this.msgDetail
 		    	this.baseMsg=this.msg.cus_basic_info
 		    	this.tripList=this.msg.trip_info
@@ -231,14 +232,18 @@
 		    	this.contactList=this.msg.all_contact
 		    	const part1=new RegExp("匹配成功")
 				const result1=part1.test(this.baseMsg.check_name);
+				const part3=new RegExp("匹配一致")
+				const result3=part3.test(this.baseMsg.check_name);
 				const part2=new RegExp("匹配成功")
 				const result2=part1.test(this.baseMsg.check_idcard);
-				if(result1){
+				const part4=new RegExp("匹配一致")
+				const result4=part4.test(this.baseMsg.check_idcard);
+				if(result1||result3){
 					this.nameCheck=1
 				}else{
 					this.nameCheck=2
 				}
-				if(result2){
+				if(result2||result4){
 					this.idCheck=1
 				}else{
 					this.idCheck=2

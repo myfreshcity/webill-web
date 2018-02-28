@@ -20,11 +20,11 @@
 			<p class="navP-head">基本信息</p>
 			<ul class="nav1-ul">
 				<li><span class="tabName"><b>登记姓名</b></span><span class="tabValue">{{baseMsg.user_name}}</span><span class="tabName"><b>性别</b></span><span class="tabValue">{{baseMsg.sex}}</span></li>
-				<li><span class="tabName"><b>年龄</b></span><span class="tabValue">{{baseMsg.age}}</span><span class="tabName"><b>户籍地址</b></span><span class="tabValue">{{baseMsg.home_address}}</span></li>
+				<li><span class="tabName"><b>年龄</b></span><span class="tabValue">{{baseMsg.age}}</span><span class="tabName"><b>户籍地址</b></span><span class="tabValue">{{baseMsg.residence_address}}</span></li>
 				<li>
 					<span class="tabName"><b>居住地址</b></span><span class="tabValue tabValue2">{{baseMsg.home_address}}<b>标准版可验真</b><br /></span>
 				</li>
-				<li><span class="tabName"><b>工作地址</b></span><span class="tabValue tabValue2">{{baseMsg.home_address}}<b>标准版可验真</b></span></li>
+				<li><span class="tabName"><b>工作地址</b></span><span class="tabValue tabValue2">{{baseMsg.work_address}}<b>标准版可验真</b></span></li>
 				<li><span class="tabName"><b>身份证</b></span><span class="tabValue tabValue2">{{baseMsg.id_no}}<b>标准版可验真</b></span></li>
 				<li class="mobile-li"><span class="tabName tabMobile"><b>手机号</b></span><span class="tabValue tabValue2 tabValue3">
 						<p class="mobile-p1">{{baseMsg.website}}</p>
@@ -76,7 +76,8 @@
 			</ul>
 		</div>
 		<div class="nav nav3" id="section-3">
-			<p class="navP-title">联系人区域汇总 <el-button type="primary" @click="derive()">导出所有</el-button></p>
+			<!--<p class="navP-title">联系人区域汇总 <el-button type="primary" @click="derive()">导出所有</el-button></p>-->
+			<p class="navP-title">联系人区域汇总</p>
 			<div id="myChart" ></div>
 		</div>
 		<div class="nav nav4" id="section-4">
@@ -220,14 +221,18 @@
 		    	this.contactList=this.msg.all_contact
 		    	const part1=new RegExp("匹配成功")
 				const result1=part1.test(this.baseMsg.check_name);
+				const part3=new RegExp("匹配一致")
+				const result3=part3.test(this.baseMsg.check_name);
 				const part2=new RegExp("匹配成功")
 				const result2=part1.test(this.baseMsg.check_idcard);
-				if(result1){
+				const part4=new RegExp("匹配一致")
+				const result4=part4.test(this.baseMsg.check_idcard);
+				if(result1||result3){
 					this.nameCheck=1
 				}else{
 					this.nameCheck=2
 				}
-				if(result2){
+				if(result2||result4){
 					this.idCheck=1
 				}else{
 					this.idCheck=2

@@ -76,11 +76,41 @@
 <script>
 import Vefoot from '@/components/Vefoot'
 import { mapGetters } from 'vuex'
-
+import { getToken } from '@/utils/auth'
+import Cookies from 'js-cookie'
+import md5 from 'js-md5';
 export default {
 	components: { Vefoot },
   name: 'dashboard',
   mounted:function(){
+  	if (getToken()) {
+    	         const url=this.$backStage('/api/user/login')
+    	         const _this=this
+					     _this.$http.post(url,{"mobileNo":Cookies.get("_wibn"),"password":Cookies.get("_wibp"),'checkFlag':"pwd"})
+					      .then((response) => { 
+					      	  console.log(response)
+					          if(response.data.status==200){
+					          	 Cookies.set('Admin-Token', "admin",7)
+					          	 Cookies.set('_wibn',response.data.obj.mobileNo,7 )
+					          	 Cookies.set('_wibp',response.data.obj.password,7 )
+					             this.$store.dispatch('UserInfo', response.data.obj)
+					             if(response.data.obj.realName){
+					             	this.$router.push({ path: '/client/clientList' })
+					             }
+					          }else{
+					          	_this.$alert("登录信息有误，请退出后重新登录", '系统提示', {
+							          confirmButtonText: '确定',
+							        });
+					          }
+					         
+					      }).catch(function(response){
+				             _this.$alert("登录信息有误，请退出后重新登录", '系统提示', {
+							          confirmButtonText: '确定',
+							        });
+				        })
+    }else{
+    	this.$router.push({ path: '/login/login' })
+    }
   },
   methods:{
   	goTemplate(){

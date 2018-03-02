@@ -32,7 +32,7 @@
 	export default{
 		data(){
 			return{
-				level:"普通会员",
+				level:"试用会员",
 				type:"个人",
 				mobile:"18721267525",
 				isReal:true,

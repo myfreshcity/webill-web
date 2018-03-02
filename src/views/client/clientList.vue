@@ -72,6 +72,7 @@
 </template>
 
 <script>
+  import $ from 'jquery'
   import { mapGetters } from 'vuex'
   import { getLoginUser } from '@/utils/utils'
   import { getToken } from '@/utils/auth' // 验权
@@ -95,7 +96,6 @@
       		length:10,
       		sortWay:""
       	},
-         currentPage4: 4
       }
     },
     filters:{
@@ -119,6 +119,7 @@
     	}
     },
     mounted:function(){
+    	   $(window).unbind ('scroll');
     	   if(this.userInfo.mobileNo){
 	           var data = new FormData();
 	           data.append('userId', this.userInfo.id);
@@ -234,6 +235,7 @@
       	this.$http.post(url, {"latestReportKey":data.latestReportKey,"name":data.realName,"idCard":data.idNo,"mobile":data.mobileNo})
       	.then((response) => {
                         this.$store.dispatch('MsgDetail', response.data.obj)
+                        this.$store.dispatch('ReportKey', data.latestReportKey)
                         if(data.latestReportType==0){
                         	this.$router.push({path:'/client/reportPageBase'})
                         }else{

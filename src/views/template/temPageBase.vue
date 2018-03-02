@@ -23,9 +23,10 @@
 			<li :class="{'li-active':liActive==3}" @click="changeLi(3)">联系人区域汇总</li>
 			<li :class="{'li-active':liActive==4}" @click="changeLi(4)">长时间联系人</li>
 			<li :class="{'li-active':liActive==5}" @click="changeLi(5)">高频联系人</li>
-			<li :class="{'li-active':liActive==6}" @click="changeLi(6)">多平台借贷分析</li>
-			<li :class="{'li-active':liActive==7}" @click="changeLi(7)">催收风险分析</li>
-			<li :class="{'li-active':liActive==8}" @click="changeLi(8)">出行数据分析</li>
+			<li :class="{'li-active':liActive==6}" @click="changeLi(6)">通话详单</li>
+			<li :class="{'li-active':liActive==7}" @click="changeLi(7)">多平台借贷分析</li>
+			<li :class="{'li-active':liActive==8}" @click="changeLi(8)">催收风险分析</li>
+			<li :class="{'li-active':liActive==9}" @click="changeLi(9)">出行数据分析</li>
 		</ul>
 		</sticky>
 		<div class="nav nav1" id="section-1">
@@ -100,6 +101,10 @@
 			<div id="highTimeChart" ></div>
 		</div>
 		<div class="nav nav5" id="section-6">
+			<p class="navP-title">通话详单</p>
+			<img src="../../../static/images/template/temImage.jpg" />
+		</div>
+		<div class="nav nav5" id="section-7">
 			<p class="navP-title">多平台借贷分析</p>
 			<ul class="contact-ul blacklist-ul">
 				<li class="contact-li"><span>检查项</span><span>检查结果</span><span class="blacklist-span tongdun-span">依据</span><span>综合结果</span></li>
@@ -125,7 +130,7 @@
 			    </li>
 			</ul>
 		</div>
-		<div class="nav nav6" id="section-7">
+		<div class="nav nav6" id="section-8">
 			<p class="navP-title">催收风险分析</p>
 			<ul class="contact-ul blacklist-ul">
 				<li class="contact-li"><span>检查项</span><span>催收信息</span><span>疑似催收信息</span></li>
@@ -144,7 +149,7 @@
 			    <li ><span>近90-120天被催收呼叫次数</span><span></span><span></span></li>
 			</ul>
 		</div>
-		<div class="nav nav7" id="section-8">
+		<div class="nav nav7" id="section-9">
 			<p class="navP-title">出行数据分析</p>
 			<ul class="contact-ul trip-ul">
 				<li class="contact-li"><span>时间段</span><span>出发地</span><span>目的地</span><span class="trip-span">出行开始时间</span><span class="trip-span">出行结束时间</span></li>
@@ -180,7 +185,7 @@
              $(window).scroll(function(){
  			     //为页面添加页面滚动监听事件
                   var wst =  $(window).scrollTop() //滚动条距离顶端值
-				 for (var i=1; i<9; i++){             //加循环
+				 for (var i=1; i<10; i++){             //加循环
 				  if(($("#section-"+i).offset().top-100)<=wst){ //判断滚动条位置
 					  _this.liActive=i
 					  _this.$forceUpdate()
@@ -716,5 +721,10 @@
     .navP-title button{
     	float: right;
     	margin-top: -10px;
+    }
+    .nav img{
+    	display: block;
+    	margin: 0 auto;
+    	width: 100%;
     }
 </style>

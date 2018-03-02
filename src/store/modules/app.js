@@ -9,6 +9,7 @@ const app = {
     msgdetail:{},    //报告详情
     userInfo:{},     //用户信息
     clientMsg:{},     //客户信息
+    reportKey:"",     //报告的key
   },
   mutations: {
     TOGGLE_SIDEBAR: state => {
@@ -31,6 +32,9 @@ const app = {
     CLIENT_MSG:(state,obj) => {
       state.clientMsg = obj
     },
+    REPORT_KEY:(state,obj) => {
+    	state.reportKey = obj
+    }
   },
   actions: {
     ToggleSideBar: ({ commit }) => {
@@ -47,6 +51,9 @@ const app = {
     },
      ClientMsg: ({ commit },clientMsg) => {
       commit('CLIENT_MSG',clientMsg)
+    },
+    ReportKey: ({ commit },reportKey) => {
+    	commit('REPORT_KEY',reportKey)
     }
   }
 }

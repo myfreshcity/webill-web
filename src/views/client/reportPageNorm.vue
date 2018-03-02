@@ -10,9 +10,10 @@
 				<li :class="{'li-active':liActive==3}" @click="changeLi(3)">联系人区域汇总</li>
 				<li :class="{'li-active':liActive==4}" @click="changeLi(4)">长时间联系人</li>
 				<li :class="{'li-active':liActive==5}" @click="changeLi(5)">高频联系人</li>
-				<li :class="{'li-active':liActive==6}" @click="changeLi(6)">多平台借贷分析</li>
-				<li :class="{'li-active':liActive==7}" @click="changeLi(7)">催收风险分析</li>
-				<li :class="{'li-active':liActive==8}" @click="changeLi(8)">出行数据分析</li>
+				<li :class="{'li-active':liActive==6}" @click="changeLi(6)">通话详单</li>
+				<li :class="{'li-active':liActive==7}" @click="changeLi(7)">多平台借贷分析</li>
+				<li :class="{'li-active':liActive==8}" @click="changeLi(8)">催收风险分析</li>
+				<li :class="{'li-active':liActive==9}" @click="changeLi(9)">出行数据分析</li>
 			</ul>
 		</sticky>
 		<div class="nav nav1" id="section-1">
@@ -67,7 +68,8 @@
 			</ul>
 		</div>
 		<div class="nav nav3" id="section-3">
-			<p class="navP-title">联系人区域汇总<el-button type="primary" @click="derive()">导出所有</el-button></p>
+			<!--<p class="navP-title">联系人区域汇总 <el-button type="primary" @click="derive()">导出所有</el-button></p>-->
+			<p class="navP-title">联系人区域汇总</p>
 			<div id="myChart" ></div>
 		</div>
 		<div class="nav nav4" id="section-4">
@@ -79,6 +81,73 @@
 			<div id="highTimeChart" ></div>
 		</div>
 		<div class="nav nav5" id="section-6">
+			<p class="navP-title">通话详单</p>
+			 <div class="filter-container client-serach">
+		  	<el-form :inline="true" :model="formSearch" class="demo-form-inline">
+		  	 <el-form-item label="">
+		  	  <el-date-picker
+			      v-model="formSearch.beginTime"
+			      type="date"
+			      placeholder="选择日期"
+			      value-format="yyyy-MM-dd">
+			   </el-date-picker>
+		     </el-form-item>
+		     <el-form-item label="至">
+		  	  <el-date-picker
+			      v-model="formSearch.lastTime"
+			      type="date"
+			      placeholder="选择日期"
+			      value-format="yyyy-MM-dd">
+			   </el-date-picker>
+		     </el-form-item>
+			  <el-form-item label="">
+			    <el-input v-model="formSearch.mobileNo" placeholder="被叫号码"></el-input>
+			  </el-form-item>
+			  <!--<el-form-item label="">
+			    <el-select v-model="formSearch.latestReportType" placeholder="通话地区">
+			      <el-option label="时间先后" value="1"></el-option>
+			      <el-option label="通话时长" value="2"></el-option>
+			    </el-select>
+			  </el-form-item>-->
+			  <el-form-item label="">
+			    <el-select v-model="formSearch.callType" placeholder="呼叫类型">
+			      <el-option label="主叫" value="1"></el-option>
+			      <el-option label="被叫" value="2"></el-option>
+			    </el-select>
+			  </el-form-item>
+			  <el-form-item label="">
+			    <el-select v-model="formSearch.sortType" placeholder="排序类型">
+			      <el-option label="时间先后" value="1"></el-option>
+			      <el-option label="通话时长" value="2"></el-option>
+			    </el-select>
+			  </el-form-item>
+			  <el-form-item>
+			    <el-button type="primary" @click="onSearch" :loading="loading1">查询</el-button>
+			    <el-button type="primary" @click="clear" >清空</el-button>
+			  </el-form-item>
+			</el-form>
+		  </div>
+		  <ul class="client-ul">
+		  	<li class="client-li"><span class="client-span3">序号</span><span class="client-span">通话时间</span><span>本机通话地</span><span>呼叫类型</span><span class="client-span client-span2">被叫号码</span><span>通话时长</span></li>
+		  	<li v-for="(ele,k) in mobileList">
+		  		<span class="client-span3">{{ele.index}}</span>
+		  		<span class="client-span">{{ele.callTime|timeFilter}}</span>
+		  		<span>{{ele.callFrom}}</span>
+		  		<span>{{ele.callMethod}}</span>
+		  		<span class="client-span client-span2">{{ele.callTel}}</span>
+		  		<span >{{ele.callDuration}}</span>
+		  	</li>
+		  </ul>
+		  <div class="block" id="foot-page">
+		    <el-pagination
+		      @current-change="handleCurrentChange"
+		      :page-size="10"
+		      layout="total, prev, pager, next, jumper"
+		      :total="totalCount">
+		    </el-pagination>
+		  </div>
+		</div>
+		<div class="nav nav5" id="section-7">
 			<p class="navP-title">多平台借贷分析</p>
 			<ul class="contact-ul blacklist-ul">
 				<li class="contact-li"><span>检查项</span><span>检查结果</span><span class="blacklist-span tongdun-span">依据</span><span>综合结果</span></li>
@@ -96,7 +165,7 @@
 			    </li>
 			</ul>
 		</div>
-		<div class="nav nav6" id="section-7">
+		<div class="nav nav6" id="section-8">
 			<p class="navP-title">催收风险分析</p>
 			<ul class="contact-ul blacklist-ul">
 				<li class="contact-li"><span>检查项</span><span>催收信息</span><span>疑似催收信息</span></li>
@@ -115,7 +184,7 @@
 			    <li ><span>近90-120天被催收呼叫次数</span><span>{{cuishouObj.day120_times}}次</span><span>{{yisicuishouObj.day120_times}}次</span></li>
 			</ul>
 		</div>
-		<div class="nav nav7" id="section-8">
+		<div class="nav nav7" id="section-9">
 			<p class="navP-title">出行数据分析</p>
 			<ul class="contact-ul trip-ul">
 				<li class="contact-li"><span>时间段</span><span>出发地</span><span>目的地</span><span class="trip-span">出行开始时间</span><span class="trip-span">出行结束时间</span></li>
@@ -135,7 +204,7 @@
 	import Sticky from '@/components/Sticky'
 	import $ from 'jquery'
 	import Highcharts from 'highCharts'
-	import {exportCsv} from '@/utils/utils'
+	import {exportCsv,timeStampToDate} from '@/utils/utils'
 	 export default {
 	 	components: { Sticky },
 	    data() {
@@ -166,9 +235,49 @@
 	        contactList:[],
 	        nameCheck:1,             //姓名效验
 	        idCheck:1,               //身份证效验
+	        loading1:false,
+	      	loading2:false,
+	      	totalCount:0,
+	      	mobileList:[],
+	      	latestReportType:'',
+	      	formSearch:{
+	      		sortType:"",
+	      		callType:"",
+	      		mobileNo:"",
+	      		beginTime:"",
+	      		lastTime:"",
+	      		length:10,
+	      		sortWay:""
+	      	},
 	      };
 	    },
 	     filters:{
+	     	timeFilter(val){
+	    		 var date = new Date(val*1000);
+				 var Y = date.getFullYear();
+				 var m = date.getMonth() + 1;
+				 var d = date.getDate();
+				 var H = date.getHours();
+				 var i = date.getMinutes();
+				 var s = date.getSeconds();
+				 if (m < 10) {
+				  m = '0' + m;
+				 }
+				 if (d < 10) {
+				  d = '0' + d;
+				 }
+				 if (H < 10) {
+				  H = '0' + H;
+				 }
+				 if (i < 10) {
+				  i = '0' + i;
+				 }
+				 if (s < 10) {
+				  s = '0' + s;
+				 }
+				 var t = Y + '-' + m + '-' + d;
+				 return t;
+	    	},
 	    	resultFilter(data){
 	    		if(data){
 	    			return data
@@ -274,18 +383,84 @@
 	             $(window).scroll(function(){
 	 			     //为页面添加页面滚动监听事件
 	                  var wst =  $(window).scrollTop() //滚动条距离顶端值
-					 for (var i=1; i<9; i++){             //加循环
+					 for (var i=1; i<10; i++){             //加循环
 					  if(($("#section-"+i).offset().top-100)<=wst){ //判断滚动条位置
 						  _this.liActive=i
 						  _this.$forceUpdate()
 						 }
 					 }
 		        })
+	              var data = new FormData();
+	           data.append('reportKey', this.reportKey);
+	           data.append('currentPage', 1);
+	           data.append('pageSize', 10);
+	           data.append('sortWay', 1);
+	           data.append('callTel', this.formSearch.mobileNo);
+	           data.append('callMethod', this.formSearch.callType);
+	           data.append('timeFrom', this.formSearch.beginTime);
+	           data.append('timeTo', this.formSearch.lastTime);
+	           const url=this.$backStage('/api/dhbReport/callsRecord')
+	           this.$http.post(url, data).then((response) => {
+	           	            console.log(response)
+	                        this.mobileList=response.data.obj.dataList
+	                        this.totalCount=response.data.obj.totalSize
+	                    }, (response) => {
+	                        
+	                    });
              }else{
 	    		this.$router.push({path:'/client/clientList'})
 	    	}
 	    },
 	    methods: {
+	    	 handleCurrentChange(val) {
+	    	   console.log(val)
+	      	   var data = new FormData();
+	           data.append('reportKey', this.reportKey);
+	           data.append('currentPage',val);
+	           data.append('pageSize', 10);
+	           data.append('sortWay', this.formSearch.sortType);
+	           data.append('callTel', this.formSearch.mobileNo);
+	           data.append('callMethod',this.formSearch.callType);
+	           data.append('timeFrom', this.formSearch.beginTime);
+	           data.append('timeTo', this.formSearch.lastTime);
+	           const url=this.$backStage('/api/dhbReport/callsRecord')
+	           this.$http.post(url, data).then((response) => {
+	           	            console.log(response)
+	                        this.mobileList=response.data.obj.dataList
+	                        this.totalCount=response.data.obj.totalSize
+	                    }, (response) => {
+	                        
+	                    });
+	      },
+	      onSearch(){
+	      	this.loading1=true
+	      	var data = new FormData();
+	           data.append('reportKey', this.reportKey);
+	           data.append('currentPage',1);
+	           data.append('pageSize', 10);
+	           data.append('sortWay', this.formSearch.sortType);
+	           data.append('callTel', this.formSearch.mobileNo);
+	           data.append('callMethod',this.formSearch.callType);
+	           data.append('timeFrom', this.formSearch.beginTime);
+	           data.append('timeTo', this.formSearch.lastTime);
+	           const url=this.$backStage('/api/dhbReport/callsRecord')
+	           this.$http.post(url, data).then((response) => {
+	           	            this.loading1=false
+	           	            console.log(response)
+	                        this.mobileList=response.data.obj.dataList
+	                        this.totalCount=response.data.obj.totalSize
+	                    }, (response) => {
+	                        
+	                    });
+	       },
+	       clear(){
+	      	this.formSearch.realName=""
+	      	this.formSearch.mobileNo=""
+	      	this.formSearch.idNo=""
+	      	this.formSearch.latestReportStatus=""
+	      	this.formSearch.latestReportType=""
+	      	this.formSearch.latestReportTimeDatetime=""
+	      },
 	       derive(){
 		      if(this.contactList.length > 0){
 		            var dlist = this.contactList;
@@ -565,7 +740,8 @@
 	     computed: {
 		    ...mapGetters([
 		      'msgDetail',
-		      'userInfo'
+		      'userInfo',
+		      'reportKey'
 		    ])
 		  }
 	  };
@@ -827,4 +1003,60 @@
     	float: right;
     	margin-top: -10px;
     }
+     /*通话详单*/
+    .client-serach .el-input{
+		width: 1.9rem;
+	}
+	
+	.client-serach .el-select{
+		width: 1.9rem;
+	}
+	/*dataInp*/ 
+	.el-button--primary{
+		margin-left: .2rem;
+	}
+	.content .client-ul{
+		margin: 0 20px;
+		border: 1px #E3E7F1 solid;
+		border-right:none ;
+		border-bottom: none;
+		font-size: 14px;
+		border-radius: 5px;
+	}
+	.content .client-ul li{
+		display: flex;
+		border-bottom: 1px #E3E7F1 solid;
+	}
+	.content .client-ul .client-li{
+		background: #F1F2F8;
+		font-size: 16px;
+		font-weight: bold;
+	}
+	.content .client-ul .client-li span{
+		font-weight: bold;
+	}
+	.content .client-ul li span{
+		flex: 1;
+		text-align: center;
+		padding: 20px 0;
+		border-right: 1px #E3E7F1 solid;
+		line-height: 24px;
+	}
+	.content .client-ul li .client-span{
+		flex: 1.5;
+	}
+	.content .client-ul li .client-span2{
+		flex: 2;
+	}
+	.content .client-ul li .client-span3{
+		flex: .7;
+	}
+	.content .client-ul li span .checkMsg{
+		padding: 6px 5px;
+		font-size: 12px;
+	}
+	.content .client-ul li span .getMsg{
+		padding: 6px 5px;
+		font-size: 12px;
+	}
 </style>

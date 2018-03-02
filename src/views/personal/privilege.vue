@@ -14,11 +14,11 @@
 					</span>
 					<span class="span2">
 						<b class="b1 silver">银卡会员</b>
-						<b class="b2">￥??元/月</b>
+						<b class="b2">￥5999元/月</b>
 					</span>
 					<span class="span2 span3">
 						<b class="b1 gold">金卡会员</b>
-						<b class="b2">￥??/月</b>
+						<b class="b2">￥8999/月</b>
 					</span>
 				</li>
 				<li class="li2 li-tip">

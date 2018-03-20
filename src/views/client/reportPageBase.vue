@@ -79,15 +79,15 @@
 		<div class="nav nav3" id="section-3">
 			<!--<p class="navP-title">联系人区域汇总 <el-button type="primary" @click="derive()">导出所有</el-button></p>-->
 			<p class="navP-title">联系人区域汇总</p>
-			<div id="myChart" ></div>
+			<div id="myChart" style="min-hight:300px"></div>
 		</div>
 		<div class="nav nav4" id="section-4">
 			<p class="navP-title">长时间联系人</p>
-			<div id="longTimeChart" ></div>
+			<div id="longTimeChart" style="min-hight:300px"></div>
 		</div>
 		<div class="nav nav5" id="section-5">
 			<p class="navP-title">高频联系人</p>
-			<div id="highTimeChart" ></div>
+			<div id="highTimeChart" style="min-hight:300px"></div>
 		</div>
 		<div class="nav nav5" id="section-6">
 			<p class="navP-title">通话详单</p>
@@ -150,6 +150,7 @@
 		  <div class="block" id="foot-page">
 		    <el-pagination
 		      @current-change="handleCurrentChange"
+		      :current-page="currentPage"
 		      :page-size="10"
 		      layout="total, prev, pager, next, jumper"
 		      :total="totalCount">
@@ -253,6 +254,7 @@
 	      		length:10,
 	      		sortWay:""
 	      	},
+	      	currentPage:1,
 	      };
 	    },
 	    filters:{
@@ -420,7 +422,9 @@
 	    },
 	    methods: {
 	       handleCurrentChange(val) {
-	       	console.log(val)
+	       	   if(val!=1){
+	       	   	   $(".el-pager").children("li").eq(0).removeClass("active");
+	       	   }
 	      	   var data = new FormData();
 	           data.append('reportKey', this.reportKey);
 	           data.append('currentPage',val);
@@ -453,14 +457,18 @@
 	           const url=this.$backStage('/api/dhbReport/callsRecord')
 	           this.$http.post(url, data).then((response) => {
 	           	            this.loading1=false
-	           	            console.log(response)
 	                        this.mobileList=response.data.obj.dataList
 	                        this.totalCount=response.data.obj.totalSize
+	                        $("#foot-page .el-input__inner")[0].value=1
+	                        $(".el-pager").children("li").removeClass("active");
+                            $(".el-pager").children("li").eq(0).addClass("active");
 	                    }, (response) => {
 	                        
 	                    });
+	                    
 	       },
 	       clear(){
+	       	this.currentPage=6
 	      	this.formSearch.realName=""
 	      	this.formSearch.mobileNo=""
 	      	this.formSearch.idNo=""

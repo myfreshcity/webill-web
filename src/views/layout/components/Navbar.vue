@@ -7,6 +7,10 @@
         <!--<img class="user-avatar" :src="avatar+'?imageView2/1/w/80/h/80'">
         <i class="el-icon-caret-bottom"></i>-->
       <!--</div>-->
+      <!--<el-tooltip effect="dark" :content="$t('navbar.screenfull')" placement="bottom">
+        <screenfull class="screenfull right-menu-item"></screenfull>
+      </el-tooltip>-->
+      
       <ul class="right-title">
       	<li class="li-active" @click="goAccount">{{userInfo.mobileNo}}</li>
       	<li class="line">|</li>
@@ -16,28 +20,23 @@
       </ul>
       <el-dropdown-menu  slot="dropdown">
       	
-        <!--<router-link  to="/">-->
-          <!--<el-dropdown-item>-->
-            
-          <!--</el-dropdown-item>-->
-        <!--</router-link>-->
-        <!--<el-dropdown-item divided>-->
-          <!--<span @click="logout" style="display:block;">LogOut</span>-->
-        <!--</el-dropdown-item>-->
+      
       </el-dropdown-menu>
     </el-dropdown>
   </el-menu>
 </template>
 
 <script>
+import $ from 'jquery'
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
-
+import Screenfull from '@/components/Screenfull'
 export default {
   components: {
     Breadcrumb,
-    Hamburger
+    Hamburger,
+    Screenfull,
   },
   mounted:function(){
   	
@@ -88,12 +87,7 @@ export default {
     float: left;
     padding: 0 10px;
   }
-  .screenfull {
-    position: absolute;
-    right: 90px;
-    top: 16px;
-    color: red;
-  }
+  
   .avatar-container {
     height: 50px;
     display: inline-block;
@@ -129,5 +123,6 @@ export default {
 .right-title .li-active:hover{
 	color: #409EFF;
 }
+
 </style>
 

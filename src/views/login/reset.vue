@@ -238,7 +238,6 @@
 	.content{
 		@include relative;
 	    height: 100vh;
-	    /*background:url(../../../static/images/login/loginbg.png);*/
 	    padding-top: 10%;
 	}
 	.head{

@@ -47,6 +47,7 @@
 	  <div class="block" id="foot-page">
 	    <el-pagination
 	      @current-change="handleCurrentChange"
+	      :current-page="currentPage"
 	      :page-size="10"
 	      layout="total, prev, pager, next, jumper"
 	      :total="totalCount">
@@ -56,6 +57,7 @@
 </template>
 
 <script>
+  import $ from 'jquery'
   import { mapGetters } from 'vuex'
   export default {
     data() {
@@ -70,7 +72,7 @@
       		length:10
       	},
         tableData: [],
-         currentPage4: 4
+        currentPage:1,
       }
     },
     filters:{
@@ -120,6 +122,9 @@
      		this.formSearch.lastTime=""
       },
       handleCurrentChange(val) {
+      	   if(val!=1){
+       	   	   $(".el-pager").children("li").eq(0).removeClass("active");
+       	   }
            var data = new FormData();
            data.append('userId', this.userInfo.id);
            data.append('start', (val-1)*10);
@@ -149,6 +154,9 @@
                         // success callback
                         this.clientList=response.data.records
                         this.totalCount=response.data.total
+                        $("#foot-page .el-input__inner")[0].value=1
+                        $(".el-pager").children("li").removeClass("active");
+                        $(".el-pager").children("li").eq(0).addClass("active");
                     }, (response) => {
                         // error callback
                     });

@@ -574,8 +574,13 @@
       		const url=this.$backStage('/api/customer/dhbSubmitForm')
       		this.$http.post(url,{"contacts":this.relationList,"userId":this.userInfo.id,"id":this.clientId,"temReportType":this.selectType,"workAddrCode":work,"workAddrDetail":this.workAddress,"homeAddrCode":home,"homeAddrDetail":this.homeAddress})
 	        .then(response => {
-//	        	console.log(response)
-	        	this.loading2=false
+	        	console.log(response)
+	        	if(response.data.status==300){
+	        			this.$alert('您的报告正在查询中请稍后', '系统提示', {
+				          confirmButtonText: '确定',
+				        });
+	        	}else{
+	        		this.loading2=false
 	             this.dhbObj=response.data.dhbGetLogin
 	             if(this.dhbObj.smsDuration){
 	             	this.needCode=true
@@ -596,6 +601,7 @@
 	             this.step2=false
 		      	 this.step3=true
 		      	 this.active=3
+	        	}
 	        })
       	}
 
@@ -735,17 +741,25 @@
 		      	             	}
 		      	             })
 	      	             }
-		             }else if(response.data.dhbCollect.smsDuration){
-		             	this.$alert("请输入短信验证码", '系统提示', {
-				          confirmButtonText: '确定',
-				        });
-				        this.dhbSmsShow=true
-		             	this.loading3=false
+		             }else if(response.data.dhbCollect.smsDuration||response.data.dhbCollect.captchaImage){
+		             	this.$alert("请输入验证码", '系统提示', {
+					          confirmButtonText: '确定',
+					        });
+		             	if(response.data.dhbCollect.smsDuration){
+		             		
+					        this.dhbSmsShow=true
+			             	this.loading3=false
+		             	}
+		             	if(response.data.dhbCollect.captchaImage){
+		             		this.imgCodeShow=true
+		             		this.imgCodeUrl=response.data.dhbCollect.captchaImage
+			             	this.loading3=false
+		             	}
 		             }else{
+		             	this.loading3=false
 		             	this.$alert(response.data.dhbCollect.msg, '系统提示', {
-				          confirmButtonText: '确定',
-				        });
-				        this.loading3=false
+					          confirmButtonText: '确定',
+					        });
 		             }
 		        })
 	        }

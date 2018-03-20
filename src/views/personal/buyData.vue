@@ -138,6 +138,17 @@
 				this.payType=index
 			},
 			toPay(){
+				if(this.userInfo.isVerified==0){
+		       		  this.$confirm('您还未进行实名认证，请先完成实名认证才可使用', '系统提示', {
+			          confirmButtonText: '去认证',
+			          cancelButtonText: '取消',
+			          type: 'warning'
+			        }).then(() => {
+			           this.$router.push({path:'/personal/autonym'})
+			        }).catch(() => {
+			                
+			        });
+		       	}else{
 				this.loading=true
 				const url=this.$backStage('/api/trade/certPay')
 					this.$http.post(url,{"userId":this.userInfo.id, "infoGoodsId":this.mealId})
@@ -150,6 +161,7 @@
 					            document.getElementById("sub").submit()
 					    }, 100)
 					})
+				}
 			},
 			changeType(){
 				if(this.productType==0){

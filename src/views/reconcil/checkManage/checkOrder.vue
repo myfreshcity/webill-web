@@ -1,4 +1,4 @@
-<!--客户列表-->
+<!--对账派单-->
 
 <template>
 	<div class="content">
@@ -68,8 +68,6 @@
 	      :total="totalCount">
 	    </el-pagination>
 	  </div>
-	  <!--<input type="file" id="file" name="myfile" />
-	  <input type="button" @click="UpladFile()" value="上传" />-->
 	</div>
 </template>
 
@@ -184,27 +182,6 @@
 
     },
      methods: {
-     	UpladFile(){
-     		var fileObj = document.getElementById("file").files[0]; // 获取文件对象
-
-            var FileController = 'http://yadong.test.manmanh.com/charge/upload';                    // 接收上传文件的后台地址 
-
-            console.log(fileObj)
-            // FormData 对象
-            var form = new FormData();
-//          form.append("author", "hooyes");                        // 可以增加表单数据
-            form.append("file", fileObj);                           // 文件对象
-            // XMLHttpRequest 对象
-            var xhr = new XMLHttpRequest();
-            xhr.open("post", FileController, true);
-            xhr.send(form);
-            xhr.onload = function () {
-                this.$alert("上传成功", '系统提示', {
-	                  confirmButtonText: '确定',
-			    });
-            };
-          
-     	},
       checkAgain(data){
       	if(data.latestReportStatus==1){
       	this.$confirm('重新获取会消耗查询次数', '系统提示', {

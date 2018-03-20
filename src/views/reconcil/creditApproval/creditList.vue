@@ -1,62 +1,37 @@
-<!--客户列表-->
+<!--减免列表-->
 
 <template>
 	<div class="content">
 	  <div class="filter-container client-serach">
 	  	<el-form :inline="true" :model="formSearch" class="demo-form-inline">
-        <el-form-item label="">
-          <el-date-picker class="dataInp"
-                          v-model="formSearch.latestReportTimeDatetime"
-                          type="date"
-                          placeholder="选择日期"
-                          value-format="yyyy-MM-dd">
-          </el-date-picker>
-
+        <el-form-item label="客户姓名">
           <el-input v-model="formSearch.realName" placeholder="客户姓名"></el-input>
         </el-form-item>
-        <el-form-item label="">
-		    <el-input v-model="formSearch.mobileNo" placeholder="手机号码"></el-input>
+        <el-form-item label="发起人">
+		    <el-input v-model="formSearch.mobileNo" placeholder="发起人"></el-input>
 		  </el-form-item>
-		  <el-form-item label="">
-		    <el-input v-model="formSearch.idNo" placeholder="身份证号"></el-input>
+		  <el-form-item label="协商金额">
+		    <el-input v-model="formSearch.idNo" placeholder="协商金额"></el-input>
 		  </el-form-item>
-		  <el-form-item label="">
-		    <el-select v-model="formSearch.latestReportType" placeholder="信息类型">
-		      <el-option label="基础" value="0"></el-option>
-		      <el-option label="标准" value="1"></el-option>
-		    </el-select>
-		  </el-form-item>
-		  <el-form-item label="">
-		    <el-select v-model="formSearch.latestReportStatus" placeholder="信息状态">
-		      <el-option label="准备获取" value="-1"></el-option>
-		      <el-option label="获取中" value="0"></el-option>
-		      <el-option label="获取成功" value="1"></el-option>
-		      <el-option label="获取失败" value="2"></el-option>
-		    </el-select>
-		  </el-form-item>
-		  <el-form-item>
+		   <el-form-item>
 		    <el-button type="primary" @click="onSearch" :loading="loading1">查询</el-button>
 		    <el-button type="primary" @click="clear" >清空</el-button>
 		  </el-form-item>
 		</el-form>
 	  </div>
 	  <ul class="client-ul">
-	  	<li class="client-li"><span class="client-span3">序号</span><span class="client-span">最近更新时间</span><span>客户姓名</span><span class="client-span">手机号</span><span class="client-span client-span2">身份证号</span><span>信息类型</span><span>查询次数</span><span>信息状态</span><span class="client-span client-span2">操作</span></li>
-	  	<li v-for="(ele,k) in clientList">
-	  		<span class="client-span3">{{ele.id}}</span>
-	  		<span class="client-span">{{ele.latestReportTimeStr}}</span>
-	  		<span>{{ele.realName}}</span>
-	  		<span class="client-span">{{ele.mobileNo}}</span>
-	  		<span class="client-span client-span2">{{ele.idNo}}</span>
-	  		<span>{{ele.latestReportType|msgType}}</span>
-	  		<span>{{ele.refreshTimes}}</span>
-	  		<span>{{ele.latestReportStatus|msgStatus}}</span>
-	  		<span class="client-span client-span2">
-	  			 <el-button type="primary"  class="checkMsg" v-show="ele.latestReportStatus==1||(ele.latestReportStatus==-1&&ele.refreshTimes>0)" @click="checkMsg(ele)">查看信息</el-button>
-		         <el-button  class="getMsg" v-show="ele.latestReportStatus!=0" @click="checkAgain(ele)">重新获取</el-button>
-	  			<!--<b class="checkMsg" v-show="ele.latestReportStatus==1||(ele.latestReportStatus==-1&&ele.refreshTimes>0)" @click="checkMsg(ele)">查看信息</b>-->
-	  			<!--<b class="getMsg" v-show="ele.latestReportStatus==1||ele.latestReportStatus==-1" @click="checkAgain(ele)">重新获取</b>-->
-	  		</span>
+	  	<li class="client-li"><span>合同编号</span><span>客户姓名</span><span>合同状态</span><span>逾期期数</span><span>逾期天数</span><span>协商金额</span><span>处理备注</span><span>减免有效期</span><span>发起人</span><span>操作</span></li>
+	  	<li>
+	  		<span >67524174</span>
+	  		<span >张三</span>
+	  		<span >逾期</span>
+	  		<span >3期</span>
+	  		<span >10</span>
+	  		<span >500</span>
+	  		<span >无</span>
+	  		<span >2018-3-8</span>
+	  		<span >电催1</span>
+	  		<span >查看</span>
 	  	</li>
 	  </ul>
 	  <div class="block" id="foot-page">
@@ -68,8 +43,6 @@
 	      :total="totalCount">
 	    </el-pagination>
 	  </div>
-	  <!--<input type="file" id="file" name="myfile" />
-	  <input type="button" @click="UpladFile()" value="上传" />-->
 	</div>
 </template>
 
@@ -82,11 +55,13 @@
   export default {
     data() {
       return {
+      	downloadLoading:false,
       	loading1:false,
       	loading2:false,
       	totalCount:0,
       	clientList:[],
       	latestReportType:'',
+      	filename:"",
       	formSearch:{
       		latestReportTimeDatetime:"",
       		realName:"",
@@ -139,6 +114,7 @@
 	           this.$http.post(url, data).then((response) => {
 	                        this.clientList=response.data.records
 	                        this.totalCount=response.data.total
+	                         console.log(this.clientList)
 	                    }, (response) => {
 
 	                    });
@@ -165,6 +141,7 @@
 						           _this.$http.post(url, data).then((response) => {
 						                        _this.clientList=response.data.records
 						                        _this.totalCount=response.data.total
+						                         console.log(_this.clientList)
 						                    }, (response) => {
 
 						                    });
@@ -181,47 +158,31 @@
 				        })
              }
           }
+         
 
     },
      methods: {
-     	UpladFile(){
-     		var fileObj = document.getElementById("file").files[0]; // 获取文件对象
-
-            var FileController = 'http://yadong.test.manmanh.com/charge/upload';                    // 接收上传文件的后台地址 
-
-            console.log(fileObj)
-            // FormData 对象
-            var form = new FormData();
-//          form.append("author", "hooyes");                        // 可以增加表单数据
-            form.append("file", fileObj);                           // 文件对象
-            // XMLHttpRequest 对象
-            var xhr = new XMLHttpRequest();
-            xhr.open("post", FileController, true);
-            xhr.send(form);
-            xhr.onload = function () {
-                this.$alert("上传成功", '系统提示', {
-	                  confirmButtonText: '确定',
-			    });
-            };
-          
-     	},
-      checkAgain(data){
-      	if(data.latestReportStatus==1){
-      	this.$confirm('重新获取会消耗查询次数', '系统提示', {
-	          confirmButtonText: '确认',
-	          cancelButtonText: '取消',
-	          type: ''
-	        }).then(() => {
-	           this.$store.dispatch('ClientMsg', data)
-      	       this.$router.push({path:'/client/newClient'})
-	        }).catch(() => {
-
-	        });
-      	}else{
-      		this.$store.dispatch('ClientMsg', data)
-      	    this.$router.push({path:'/client/newClient'})
-      	}
-      },
+	    handleDownload() {
+	      this.downloadLoading = true
+	      import('@/vendor/Export2Excel').then(excel => {
+	      	debugger
+	        const tHeader = ['Id', 'Title', 'Author', 'Readings', 'Date']
+	        const filterVal = ['id', 'id', 'id', 'id', 'id']
+	        const list = this.clientList
+	        const data = this.formatJson(filterVal, list)
+	        excel.export_json_to_excel(tHeader, data, this.filename)
+	        this.downloadLoading = false
+	      })
+	    },
+	    formatJson(filterVal, jsonData) {
+	      return jsonData.map(v => filterVal.map(j => {
+//	        if (j === 'timestamp') {
+//	          return parseTime(v[j])
+//	        } else {
+	          return v[j]
+//	        }
+	      }))
+	    },
       clear(){
       	this.formSearch.realName=""
       	this.formSearch.mobileNo=""
@@ -354,6 +315,20 @@
 		font-size: .14rem;
 		border-radius: 5px;
 	}
+	.content .client-ul p{
+		overflow: hidden;
+		border-bottom: 1px #E3E7F1 solid;
+		padding: .1rem .2rem;
+		background: #F1F2F8;
+	}
+	.content .client-ul p .client-spanLeft{
+		float: left;
+		padding: .1rem 0;
+	}
+	.content .client-ul p button{
+		float: right;
+		margin-right: .3rem;
+	}
 	.content .client-ul li{
 		display: flex;
 		border-bottom: 1px #E3E7F1 solid;
@@ -369,25 +344,11 @@
 	.content .client-ul li span{
 		flex: 1;
 		text-align: center;
-		padding: .2rem 0;
+		padding: .1rem 0;
 		border-right: 1px #E3E7F1 solid;
 		line-height: .4rem;
 	}
-	.content .client-ul li .client-span{
+	.content .client-ul li .client-span-card{
 		flex: 1.5;
-	}
-	.content .client-ul li .client-span2{
-		flex: 2;
-	}
-	.content .client-ul li .client-span3{
-		flex: .7;
-	}
-	.content .client-ul li span .checkMsg{
-		padding: .06rem .05rem;
-		font-size: .12rem;
-	}
-	.content .client-ul li span .getMsg{
-		padding: .06rem .05rem;
-		font-size: .12rem;
 	}
 </style>

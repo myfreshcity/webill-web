@@ -64,7 +64,7 @@
 			<p class="navP-title">金融类通话信息</p>
 			<ul class="contact-ul blacklist-ul">
 				<li class="contact-li"><span>检查项</span><span class="blacklist-span">结果</span><span class="blacklist-span">依据</span></li>
-			    <li v-for="(ele,k) in msg.financial_call_info" v-if="k<8"><span class="span-mid"><b>{{ele.check_point_cn}}</b></span><span class="jinrong-span span-mid"><b>{{ele.result|resultFilter}}</b></span><span class="blacklist-span"><b v-show="ele.evidence.length>1">联系列表：{{ele.evidence.length}} <i v-show="!financialShow[k]" @click="showFinancial(k,1)" class="financial-more">展开更多</i><i v-show="financialShow[k]" @click="showFinancial(k,2)" class="financial-more">收起</i></b><b v-show="ele.evidence.length==0">无</b><b v-for="(item,m) in ele.evidence" v-show="financialShow[k]||ele.evidence.length==1">{{item}}</b></span></li>
+			    <li v-for="(ele,k) in msg.financial_call_info"><span class="span-mid"><b>{{ele.check_point_cn}}</b></span><span class="jinrong-span span-mid"><b>{{ele.result|resultFilter}}</b></span><span class="blacklist-span"><b v-show="ele.evidence.length>1">联系列表：{{ele.evidence.length}} <i v-show="!financialShow[k]" @click="showFinancial(k,1)" class="financial-more">展开更多</i><i v-show="financialShow[k]" @click="showFinancial(k,2)" class="financial-more">收起</i></b><b v-show="ele.evidence.length==0">无</b><b v-for="(item,m) in ele.evidence" v-show="financialShow[k]||ele.evidence.length==1">{{item}}</b></span></li>
 			</ul>
 		</div>
 		<div class="nav nav3" id="section-3">
@@ -141,6 +141,7 @@
 		  <div class="block" id="foot-page">
 		    <el-pagination
 		      @current-change="handleCurrentChange"
+		      :current-page="currentPage"
 		      :page-size="10"
 		      layout="total, prev, pager, next, jumper"
 		      :total="totalCount">
@@ -249,6 +250,7 @@
 	      		length:10,
 	      		sortWay:""
 	      	},
+	      	currentPage:1,
 	      };
 	    },
 	     filters:{
@@ -401,7 +403,6 @@
 	           data.append('timeTo', this.formSearch.lastTime);
 	           const url=this.$backStage('/api/dhbReport/callsRecord')
 	           this.$http.post(url, data).then((response) => {
-	           	            console.log(response)
 	                        this.mobileList=response.data.obj.dataList
 	                        this.totalCount=response.data.obj.totalSize
 	                    }, (response) => {
@@ -413,6 +414,9 @@
 	    },
 	    methods: {
 	    	 handleCurrentChange(val) {
+	    	   if(val!=1){
+	       	   	   $(".el-pager").children("li").eq(0).removeClass("active");
+	       	   }
 	    	   console.log(val)
 	      	   var data = new FormData();
 	           data.append('reportKey', this.reportKey);
@@ -425,7 +429,6 @@
 	           data.append('timeTo', this.formSearch.lastTime);
 	           const url=this.$backStage('/api/dhbReport/callsRecord')
 	           this.$http.post(url, data).then((response) => {
-	           	            console.log(response)
 	                        this.mobileList=response.data.obj.dataList
 	                        this.totalCount=response.data.obj.totalSize
 	                    }, (response) => {
@@ -446,9 +449,11 @@
 	           const url=this.$backStage('/api/dhbReport/callsRecord')
 	           this.$http.post(url, data).then((response) => {
 	           	            this.loading1=false
-	           	            console.log(response)
 	                        this.mobileList=response.data.obj.dataList
 	                        this.totalCount=response.data.obj.totalSize
+	                        $("#foot-page .el-input__inner")[0].value=1
+	                        $(".el-pager").children("li").removeClass("active");
+                            $(".el-pager").children("li").eq(0).addClass("active");
 	                    }, (response) => {
 	                        
 	                    });

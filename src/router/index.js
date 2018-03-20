@@ -25,6 +25,7 @@ export const constantRouterMap = [
   { path: '/reset', component: _import('login/reset'), hidden: true },
   { path: '/agreement', component: _import('login/agreement'), hidden: true },
   { path: '/404', component: _import('404'), hidden: true },
+  { path: '/backPage', component: _import('backPage'), hidden: true },
   
   {
     path: '/',
@@ -168,15 +169,64 @@ export const constantRouterMap = [
     ]
   },
 //{
-//  path: '/form',
+//	path: '/reconcil',
 //  component: Layout,
+//  redirect: '/checkManage/checkSelf',
+//  name: 'Reconcil',
+//  hidden: false,
+//  meta: { title: '对账', icon: 'other' },
 //  children: [
-//    {
-//      path: 'index',
-//      name: 'Form',
-//      component: _import('form/index'),
-//      meta: { title: 'Form', icon: 'form' }
-//    }
+//   
+//	      {
+//	        path: 'checkSelf',
+//	        name: 'CheckSelf',
+//	        component: _import('reconcil/checkManage/checkSelf'),
+//	        meta: { title: '自动对账', icon: '' }
+//	      },
+////	       {
+////	        path: 'checkOrder',
+////	        name: 'CheckOrder',
+////	        component: _import('reconcil/checkManage/checkOrder'),
+////	        meta: { title: '对账派单', icon: '' }
+////	      },
+//	      {
+//	        path: 'checkList',
+//	        name: 'CheckList',
+//	        component: _import('reconcil/checkManage/checkList'),
+//	        meta: { title: '对账列表', icon: '' }
+//	      },
+//	      {
+//	        path: 'checkDetail',
+//	        name: 'CheckDetail',
+//	        hidden: true,
+//	        component: _import('reconcil/checkManage/checkDetail'),
+//	        meta: { title: '对账详情', icon: '' }
+//	      },
+//	       {
+//	        path: 'repaymentDetail',
+//	        name: 'RepaymentDetail',
+//	        component: _import('reconcil/agreementManage/repaymentDetail'),
+//	        meta: { title: '还款详情', icon: '' }
+//	      },
+//	      {
+//	        path: 'repaymentPlan',
+//	        name: 'RepaymentPlan',
+//	        hidden: true,
+//	        component: _import('reconcil/agreementManage/repaymentPlan'),
+//	        meta: { title: '还款计划', icon: '' }
+//	      },
+//	      {
+//	        path: 'creditDetail',
+//	        name: 'CreditDetail',
+//	        component: _import('reconcil/creditApproval/creditDetail'),
+//	        meta: { title: '减免详情', icon: '' }
+//	      },
+//	      {
+//	        path: 'creditList',
+//	        name: 'CreditList',
+//	        component: _import('reconcil/creditApproval/creditList'),
+//	        meta: { title: '减免计划', icon: '' }
+//	      }
 //  ]
 //},
 

@@ -101,7 +101,112 @@ export const constantRouterMap = [
       }
     ]
   },
-  {
+ 
+   {
+  	path: '/template',
+    component: Layout,
+    redirect: '/template/temPageBase',
+    name: 'Template',
+    hidden: true,
+    meta: { title: '其他', icon: 'other' },
+    children: [
+      {
+        path: 'temPageBase',
+        name: 'TemPageBase',
+        component: _import('template/temPageBase'),
+        meta: { title: '报告页基础版模板', icon: '' }
+      },
+       {
+        path: 'temPageNorm',
+        name: 'TemPageNorm',
+        component: _import('template/temPageNorm'),
+        meta: { title: '报告页标准版模板', icon: '' }
+      },
+      {
+        path: 'information',
+        name: 'Information',
+        component: _import('template/information'),
+        meta: { title: '基础版&标准版', icon: '' }
+      }
+    ]
+  },
+{
+	path: '/reconcil',
+    component: Layout,
+    redirect: '/checkManage/checkSelf',
+    name: 'Reconcil',
+    hidden: false,
+    meta: { title: '贷款管理', icon: 'other' },
+    children: [
+     
+	      {
+	        path: 'checkSelf',
+	        name: 'CheckSelf',
+	        hidden: true,
+	        component: _import('reconcil/checkManage/checkSelf'),
+	        meta: { title: '导入还款流水', icon: '' }
+	      },
+	       {
+	        path: 'contractSelf',
+	        name: 'ContractSelf',
+	        hidden: true,
+	        component: _import('reconcil/checkManage/contractSelf'),
+	        meta: { title: '导入合同', icon: '' }
+	      },
+	       {
+	        path: 'repayList',
+	        name: 'RepayList',
+	        component: _import('reconcil/checkManage/repayList'),
+	        meta: { title: '还款流水', icon: '' }
+	      },
+//	       {
+//	        path: 'checkOrder',
+//	        name: 'CheckOrder',
+//	        component: _import('reconcil/checkManage/checkOrder'),
+//	        meta: { title: '对账派单', icon: '' }
+//	      },
+	      {
+	        path: 'checkList',
+	        name: 'CheckList',
+	        component: _import('reconcil/checkManage/checkList'),
+	        meta: { title: '对账处理', icon: '' }
+	      },
+	      {
+	        path: 'checkDetail',
+	        name: 'CheckDetail',
+	        hidden: true,
+	        component: _import('reconcil/checkManage/checkDetail'),
+	        meta: { title: '对账详情', icon: '' }
+	      },
+	       {
+	        path: 'repaymentDetail',
+	        name: 'RepaymentDetail',
+	        component: _import('reconcil/agreementManage/repaymentDetail'),
+	        meta: { title: '贷款列表', icon: '' }
+	      },
+	      {
+	        path: 'repaymentPlan',
+	        name: 'RepaymentPlan',
+	        hidden: true,
+	        component: _import('reconcil/agreementManage/repaymentPlan'),
+	        meta: { title: '还款计划', icon: '' }
+	      },
+	      {
+	        path: 'creditDetail',
+	        name: 'CreditDetail',
+	        hidden: true,
+	        component: _import('reconcil/creditApproval/creditDetail'),
+	        meta: { title: '减免详情', icon: '' }
+	      },
+	      {
+	        path: 'creditList',
+	        name: 'CreditList',
+	        component: _import('reconcil/creditApproval/creditList'),
+	        meta: { title: '对账审核', icon: '' }
+	      }
+    ]
+},
+   {
     path: '/personal',
     component: Layout,
     redirect: '/personal/account',
@@ -140,96 +245,6 @@ export const constantRouterMap = [
       }
     ]
   },
-   {
-  	path: '/template',
-    component: Layout,
-    redirect: '/template/temPageBase',
-    name: 'Template',
-    hidden: true,
-    meta: { title: '其他', icon: 'other' },
-    children: [
-      {
-        path: 'temPageBase',
-        name: 'TemPageBase',
-        component: _import('template/temPageBase'),
-        meta: { title: '报告页基础版模板', icon: '' }
-      },
-       {
-        path: 'temPageNorm',
-        name: 'TemPageNorm',
-        component: _import('template/temPageNorm'),
-        meta: { title: '报告页标准版模板', icon: '' }
-      },
-      {
-        path: 'information',
-        name: 'Information',
-        component: _import('template/information'),
-        meta: { title: '基础版&标准版', icon: '' }
-      }
-    ]
-  },
-//{
-//	path: '/reconcil',
-//  component: Layout,
-//  redirect: '/checkManage/checkSelf',
-//  name: 'Reconcil',
-//  hidden: false,
-//  meta: { title: '对账', icon: 'other' },
-//  children: [
-//   
-//	      {
-//	        path: 'checkSelf',
-//	        name: 'CheckSelf',
-//	        component: _import('reconcil/checkManage/checkSelf'),
-//	        meta: { title: '自动对账', icon: '' }
-//	      },
-////	       {
-////	        path: 'checkOrder',
-////	        name: 'CheckOrder',
-////	        component: _import('reconcil/checkManage/checkOrder'),
-////	        meta: { title: '对账派单', icon: '' }
-////	      },
-//	      {
-//	        path: 'checkList',
-//	        name: 'CheckList',
-//	        component: _import('reconcil/checkManage/checkList'),
-//	        meta: { title: '对账列表', icon: '' }
-//	      },
-//	      {
-//	        path: 'checkDetail',
-//	        name: 'CheckDetail',
-//	        hidden: true,
-//	        component: _import('reconcil/checkManage/checkDetail'),
-//	        meta: { title: '对账详情', icon: '' }
-//	      },
-//	       {
-//	        path: 'repaymentDetail',
-//	        name: 'RepaymentDetail',
-//	        component: _import('reconcil/agreementManage/repaymentDetail'),
-//	        meta: { title: '还款详情', icon: '' }
-//	      },
-//	      {
-//	        path: 'repaymentPlan',
-//	        name: 'RepaymentPlan',
-//	        hidden: true,
-//	        component: _import('reconcil/agreementManage/repaymentPlan'),
-//	        meta: { title: '还款计划', icon: '' }
-//	      },
-//	      {
-//	        path: 'creditDetail',
-//	        name: 'CreditDetail',
-//	        component: _import('reconcil/creditApproval/creditDetail'),
-//	        meta: { title: '减免详情', icon: '' }
-//	      },
-//	      {
-//	        path: 'creditList',
-//	        name: 'CreditList',
-//	        component: _import('reconcil/creditApproval/creditList'),
-//	        meta: { title: '减免计划', icon: '' }
-//	      }
-//  ]
-//},
-
   { path: '*', redirect: '/404', hidden: true }
 ]
 

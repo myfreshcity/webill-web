@@ -14,40 +14,84 @@
 			</ul>
 		</div>
 		<div class="nav2">
-			<p>逾期信息</p>
+			<p>实还金额</p>
+			<div class="nav2-box">
+			 <el-tabs  v-model="activeName1" type="card" @tab-click="realClick">
+			    <el-tab-pane label="未冲账" name="first"></el-tab-pane>
+			    <el-tab-pane label="已冲账" name="second"></el-tab-pane>
+			    <el-tab-pane label="全部" name="third"></el-tab-pane>
+			  </el-tabs>
+			</div>
 			<ul>
-				<li class="nav2-li-head"><span>应还日期</span><span>还款期数</span><span>应还本息</span><span class="nav2-span-right">实还金额</span></li>
-				<li v-for="(ele,k) in checkDetail.overtime_list">
+				<li class="nav2-li-head"><span>支付时间</span><span>姓名</span><span>还款金额</span><span class="nav2-span-right">还款渠道</span></li>
+				<li v-for="(ele,k) in realPay">
+					<span>{{ele.refund_time}}</span>
+					<span>{{ele.refund_name}}</span>
+					<span>{{ele.amount}}</span>
+					<span>{{ele.way}}</span>
+				</li>
+				<li><span >合计</span><span class="spanAll"></span></li>
+			</ul>
+	    </div>
+	    <div class="nav2">
+			<p>还款计划</p>
+			<div class="nav2-box">
+			 <el-tabs  v-model="activeName2" type="card" @tab-click="repayClick">
+			    <el-tab-pane label="逾期" name="first"></el-tab-pane>
+			    <el-tab-pane label="提前结清" name="second"></el-tab-pane>
+			    <el-tab-pane label="正常结清" name="third"></el-tab-pane>
+			    <el-tab-pane label="还款中" name="fourth"></el-tab-pane>
+			    <el-tab-pane label="全部" name="five"></el-tab-pane>
+			  </el-tabs>
+			</div>
+			<ul>
+				<li class="nav2-li-head"><span>应还日期</span><span>还款期数</span><span>逾期天数</span><span>应还本息</span><span class="nav2-span-right">还款状态</span></li>
+				<li v-for="(ele,k) in repayPlan">
 					<span>{{ele.deadline}}</span>
 					<span>第{{ele.tensor}}期</span>
+					<span>{{ele.overtime_date|overtimeFilter}}</span>
+					<span>{{ele.amount}}</span>
+					<span>{{ele.refund_status}}</span>
+				</li>
+			</ul>
+	    </div>
+		<!--<div class="nav2" >
+			<ul>
+				<li class="nav2-li-head"><span>应还日期</span><span>还款期数</span><span>逾期天数</span><span>应还本息</span><span class="nav2-span-right">还款状态</span></li>
+				<li v-for="(ele,k) in overList">
+					<span>{{ele.deadline}}</span>
+					<span>第{{ele.tensor}}期</span>
+					<span>{{ele.overtime_date}}</span>
 					<span>{{ele.amount}}</span>
 					<span>-</span>
 				</li>
-				<li><span>合计</span><span>共{{checkDetail.tensor}}期</span><span>{{checkDetail.overtime_sum}}</span><span>{{checkDetail.remain_sum}}</span></li>
+				<li><span>合计</span><span>共{{checkDetail.overtime_num}}期</span><span>-</span><span>{{checkDetail.overtime_sum}}</span><span>{{checkDetail.remain_sum}}</span></li>
 			</ul>
-		</div>
+		</div>-->
 		<div class="nav1 nav3">
 			<p>修改还款信息</p>
 			<ul>
-				<li class="li-head"><span class="span-left">清欠还款额</span><span class="span-right">最低还款额：1257.04 已挂账金额：200</span></li>
-				<li><span class="span-left">提前结清还款额</span><span class="span-right">最低还款额：6357.04</span></li>
+				<li class="li-head"><span class="span-left" >审批结果</span><span class="span-right">{{approveResult|resultFilter}}</span></li>
+				<li v-if="approveRemark"><span class="span-left" >拒绝理由</span><span class="span-right">{{approveRemark}}</span></li>
+				<li ><span class="span-left">最低还款额</span><span class="span-right">{{minSum}}<span class="redSpan">注：未加逾期费用</span></span></li>
 				<li>
 					<span class="span-left">处理方式</span>
 					<span class="span-right">
 					    <el-radio :disabled="radioDisable" v-model="selectType" label="0">&nbsp;清除欠款</el-radio>
-					    <el-radio :disabled="radioDisable" v-model="selectType" label="1">&nbsp;提前结清</el-radio>
+					    <el-radio :disabled="radioDisable" v-model="selectType" label="1">&nbsp;一次性结清</el-radio>
 					    <el-radio :disabled="radioDisable" v-model="selectType" label="2">&nbsp;移交外催</el-radio>
 					</span>
 				</li>
-				<li v-if="selectShow"><span class="span-left">协商金额</span><span class="span-right"><el-input v-model="consultValue" :disabled="radioDisable" class="work-input" placeholder="协商后的还款金额"></el-input></span></li>
-				<li v-if="selectShow">
+				<li><span class="span-left">协商金额</span><span class="span-right"><el-input v-model="consultValue" :disabled="radioDisable||handOver" class="work-input" placeholder="协商后的还款金额"></el-input></span></li>
+				<li>
 					<span class="span-left">承诺日期</span>
 					<span class="span-right">
 						<el-date-picker class="dataInp"
                           v-model="repayDate"
                           type="date"
+                          end-data="2018-04-01"
                           placeholder="承诺还款日期"
-                          :disabled="radioDisable"
+                          :disabled="radioDisable||handOver"
                           value-format="yyyy-MM-dd">
                         </el-date-picker>
 					</span>
@@ -56,7 +100,7 @@
 			</ul>
 			 <p class="nav3-sub" v-if="!radioDisable"><el-button v-waves type="primary" @click="commitSub">提交</el-button></p>
 		</div>
-		<div class="nav4" v-if="matching">
+		<div class="nav4" v-if="!radioDisable">
 			<p>未匹配流水列表</p>
 			 <div class="filter-container client-serach">
 			  	<el-form :inline="true" :model="formSearch" class="demo-form-inline">
@@ -81,11 +125,12 @@
 				</el-form>
 			  </div>
 		  <ul class="client-ul">
-		  	<li class="client-li"><span>支付日期</span><span>支付时间</span><span>姓名</span><span>收款卡号尾号</span><span>还款金额</span><span>还款渠道</span><span>操作</span></li>
+		  	<li class="client-li"><span>支付日期</span><span>支付时间</span><span>姓名</span><span>门店</span><span>收款卡号尾号</span><span>还款金额</span><span>还款渠道</span><span>操作</span></li>
 		  	<li v-for="(ele,k) in contractList">
 		  		<span>{{ele.refund_date}}</span>
 		  		<span>{{ele.refund_time}}</span>
 		  		<span>{{ele.refund_name}}</span>
+		  		<span>{{ele.shop}}</span>
 		  		<span>{{ele.card_id}}</span>
 		  		<span>{{ele.amount}}</span>
 		  		<span>{{ele.type}}</span>
@@ -123,21 +168,26 @@
 		 },
 		 data(){
 			return {
+				activeName1: 'first',
+				activeName2: 'first',
+				overList:[],  //逾期列表
+				minSum:"",   //最低还款额
 				isStrike:false,
 				strikeDetail:{},
 				bgShow:false,
 				radioDisable:false, 
+				handOver:false,
 				selectType:'0',    
 				consultValue:"",
 				repayDate:'',      //承诺还款日期
 				remark:'',         //备注
 				loading1:false,
-		      	loading2:false,
 		      	totalCount:0,
 		      	contractList:[],
-		      	latestReportType:'',
 		      	matching:true,
 		      	selectShow:true,
+		      	approveResult:"",   //审批结果
+		      	approveRemark:"",   //拒绝审批理由
 		      	formSearch:{
 		      		realName:"",
 		      		range:"",
@@ -145,50 +195,147 @@
 		      	},
 		      	currentPage:1,
 		      	checkDetail:{},
+		      	realPay:[],   //实际还款列表
+		      	realPay1:[],
+		      	realPay2:[],
+		      	realPay3:[],
+		      	repayPlan:[],  //还款计划列表
+		      	repayPlan1:[],
+		      	repayPlan2:[],
+		      	repayPlan3:[],
+		      	repayPlan4:[],
+		      	repayPlan5:[],
+			}
+		},
+		filters:{
+			overtimeFilter(index){
+				if(index<0){
+					return "--"
+				}else{
+					return index
+				}
+			},
+			resultFilter(index){
+				if(index==0){
+					return "拒绝"
+				}else if(index==1){
+					return "通过"
+				}else{
+					return ""
+				}
 			}
 		},
 		mounted:function(){
-			 console.log(this.contractNo)
 			 $(window).unbind ('scroll');
-			   const checkUrl=this.$checkStage('/charge/contract/detail/get')
-	           this.$http.post(checkUrl, {'contract_no':this.contractNo}).then((response) => {
-	           	            console.log(response)
-	           	            this.checkDetail=response.data
-	                    }, (response) => {
-
-	                    });
-	           var data = new FormData();
-	           data.append('userId', this.userInfo.id);
-	           data.append('page', 1);
-	           data.append('range', this.formSearch.range);
-	           data.append('customer', this.formSearch.realName);
-	           data.append('refund_date', this.formSearch.date);
-	           const url=this.$checkStage('/charge/refund/unlink/get')
-	           this.$http.post(url, data).then((response) => {
-	           	            console.log(response)
-	                        this.contractList=response.data.unlinked_list
-	                        this.totalCount=response.data.num
-	                    }, (response) => {
-
-	                    });
+			 if(this.userInfo.mobileNo){
+			 	  const checkUrl=this.$checkStage('/charge/contract/detail/get')
+		           this.$http.post(checkUrl, {'contract_no':this.contractNo,"is_overtime":0}).then((response) => {
+		           	            console.log(response)
+		           	            this.checkDetail=response.data
+		           	            this.overList=response.data.overtime_list
+		           	            this.minSum=this.checkDetail.overtime_sum
+		           	            this.approveResult=this.checkDetail.commit.result
+		           	            this.approveRemark=this.checkDetail.commit.approve_remark
+		           	            this.realPay3=this.checkDetail.real_pays
+		           	            this.realPay=this.realPay3
+		           	            for(let i=0;i<this.realPay.length;i++){
+		           	            	if(this.realPay[i].amount==0){
+		           	            		this.realPay2.push(this.realPay[i])
+		           	            	}else{
+		           	            		this.realPay1.push(this.realPay[i])
+		           	            	}
+		           	            }
+		           	            this.repayPlan5=this.checkDetail.overtime_list
+		           	            
+		           	            for(let i=0;i<this.repayPlan5.length;i++){
+		           	            	if(this.repayPlan5[i].refund_status=="逾期"){
+		           	            		this.repayPlan1.push(this.repayPlan5[i])
+		           	            	}else if(this.repayPlan5[i].refund_status=="提前结清"){
+		           	            		this.repayPlan2.push(this.repayPlan5[i])
+		           	            	}else if(this.repayPlan5[i].refund_status=="正常结清"){
+		           	            		this.repayPlan3.push(this.repayPlan5[i])
+		           	            	}else if(this.repayPlan5[i].refund_status=="还款中"){
+		           	            		this.repayPlan4.push(this.repayPlan5[i])
+		           	            	}
+		           	            }
+		           	            this.repayPlan=this.repayPlan1
+		           	            if(this.checkDetail.commit.amount){
+		           	            	this.selectType=String(this.checkDetail.commit.type)
+		           	            	this.repayDate=this.checkDetail.commit.deadline
+		           	            	this.remark=this.checkDetail.commit.remark
+		           	            	this.consultValue=this.checkDetail.commit.amount
+		           	            	if(this.checkDetail.commit.result==1&&this.checkDetail.commit.is_valid==1){
+		           	            		this.radioDisable=true
+		           	            	}
+		           	            	
+		           	            }
+		                    }, (response) => {
+	
+		                    });
+		           var data = new FormData();
+		           data.append('userId', this.userInfo.id);
+		           data.append('page', 1);
+		           data.append('range', this.formSearch.range);
+		           data.append('customer', this.formSearch.realName);
+		           data.append('refund_date', this.formSearch.date);
+		           const url=this.$checkStage('/charge/refund/unlink/get')
+		           this.$http.post(url, data).then((response) => {
+		                        this.contractList=response.data.unlinked_list
+		                        this.totalCount=response.data.num
+		                       
+		                    }, (response) => {
+	
+		                    });
+			 }else{
+			 	this.$router.push({path:'/reconcil/checkList'})
+			 }
+			 
 		},
 		watch:{
 			 selectType:function(index){
 		     	if(index==2){
-				  		this.selectShow=false;
+				  		this.handOver=true;
+				  		this.minSum="-"
+				 }else if(index==1){
+				 	    this.handOver=false;
+				  		this.minSum=this.checkDetail.unsettled_amount
 				 }else{
-				  		this.selectShow=true;
+				  		this.handOver=false;
+				  		this.minSum=this.checkDetail.overtime_sum
 				}
 		     	
 		     },
 		},
 		methods:{
+			realClick(index) {
+			   console.log(this.activeName1)
+			   if(this.activeName1=="first"){
+			   	   this.realPay=this.realPay1
+			   }else if(this.activeName1=="second"){
+			   	    this.realPay=this.realPay2
+			   }else{
+			   	    this.realPay=this.realPay3
+			   }
+		    },
+		    repayClick(index) {
+		    	if(this.activeName2=="first"){
+		    		console.log(1111)
+			   	   this.repayPlan=this.repayPlan1
+			   }else if(this.activeName2=="second"){
+			   	    this.repayPlan=this.repayPlan2
+			   }else if(this.activeName2=="third"){
+			   	    this.repayPlan=this.repayPlan3
+			   }else if(this.activeName2=="fourth"){
+			   	    this.repayPlan=this.repayPlan4
+			   }else{
+			   	    this.repayPlan=this.repayPlan5
+			   }
+		    },
 			cancel(){
 				this.isStrike=false
 				this.bgShow=false
 			},
 			confirm(){
-			   this.$router.push({path:'/backPage'})
 			   var data = new FormData();
 	           data.append('contract_no', this.contractNo);
 	           data.append('user_id',this.userInfo.id);
@@ -196,8 +343,8 @@
 	           const url=this.$checkStage('/charge/refund/unlink/link')
 	           this.$http.post(url, data).then((response) => {
 	           	            console.log(response)
-	           	            if(response.data.status==200){
-	           	            	
+	           	            if(response.data.isSucceed==200){
+	           	            	 this.$router.push({path:'/backPage'})
 	           	            }else{
 	           	            	this.$alert(response.data.message, '系统提示', {
 					                  confirmButtonText: '确定',
@@ -218,26 +365,32 @@
 				this.strikeDetail=data
 			},
 			commitSub(){
-			   var data = new FormData();
-	           data.append('contract_no', this.contractNo);
-	           data.append('user_id',this.userInfo.id);
-	           data.append('type', this.selectType);
-	           data.append('deadline', this.repayDate);
-	           data.append('amount', this.consultValue);
-	           data.append('commit',this.remark);
-	           const url=this.$checkStage('/charge/commit/create')
-	           this.$http.post(url, data).then((response) => {
-	           	            console.log(response)
-	           	            if(response.data.status==200){
-	           	            	this.$router.push({path:'/reconcil/checkDetail'})
-	           	            }else{
-	           	            	this.$alert(response.data.message, '系统提示', {
-					                  confirmButtonText: '确定',
-							    });
-	           	            }
-	                    }, (response) => {
-	                        
-	                    });
+			   if((!this.repayDate||!this.consultValue)&&this.selectShow){
+			   	  this.$alert("协商金额，日期为必填项", '系统提示', {
+					     confirmButtonText: '确定',
+				   });
+			   }else{
+				   var data = new FormData();
+		           data.append('contract_no', this.contractNo);
+		           data.append('user_id',this.userInfo.id);
+		           data.append('type', this.selectType);
+		           data.append('deadline', this.repayDate);
+		           data.append('amount', this.consultValue);
+		           data.append('commit',this.remark);
+		           const url=this.$checkStage('/charge/commit/create')
+		           this.$http.post(url, data).then((response) => {
+		           	            console.log(response)
+		           	            if(response.data.isSucceed==200){
+		           	            	this.$router.push({path:'/reconcil/checkList'})
+		           	            }else{
+		           	            	this.$alert(response.data.message, '系统提示', {
+						                  confirmButtonText: '确定',
+								    });
+		           	            }
+		                    }, (response) => {
+		                        
+		                    });
+	          }
 			},
 			 handleCurrentChange(val) {
 	       	   if(val!=1){
@@ -273,7 +426,7 @@
 	                        this.contractList=response.data.unlinked_list
 	                        this.totalCount=response.data.num
 	                    }, (response) => {
-
+                             this.loading1=false
 	                    });
 	                    
 	       },
@@ -315,9 +468,6 @@
 		margin-top: .2rem;
 		padding: .2rem;
 	}
-	.nav4 ul{
-		margin-top: .3rem;
-	}
 	.nav4 p{
 		margin-bottom: .3rem;
 	}
@@ -335,6 +485,7 @@
 	.nav1 ul li span{
 		flex: 1;
 	}
+	
 	.nav1 ul li .span-left{
 		flex: .3;
 		border-right:1px #E3E7F1 solid ;
@@ -343,10 +494,15 @@
 	.nav2{
 		padding: .3rem;
 	}
-	.nav2 ul{
+	.nav2 .nav2-box{
 		width: 80%;
 		margin-top: .2rem;
 		padding: .2rem;
+	}
+	.nav2 ul{
+		width: 80%;
+		padding: .2rem;
+		margin-top: -.4rem;
 	}
 	.nav2 ul li{
 		display: flex;
@@ -356,13 +512,16 @@
 		border-top:none ;
 	}
 	.nav2 ul .nav2-li-head{
-		border-top: 1px #E3E7F1 solid;
+		/*border-top: 1px #E3E7F1 solid;*/
 		background: #eee;
 	}
 	.nav2 ul li span{
 		flex:1;
 		text-align: center;
 		border-right:1px #E3E7F1 solid ;
+	}
+	.nav2 ul li .spanAll{
+		flex: 3;
 	}
 	.nav2 ul li .nav2-span-right{
 		border-right: none;
@@ -481,5 +640,10 @@
 	}
 	.span-check:hover{
 		color: #2299DD;
+	}
+	
+	.redSpan{
+		margin-left: .2rem;
+		color: red;
 	}
 </style>

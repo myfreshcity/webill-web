@@ -45,4 +45,7 @@ export default {
 		display: none;
 		height: 0;
 	}
+	.autoNav2 .el-form-item .el-form-item__label{
+		width: 150px !important;
+	}
 </style>

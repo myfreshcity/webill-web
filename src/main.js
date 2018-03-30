@@ -25,7 +25,42 @@ Vue.use(ElementUI)
 //Object.keys(filters).forEach(key => {
 //Vue.filter(key, filters[key])
 //})
-
+axios.interceptors.request.use(
+    config => {
+    	  const token = localStorage.getItem('jwt_token')
+        if (token) {  // 每次发送请求之前判断是否存在token，如果存在，则统一在http请求的header都加上token，不用每次请求都手动添加了
+            config.headers.Token = token;
+        }
+        return config;
+    },
+    err => {
+        return Promise.reject(err);
+    });
+    
+axios.interceptors.response.use(
+    response => {
+//  	  console.log(response)
+    	  if(response.data.obj){
+    	  	if(response.data.obj.jwtToken){
+    	  		let token= response.data.obj.jwtToken
+    	  	  localStorage.setItem('jwt_token', token)
+    	  	}
+    	  }
+        return response;
+    },
+    error => {
+        if (error.response) {
+            switch (error.response.status) {
+                case 401:
+                    // 这里写清除token的代码
+                    router.replace({
+                        path: 'login',
+                        query: {redirect: router.currentRoute.fullPath}//登录成功后跳入浏览的当前页面
+                    })
+            }
+        }
+        return Promise.reject(error.response.data) 
+    });
 Vue.config.productionTip = false
 
 new Vue({

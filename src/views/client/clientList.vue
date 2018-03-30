@@ -68,8 +68,6 @@
 	      :total="totalCount">
 	    </el-pagination>
 	  </div>
-	  <!--<input type="file" id="file" name="myfile" />
-	  <input type="button" @click="UpladFile()" value="上传" />-->
 	</div>
 </template>
 
@@ -103,10 +101,12 @@
     },
     filters:{
     	msgType(index){
-    		if(index==0){
+    		if(index===0){
     			return "基础版"
-    		}else{
+    		}else if(index===1){
     			return "标准版"
+    		}else{
+    			return ""
     		}
     	},
     	msgStatus(index){
@@ -137,6 +137,7 @@
 	           data.append('timeFrom',this.formSearch.latestReportTimeDatetime)
 	           const url=this.$backStage('/api/customer/list')
 	           this.$http.post(url, data).then((response) => {
+	           	            console.log(response)
 	                        this.clientList=response.data.records
 	                        this.totalCount=response.data.total
 	                    }, (response) => {
@@ -149,6 +150,7 @@
 					     _this.$http.post(url,{"mobileNo":Cookies.get("_wibn"),"password":Cookies.get("_wibp"),'checkFlag':"pwd"})
 					      .then((response) => {
 					          if(response.data.status==200){
+					          	 localStorage.setItem('jwt_token',response.data.obj.jwtToken)
 					             this.$store.dispatch('UserInfo', response.data.obj)
 					             var data = new FormData();
 						           data.append('userId', _this.userInfo.id);
@@ -184,27 +186,6 @@
 
     },
      methods: {
-     	UpladFile(){
-     		var fileObj = document.getElementById("file").files[0]; // 获取文件对象
-
-            var FileController = 'http://yadong.test.manmanh.com/charge/upload';                    // 接收上传文件的后台地址 
-
-            console.log(fileObj)
-            // FormData 对象
-            var form = new FormData();
-//          form.append("author", "hooyes");                        // 可以增加表单数据
-            form.append("file", fileObj);                           // 文件对象
-            // XMLHttpRequest 对象
-            var xhr = new XMLHttpRequest();
-            xhr.open("post", FileController, true);
-            xhr.send(form);
-            xhr.onload = function () {
-                this.$alert("上传成功", '系统提示', {
-	                  confirmButtonText: '确定',
-			    });
-            };
-          
-     	},
       checkAgain(data){
       	if(data.latestReportStatus==1){
       	this.$confirm('重新获取会消耗查询次数', '系统提示', {

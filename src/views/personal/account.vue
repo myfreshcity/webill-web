@@ -73,6 +73,7 @@
 					      .then((response) => { 
 					          if(response.data.status==200){
 					             _this.$store.dispatch('UserInfo', response.data.obj)
+					             localStorage.setItem('jwt_token',response.data.obj.jwtToken)
 					             _this.user=_this.userInfo
 								 if(_this.user.isVerified==0){
 									_this.isReal=false

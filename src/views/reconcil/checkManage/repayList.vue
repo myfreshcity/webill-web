@@ -1,4 +1,4 @@
-<!--对账列表-->
+<!--还款流水列表-->
 
 <template>
 	<div class="content">
@@ -8,21 +8,21 @@
           <el-input v-model="formSearch.realName" placeholder="客户姓名"></el-input>
         </el-form-item>
         <el-form-item label="">
-		    <el-input v-model="formSearch.contractNo" placeholder="合同编号"></el-input>
+		    <el-input v-model="formSearch.shop" placeholder="门店"></el-input>
+		  </el-form-item>
+		   <el-form-item label="">
+		    <el-select v-model="formSearch.checkStatus" placeholder="流水状态">
+		      <el-option label="未匹配" value="0"></el-option>
+		      <el-option label="已匹配" value="1"></el-option>
+		    </el-select>
 		  </el-form-item>
 		  <el-form-item label="">
 		    <el-date-picker class="dataInp"
                           v-model="formSearch.date"
                           type="date"
-                          placeholder="对账日期"
+                          placeholder="创建时间"
                           value-format="yyyy-MM-dd">
             </el-date-picker>
-		  </el-form-item>
-		   <el-form-item label="">
-		    <el-select v-model="formSearch.dealType" placeholder="处理状态">
-		      <el-option label="未处理" value="0"></el-option>
-		      <el-option label="已处理" value="1"></el-option>
-		    </el-select>
 		  </el-form-item>
 		  <el-form-item>
 		    <el-button type="primary" @click="onSearch" :loading="loading1">查询</el-button>
@@ -31,22 +31,20 @@
 		</el-form>
 	  </div>
 	  <ul class="client-ul">
-	  	<p><span class="client-spanLeft">数据列表</span><el-button type="primary" @click="handleDownload()" :loading="downloadLoading">导出数据</el-button></p>
-	  	<li class="client-li"><span>合同编号</span><span>客户姓名</span><span class="client-span-card">身份证</span><span >还款期数</span><span>逾期期数</span><span>对账日期</span><span>对账状态</span><span>处理状态</span><span>操作</span></li>
+	  	<p><span class="client-spanLeft">数据列表</span><el-button type="primary" @click="guide()" :loading="downloadLoading">导入流水</el-button></p>
+	  	<li class="client-li"><span>创建时间</span><span>客户姓名</span><span>所在门店</span><span>还款金额</span><span >支付时间</span><span>渠道</span><span>收款卡号尾号</span><span>流水状态</span></li>
 	  	<li v-for="(ele,k) in contractList">
 	  		<span >{{ele.contract_no}}</span>
 	  		<span >{{ele.customer}}</span>
-	  		<span class="client-span-card">{{ele.id_number}}</span>
+	  		<span >{{ele.id_number}}</span>
+	  		<span >{{ele.loan_amount}}</span>
+	  		<span >{{ele.loan_date}}</span>
 	  		<span >{{ele.tensor}}</span>
-	  		<span >{{ele.overtime_tensor}}</span>
-	  		<!--<span >{{ele.overtime_days}}</span>-->
-	  		<span >{{ele.upload_time}}</span>
-	  		<span >{{ele.check_status|checkStatus}}</span>
-	  		<span >{{ele.deal_status|dealStatus}}</span>
-	  		<span @click="checkDetail(ele.contract_no)" class="span-check">查看详情</span>
+	  		<span >{{ele.tensor}}</span>
+	  		<span >{{ele.tensor}}</span>
 	  	</li>
 	  </ul>
-	  <div class="block" id="foot-page">
+	  <!--<div class="block" id="foot-page">
 	    <el-pagination
 	      @current-change="handleCurrentChange"
 	      :current-page="currentPage"
@@ -55,6 +53,22 @@
 	      :total="totalCount">
 	    </el-pagination>
 	  </div>
+	  <div class="contract" v-show="isGuide">
+	  	  选择模板  <el-select v-model="value" placeholder="请选择">
+		    <el-option
+		      v-for="item in options"
+		      :key="item.value"
+		      :label="item.label"
+		      :value="item.value">
+		    </el-option>
+		  </el-select>
+	  	 <p class="p1 component-item"><span>模板下载</span><el-button v-waves type="primary" @click="downLoad"><svg-icon icon-class="downLoad" /> 模 板</el-button></p>
+         <p class="p2">(请先下载Excel模板，按照模板格式填写数据，以确保数据格式正确)</p>
+         <p class="p1"><span>上传合同文件</span><input type="file" id="file" name="myfile" multiple="multiple" accept=".xls"/></p>
+         <p class="p2">(只支持.xls文件，切勿更改文件后缀名。） </p>
+         <p class="p4"><el-button v-waves type="primary" @click="cancel()">取消</el-button><el-button v-waves type="primary" @click="UpladFile()" :loading="loading">上传</el-button></p>
+	  </div>
+	  <div class="bg" v-show="bgShow" @click="showBg()"></div>-->
 	</div>
 </template>
 
@@ -64,49 +78,60 @@
   import { getLoginUser } from '@/utils/utils'
   import { getToken } from '@/utils/auth' // 验权
   import Cookies from 'js-cookie'
+  import waves from '@/directive/waves/index.js' // 水波纹指令
   export default {
-    data() {
-      return {
-      	downloadLoading:false,
-      	loading1:false,
-      	totalCount:0,
-      	contractList:[],
-      	filename:"",
-      	formSearch:{
-      		realName:"",
-      		date:"",
-      		contractNo:"",
-      		dealType:"",
-      	},
-      	currentPage:1,
+  	directives: {
+		waves
+    },
+    data(){
+        return {
+	      	downloadLoading:false,
+	      	loading:false,
+	      	loading1:false,
+	      	totalCount:0,
+	      	contractList:[],
+	      	isGuide:false,
+	      	bgShow:false,
+	      	formSearch:{
+	      		realName:"",
+	      		date:"",
+	      		shop:"",
+	      		checkStatus:"",
+	      	},
+	      	 options: [{
+	          value: '选项1',
+	          label: '模板一'
+	        }, {
+	          value: '选项2',
+	          label: '模板二'
+	        }],
+	        value: '',
+	      	currentPage:1,
       }
     },
     filters:{
-    	dealStatus(index){
+    	checkFilter(index){
     		if(index==0){
-    			return "未处理"
-    		}else{
-    			return "已处理"
-    		}
-    	},
-    	checkStatus(index){
-    		if(index==0){
-    			return "对账失败"
-    		}else{
-    			return "对账成功"
+    			return "逾期"
+    		}else if(index==1){
+    			return "正常"
     		}
     	}
     },
+    watch:{
+    	
+    },
     mounted:function(){
-    	   $(window).unbind ('scroll');
-	        if(this.userInfo.mobileNo){
+		 $(window).unbind ('scroll');
+    	   if(this.userInfo.mobileNo){
 	           var data = new FormData();
-	           data.append('userId', this.userInfo.id);
+	           data.append('userId', 'this.userInfo.id');
 	           data.append('page', 1);
-	           data.append('contract_no', this.formSearch.contractNo);
 	           data.append('customer', this.formSearch.realName);
-	           data.append('all',0);
-	           data.append('checkStatus',this.formSearch.dealType);
+	           data.append('all',1);
+	           data.append("file_id",this.serialId)
+//	           data.append('checkStatus',this.formSearch.shop);
+	           data.append('checkStatus',this.formSearch.checkStatus);
 	           data.append('check_date', this.formSearch.date);
 	           const url=this.$checkStage('/charge/contract/get')
 	           this.$http.post(url, data).then((response) => {
@@ -116,70 +141,19 @@
 	                    }, (response) => {
 
 	                    });
-            }else{
-            	 if (getToken()) {
-    	         const url=this.$backStage('/api/user/login')
-    	         const _this=this
-					     _this.$http.post(url,{"mobileNo":Cookies.get("_wibn"),"password":Cookies.get("_wibp"),'checkFlag':"pwd"})
-					      .then((response) => {
-					          if(response.data.status==200){
-					             this.$store.dispatch('UserInfo', response.data.obj)
-					             localStorage.setItem('jwt_token',response.data.obj.jwtToken)
-					            var data = new FormData();
-					            data.append('userId', this.userInfo.id);
-					            data.append('page', 1);
-					            data.append('contract_no', this.formSearch.contractNo);
-					            data.append('customer', this.formSearch.realName);
-					            data.append('all',0);
-					            data.append('checkStatus',this.formSearch.dealType);
-					            data.append('check_date', this.formSearch.date);
-					            const url=this.$checkStage('/charge/contract/get')
-					            this.$http.post(url, data).then((response) => {
-					           	            console.log(response)
-					                        this.contractList=response.data.contract_list
-					                        this.totalCount=response.data.num
-					                    }, (response) => {
-				
-					                    });
-					          }else{
-					          	_this.$alert("登录信息有误，请退出后重新登录", '系统提示', {
-							          confirmButtonText: '确定',
-							        });
-					          }
-
-					      }).catch(function(response){
-				             _this.$alert("登录信息有误，请退出后重新登录", '系统提示', {
-							          confirmButtonText: '确定',
-							        });
-				        })
-                 }
-            }
+	        }else{
+	        	this.$router.push({path:'/reconcil/checkList'})
+	        }
     },
      methods: {
      	checkDetail(data){
      		this.$store.dispatch('ContractNo', data)
-     		this.$router.push({path:'/reconcil/checkDetail'})
+     		this.$router.push({path:'/reconcil/repaymentPlan'})
      	},
-	    handleDownload() {
-	      this.downloadLoading = true
-	      import('@/vendor/Export2Excel').then(excel => {
-	        const tHeader = ['合同编号', '客户姓名', '身份证', '还款期数', '逾期期数','对账状态','处理状态','备注']
-	        const filterVal = ['contract_no', 'customer', 'id_number', 'tensor', 'upload_time','check_status','deal_status','0代表未处理或对账失败，1代表已处理或处理成功']
-	        const list = this.contractList
-	        const data = this.formatJson(filterVal, list)
-	        excel.export_json_to_excel(tHeader, data, this.filename)
-	        this.downloadLoading = false
-	      })
-	    },
-	    formatJson(filterVal, jsonData) {
-	      return jsonData.map(v => filterVal.map(j => {
-//	        if (j === 'timestamp') {
-//	          return parseTime(v[j])
-//	        } else {
-	          return v[j]
-//	        }
-	      }))
-	    },
+     	
+	  guide(){
+	  	this.$router.push({path:'/reconcil/checkSelf'})
+	  },
       clear(){
       	this.formSearch.realName=""
       	this.formSearch.mobileNo=""
@@ -198,12 +172,12 @@
 	           data.append('page', val);
 	           data.append('contract_no', this.formSearch.contractNo);
 	           data.append('customer', this.formSearch.realName);
-	           data.append('all',0);
-	           data.append('checkStatus',this.formSearch.dealType);
+	           data.append('all',1);
+	           data.append('checkStatus',this.formSearch.shop);
+	           data.append('checkStatus',this.formSearch.checkStatus);
 	           data.append('check_date', this.formSearch.date);
 	           const url=this.$checkStage('/charge/contract/get')
 	           this.$http.post(url, data).then((response) => {
-	           	            console.log(response)
 	                        this.contractList=response.data.contract_list
 	                        this.totalCount=response.data.num
 	                    }, (response) => {
@@ -217,16 +191,17 @@
 	           data.append('page', 1);
 	           data.append('contract_no', this.formSearch.contractNo);
 	           data.append('customer', this.formSearch.realName);
-	           data.append('all',0);
+	           data.append('all',1);
+	           data.append('checkStatus',this.formSearch.shop);
+	           data.append('checkStatus',this.formSearch.checkStatus);
 	           data.append('check_date', this.formSearch.date);
 	           const url=this.$checkStage('/charge/contract/get')
 	           this.$http.post(url, data).then((response) => {
 	           	            this.loading1=false
-	           	            console.log(response)
 	                        this.contractList=response.data.contract_list
 	                        this.totalCount=response.data.num
 	                    }, (response) => {
-
+                            this.loading1=false
 	                    });
 
       }
@@ -234,7 +209,8 @@
     computed: {
 	    ...mapGetters([
 	      'msgType',
-	      'userInfo'
+	      'userInfo',
+	      'serialId'
 	    ])
 	}
   }
@@ -302,10 +278,71 @@
 	.content .client-ul li .client-span-card{
 		flex: 1.5;
 	}
+	/*导入合同窗口*/
+	.contract{
+		width: 40%;
+		height: 4.4rem;
+		position: fixed;
+		left: 50%;
+		top:50% ;
+		margin-left: -20%;
+		margin-top: -2.2rem;
+		border: 1px #E3E7F1 solid;
+		background: #fff;
+		padding: .3rem;
+		z-index: 1000;
+	}
+	.contract .el-select{
+		margin-left: .2rem;
+		width: 1.6rem;
+	}
+	.p1{
+		font-size: .16rem;
+		margin-bottom: .3rem;
+		margin-top: .2rem;
+	}
+	.p1 button{
+		padding: .1rem .2rem;
+		margin-left: .3rem;
+		text-align: center;
+		font-size: .16rem;
+	}
+	.p1 input{
+		margin-left: .3rem;
+		outline: none;
+		font-size: .16rem;
+		display: inline-block;
+		border-radius: .2rem;
+	}
+	.p2{
+		color: #666;
+		margin-bottom: .3rem;
+	}
+	.p3{
+		color: red;
+		margin-bottom: .2rem;
+	}
+	.p4 {
+		text-align: center;
+	}
+	.bg{
+		width: 100%;
+		height: 100%;
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: #000;
+		opacity: .3;
+	}
 	.span-check{
 		color: #0BB1FF;
 	}
 	.span-check:hover{
-		color: #000;
+		color: #333;
+	}
+	.redSpan{
+		color: red;
 	}
 </style>

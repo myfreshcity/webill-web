@@ -33,15 +33,10 @@
       	loading2:false,
       	totalCount:0,
       	clientList:[],
-      	latestReportType:'',
-      	filename:"",
       	formSearch:{
-      		latestReportTimeDatetime:"",
       		realName:"",
       		mobileNo:"",
       		idNo:"",
-      		latestReportType:"",
-      		latestReportStatus:"",
       		start:0,
       		length:10,
       		sortWay:""
@@ -70,15 +65,18 @@
     	}
     },
     mounted:function(){
-    	   console.log(this.contractNo)
 			 $(window).unbind ('scroll');
+			 if(this.userInfo.mobileNo){
 			   const checkUrl=this.$checkStage('/charge/contract/detail/get')
-	           this.$http.post(checkUrl, {'contract_no':this.contractNo}).then((response) => {
+	           this.$http.post(checkUrl, {'contract_no':this.contractNo,"is_overtime":0}).then((response) => {
 	           	            console.log(response)
 	           	            this.repaymentList=response.data.overtime_list
 	                    }, (response) => {
 
 	                    });
+	         }else{
+	         	this.$router.push({path:'/reconcil/checkList'})
+	         }
      },
      methods: {
 	   

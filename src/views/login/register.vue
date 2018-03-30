@@ -189,6 +189,7 @@
 				          	 Cookies.set('_wibn',response.data.obj.mobileNo,7)
 					         Cookies.set('_wibp',response.data.obj.password,7 )
 					         this.$store.dispatch('UserInfo', response.data.obj)
+					          localStorage.setItem('jwt_token',response.data.obj.jwtToken)
 					         if(response.data.obj.realName){
 					             	this.$router.push({ path: '/client/clientList' })
 					          }else{
@@ -206,9 +207,6 @@
 		  	},
 		  	getCode(){
 		  		if(this.codeText=="获取验证码"&&!this.disabled1){
-				      	this.$alert('验证码发送成功,请不要重复点击', '系统提示', {
-					          confirmButtonText: '确定',
-					    });
 					    this.disabled1=true
 							    const url=this.$backStage('/api/verifyCode/sendVerifyCode')
 							    this.$http.post(url,{'mobileNo':this.mobileNo,'checkFlag':"register"})

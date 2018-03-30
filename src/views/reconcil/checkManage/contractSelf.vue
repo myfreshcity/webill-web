@@ -1,13 +1,12 @@
-<!--导入流水页-->
+<!--导入合同列表页-->
 
 <template>
 	<div class="content">
-         <p class="p1 component-item"><span>现金流水 &nbsp;&nbsp;模板下载</span><el-button v-waves type="primary" @click="downLoad"><svg-icon icon-class="downLoad" /> 模 板</el-button></p>
+         <p class="p1 component-item"><span>贷款合同 &nbsp;&nbsp;模板下载</span><el-button v-waves type="primary" @click="downLoad"><svg-icon icon-class="downLoad" /> 模 板</el-button></p>
          <p class="p2">(请先下载Excel模板，按照模板格式填写数据，以确保数据格式正确)</p>
          <!--<p class="p1"><span>上传流水文件</span><input type="file" id="file" name="myfile" multiple="multiple" accept=".xls"></p>-->
-         <p class="p1"><span class="span-p1">上传流水文件</span> <upload-excel-component @on-selected-file='selected'></upload-excel-component></p>
+         <p class="p1"><span class="span-p1">上传合同文件</span> <upload-excel-component @on-selected-file='selected'></upload-excel-component></p>
          <p class="p2">(只支持.xls文件，切勿更改文件后缀名。） </p>
-         <p class="p3">注：仅支持当天之前的流水对账，且不允许重复对账</p>
          <p class="p4"><el-button v-waves type="primary" @click="UpladFile()" :loading="loading">确认上传</el-button></p>
          <!--<upload-excel-component @on-selected-file='selected'></upload-excel-component>-->
          <el-table :data="tableData" border highlight-current-row style="width: 100%;margin-top:20px;">
@@ -53,7 +52,7 @@
 		 		}else{
 		 		this.loading=false
 	     		var fileObj = document.getElementById("excel-upload-input").files; // 获取文件对象
-	            var FileController = this.$checkStage('/charge/refund/upload');                    // 接收上传文件的后台地址 
+	            var FileController = this.$checkStage('/charge/plan/upload');                    // 接收上传文件的后台地址 
 	            // FormData 对象
 	            var form = new FormData();
 //	            for(var i=0;i<fileObj.length;i++){      
@@ -67,9 +66,8 @@
 	            		_this.$alert("上传成功", '系统提示', {
 			                  confirmButtonText: '确定',
 					    });
-					    _this.$store.dispatch("SerialId",response.data.file_id)
 					    _this.loading=false
-		                _this.$router.push({path:'/reconcil/repayList'})
+		                _this.$router.push({path:'/reconcil/repaymentDetail'})
 	            	}else{
 	            		_this.$alert(response.data.message, '系统提示', {
 					        confirmButtonText: '确定',
@@ -80,8 +78,7 @@
 		        }
 	        },
 	     	downLoad(){
-	     		var url=this.$checkStage('/charge/refund/download')
-	     		window.open(url)
+	     		window.open(this.$checkStage('/charge/plan/download'))
 	     	},
 	     	selected(data) {
 	     	  console.log(data)
@@ -121,7 +118,7 @@
 	}
 	.p1 .span-p1{
 		float: left;
-		margin-top: 8px;
+		margin-top: 5px;
 	}
 	.p2{
 		color: #666;

@@ -191,6 +191,7 @@
 					          	 Cookies.set('_wibn',response.data.obj.mobileNo,7 )
 					          	 Cookies.set('_wibp',response.data.obj.password,7 )
 					             this.$store.dispatch('UserInfo', response.data.obj)
+					             localStorage.setItem('jwt_token',response.data.obj.jwtToken)
 					             if(response.data.obj.realName){
 					             	this.$router.push({ path: '/client/clientList' })
 					             }else{
@@ -203,7 +204,7 @@
 					          }
 					         
 					      }).catch(function(response){
-				              this.loading=false
+//				              this.loading=false
 				          })
 				      }
 			     }else{
@@ -227,27 +228,30 @@
 			     	            const url=this.$backStage('/api/user/login')
 							    this.$http.post(url,{"mobileNo":this.mobileNo,"inCode":this.code,'checkFlag':"quick"})
 							      .then((response) => { 
-							      	 this.loading=false
 							          if(response.data.status==200){
 							              Cookies.set('Admin-Token', "admin")
-					                      this.$router.push({ path: '/' })
+							              Cookies.set('_wibn',response.data.obj.mobileNo,7 )
+					          	          Cookies.set('_wibp',response.data.obj.password,7 )
 					                      this.$store.dispatch('UserInfo', response.data.obj)
+					                      localStorage.setItem('jwt_token',response.data.obj.jwtToken)
+					                       if(response.data.obj.realName){
+								             	this.$router.push({ path: '/client/clientList' })
+								             }else{
+								             	this.$router.push({ path: '/' })
+								             }
 							          }else{
 							             this.$alert(response.data.msg, '系统提示', {
 									          confirmButtonText: '确定',
 									    });
 							          }
 							      }).catch(function(response){
-			                          this.loading=false
+//			                          this.loading=false
 			                      })
 					}
 			     }
 		  	},
 		  	getCode(){
 		  		if(this.codeText=="获取验证码"&&!this.disabled1){
-				      	this.$alert('验证码发送成功,请不要重复点击', '系统提示', {
-					          confirmButtonText: '确定',
-					    });
 					    this.disabled1=true
 							    const url=this.$backStage('/api/verifyCode/sendVerifyCode')
 							    this.$http.post(url,{'mobileNo':this.mobileNo,'checkFlag':"quick"})

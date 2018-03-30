@@ -9,36 +9,46 @@
 		</p>
 		<div class="nav1">
 			<ul>
-				<li class="li-head"><span class="span-left">客户姓名</span><span class="span-right"></span></li>
-				<li><span class="span-left">借款金额</span><span class="span-right"></span></li>
-				<li><span class="span-left">总期数</span><span class="span-right"></span></li>
+				<li class="li-head"><span class="span-left">客户姓名</span><span class="span-right">{{creditDetail.customer}}</span></li>
+				<li><span class="span-left">借款金额</span><span class="span-right">{{creditDetail.loan_amount}}</span></li>
+				<li><span class="span-left">总期数</span><span class="span-right">{{creditDetail.tensor}}</span></li>
 			</ul>
 		</div>
-		<div class="nav2">
+		<div class="nav2" v-if="overtimeList.length!=0">
 			<ul>
-				<li class="nav2-li-head"><span>应还日期</span><span>还款期数</span><span>应还本息</span><span>逾期天数</span><span class="nav2-span-right">实还金额</span></li>
+				<li class="nav2-li-head"><span>应还日期</span><span>还款期数</span><span>应还本息</span><span class="nav2-span-right">实还金额</span></li>
+				<li v-for="(ele,k) in overtimeList">
+					<span>{{ele.deadline}}</span>
+					<span>{{ele.tensor}}</span>
+					<span>{{ele.amount}}</span>
+					<span class="nav2-span-right">-</span>
+				</li>
+				<li><span>合计</span><span>共{{creditDetail.overtime_num}}期</span><span>{{creditDetail.overtime_sum}}</span><span>{{creditDetail.remain_sum}}</span></li>
 			</ul>
 		</div>
 		<div class="nav1 nav3">
 			<ul>
-				<li class="li-head"><span class="span-left">申请状态</span><span class="span-right">待审批</span></li>
-				<li><span class="span-left">协商金额</span><span class="span-right">1000</span></li>
-				<li><span class="span-left">处理批注</span><span class="span-right">无</span></li>
-				<li><span class="span-left">协商有效期</span><span class="span-right">2018-3-8</span></li>
+				<li class="li-head"><span class="span-left">申请状态</span><span class="span-right">{{creditDetail.result|resultFilter}}</span></li>
+				<li><span class="span-left">协商金额</span><span class="span-right">{{creditDetail.commit_amount}}</span></li>
+				<li><span class="span-left">处理备注</span><span class="span-right">{{creditDetail.remark}}</span></li>
+				<li><span class="span-left">协商有效期</span><span class="span-right">{{creditDetail.deadline}}</span></li>
 				<li>
 					<span class="span-left">审核操作</span>
 					<span class="span-right">
-					    <el-radio v-model="selectType" label="0">&nbsp;通过</el-radio>
-					    <el-radio v-model="selectType" label="1">&nbsp;拒绝</el-radio>
+					    <el-radio v-model="selectType" label="1">&nbsp;通过</el-radio>
+					    <el-radio v-model="selectType" label="2">&nbsp;拒绝</el-radio>
 					</span>
 				</li>
+				<li><span class="span-left">拒绝原因</span><span class="span-right"><el-input v-model="remark" :disabled="selectType==1" class="remark-input" placeholder=""></el-input></span></li>
 			</ul>
-			 <p class="nav3-sub"><el-button v-waves type="primary">提交</el-button></p>
+			 <p class="nav3-sub" v-if="creditShow"><el-button v-waves type="primary" @click=creditSub>提交</el-button></p>
 		</div>
 	</div>
 </template>
 
 <script>
+	import $ from 'jquery'
+	import { mapGetters } from 'vuex'
 	import waves from '@/directive/waves/index.js' // 水波纹指令
 	export default {
 		 directives: {
@@ -46,8 +56,81 @@
 		 },
 		 data(){
 			return {
-				selectType:'0',    //协商金额
+				creditShow:true,
+				selectType:'1',    
+				creditDetail:{},   //协商详情
+				overtimeList:[],
+				remark:"",
 			}
+		},
+		filters:{
+			resultFilter(data){
+				if(data==0){
+					return "拒绝"
+				}else if(data==1){
+					return "通过"
+				}else{
+					return "未审核"
+				}
+			}
+		},
+		mounted:function(){
+			 if(this.userInfo.mobileNo){
+					   $(window).unbind ('scroll');
+					   const checkUrl=this.$checkStage('/charge/commit/detail/get')
+			           this.$http.post(checkUrl, {'commit_id':this.commitId}).then((response) => {
+	           	            console.log(response)
+	           	            this.creditDetail=response.data
+	           	            this.overtimeList=this.creditDetail.ovetime_list
+	           	            if(this.creditDetail.result==0||this.creditDetail.result==1){
+	           	            	this.creditShow=false
+	           	            	this.selectType=String(this.creditDetail.result)
+	           	            }
+	                    }, (response) => {
+
+	                    });
+	          }else{
+	          	this.$router.push({path:'/reconcil/checkList'})
+	          }
+         },
+         methods:{
+         	creditSub(){
+         	   if(this.selectType==2&&!this.remark){
+         	   	    this.$alert("请填写拒绝原因", '系统提示', {
+		                  confirmButtonText: '确定',
+				    });
+         	   }else{
+	         	   var data = new FormData();
+		           data.append('userId', this.userInfo.id);
+		           data.append('commit_id', this.commitId);
+		           data.append('result', this.selectType);
+		           data.append('comments', this.remark);
+		           const url=this.$checkStage('/charge/commit/approve')
+		           this.$http.post(url, data).then((response) => {
+		           	            if(response.data.isSucceed==200){
+		           	            	this.$router.push({path:'/reconcil/creditList'})
+		           	            	this.$alert("审核成功", '系统提示', {
+							                  confirmButtonText: '确定',
+									    });
+		           	            }else{
+		           	            	this.$alert("审核失败", '系统提示', {
+							                  confirmButtonText: '确定',
+									    });
+		           	            }
+	
+		           }, (response) => {
+	
+		                    });
+	            }
+         	}
+         },
+		 computed: {
+		    ...mapGetters([
+		      'msgType',
+		      'userInfo',
+		      'contractNo',
+		      'commitId'
+		    ])
 		}
 	}
 </script>

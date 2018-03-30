@@ -58,6 +58,7 @@ export default {
 	          cancelButtonText: '取消',
 	          type: 'warning'
 	        }).then(() => {
+	        	 localStorage.clear()
 	           this.$store.dispatch('LogOut').then(() => {
 				        location.reload() // 为了重新实例化vue-router对象 避免bug
 				      })

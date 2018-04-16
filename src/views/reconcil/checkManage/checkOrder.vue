@@ -36,7 +36,7 @@
 		  </el-form-item>
 		  <el-form-item>
 		    <el-button type="primary" @click="onSearch" :loading="loading1">查询</el-button>
-		    <el-button type="primary" @click="clear" >清空</el-button>
+		    <el-button  @click="clear" >清空</el-button>
 		  </el-form-item>
 		</el-form>
 	  </div>
@@ -328,7 +328,7 @@
 		border: 1px #E3E7F1 solid;
 		border-right:none ;
 		border-bottom: none;
-		font-size: .14rem;
+		font-size: 12px;
 		border-radius: 5px;
 	}
 	.content .client-ul li{
@@ -337,7 +337,7 @@
 	}
 	.content .client-ul .client-li{
 		background: #F1F2F8;
-		font-size: .16rem;
+		font-size: 14px;
 		font-weight: bold;
 	}
 	.content .client-ul .client-li span{

@@ -19,7 +19,7 @@
 					</span>
 					<img src="../../../static/images/login/qingchu.png" v-show="passwordClear" @click="clearPassword()"/>
 				</p>
-				<p class="p-code"><input placeholder="请输入短信验证码" v-model="code" maxlength="6" @blur="onBlurCode"/><span @click="getCode()" :class="{'time-active':!disabled1}">{{codeText|msgTime}}</span><img src="../../../static/images/login/qingchu.png" v-show="codeClear" v-on:click="clearCode()"/></p>
+				<p class="p-code"><input placeholder="请输入短信验证码" v-model="code" maxlength="6" @blur="onBlurCode"/><span @click="getCode()" :class="{'codeSpan':codeText=='获取验证码'}">{{codeText|msgTime}}</span><img src="../../../static/images/login/qingchu.png" v-show="codeClear" v-on:click="clearCode()"/></p>
 			</div>
 			<el-button type="primary" style="width:80%;" :loading="loading" @click.native.prevent="regist()">
                                   会员注册
@@ -366,8 +366,9 @@
 		height: 38px;
 		font-size: 14px;
 	}
-	.nav .p-code .time-active{
-		opacity: 1;
+	.nav .p-code .codeSpan{
+		background: #0BB1FF;
+		color: #fff;
 	}
 	.nav .p-code img{
 		position: absolute;

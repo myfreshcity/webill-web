@@ -10,7 +10,7 @@
 			</div>
 			<div class="nav">
 				<p class="p-tel"><input placeholder="请输入手机号码" v-model="mobileNo" maxlength="11" @blur="onBlurMobile"/><img src="../../../static/images/login/qingchu.png" v-show="mobileNoClear" @click="clearMobile()"/></p>
-				<p class="p-code"><input placeholder="请输入短信验证码" v-model="code" maxlength="6" @blur="onBlurCode"/><span @click="getCode()" :class="{'time-active':!disabled1}">{{codeText|msgTime}}</span><img src="../../../static/images/login/qingchu.png" v-show="codeClear" v-on:click="clearCode()"/></p>
+				<p class="p-code"><input placeholder="请输入短信验证码" v-model="code" maxlength="6" @blur="onBlurCode"/><span @click="getCode()" :class="{'codeSpan':codeText=='获取验证码'}">{{codeText|msgTime}}</span><img src="../../../static/images/login/qingchu.png" v-show="codeClear" v-on:click="clearCode()"/></p>
 			    <p class="p-password">
 					<input placeholder="请输入新密码，密码6-20位、字母组合" v-if="passwordShow" type='text' v-model="password" maxlength="20" @blur="onBlurPassword">
 					<input placeholder="请输入新密码，密码6-20位、字母组合" v-if="!passwordShow" type='password' v-model="password" maxlength="20" @blur="onBlurPassword">
@@ -356,8 +356,9 @@
 		height: 38px;
 		font-size: 14px;
 	}
-	.nav .p-code .time-active{
-		opacity: 1;
+	.nav .p-code .codeSpan{
+		background: #0BB1FF;
+		color: #fff;
 	}
 	.nav .p-code img{
 		position: absolute;

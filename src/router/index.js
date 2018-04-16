@@ -38,31 +38,10 @@ export const constantRouterMap = [
       component: _import('dashboard/index')
     }]
   },
-//{
-//  path: '/example',
-//  component: Layout,
-//  redirect: '/example/table',
-//  name: 'Example',
-//  meta: { title: 'Example', icon: 'example' },
-//  children: [
-//    {
-//      path: 'table',
-//      name: 'Table',
-//      component: _import('table/index'),
-//      meta: { title: 'Table', icon: 'table' }
-//    },
-//    {
-//      path: 'tree',
-//      name: 'Tree',
-//      component: _import('tree/index'),
-//      meta: { title: 'Tree', icon: 'tree' }
-//    }
-//  ]
-//},
   {
     path: '/client',
     component: Layout,
-    redirect: '/client/newClient',
+    redirect: '/client/clientList',
     name: 'Client',
     meta: { title: '客户资料', icon: 'client' },
     children: [
@@ -133,10 +112,10 @@ export const constantRouterMap = [
 {
 	path: '/reconcil',
     component: Layout,
-    redirect: '/checkManage/checkSelf',
+    redirect: '/reconcil/repaymentDetail',
     name: 'Reconcil',
     hidden: false,
-    meta: { title: '贷款管理', icon: 'other' },
+    meta: { title: '对账管理', icon: 'qian' },
     children: [
      
 	      {
@@ -181,14 +160,14 @@ export const constantRouterMap = [
 	       {
 	        path: 'repaymentDetail',
 	        name: 'RepaymentDetail',
-	        component: _import('reconcil/agreementManage/repaymentDetail'),
-	        meta: { title: '贷款列表', icon: '' }
+	        component: _import('reconcil/loansManage/repaymentDetail'),
+	        meta: { title: '合同列表', icon: '' }
 	      },
 	      {
 	        path: 'repaymentPlan',
 	        name: 'RepaymentPlan',
 	        hidden: true,
-	        component: _import('reconcil/agreementManage/repaymentPlan'),
+	        component: _import('reconcil/loansManage/repaymentPlan'),
 	        meta: { title: '还款计划', icon: '' }
 	      },
 	      {

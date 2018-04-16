@@ -10,12 +10,21 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: {
+//  	'/api': {
+//          target: 'http://longfei.test.manmanh.com',
+//          changeOrigin: true,
+//          pathRewrite: {
+//              '^/api': '/'
+//          }
+//      }
+    },
 
     // Various Dev Server settings
     host: '192.168.99.153', // can be overwritten by process.env.HOST
+    env: require('./dev.env'),
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
-    autoOpenBrowser: true,
+    autoOpenBrowser: false,
     errorOverlay: true,
     notifyOnErrors: false,
     poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-

@@ -194,7 +194,7 @@ export default {
 		font-size: .42rem;
 		margin-top: 1.2rem;
 		color: #fff;
-		margin-bottom: 1.16rem;
+		margin-bottom: 1.66rem;
 	}
 	.nav .span-left{
 		display: inline-block;
@@ -255,7 +255,7 @@ export default {
 		width: 1000px;
 		text-align: center;
 		position: absolute;
-		bottom: .8rem;
+		bottom: 1rem;
 		left: 50%;
 		margin-left: -500px;
 	}

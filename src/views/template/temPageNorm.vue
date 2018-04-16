@@ -2,11 +2,11 @@
 
 <template>
 	<div class="content">
-		<p class="msgType">
+		<!--<p class="msgType">
 			<el-button  @click="changeType()">基础版</el-button>
 			<el-button type="primary">标准版</el-button>
-		</p>
-		<p class="head">{{msgTitle}}</p>
+		</p>-->
+		<p class="head">{{msgTitle}}<el-button  @click="changeType()">标准版</el-button><el-button type="primary">基础版</el-button></p>
 		<sticky className="sub-navbar">
 			<ul class="tabs-ul">
 				<li :class="{'li-active':liActive==1}" @click="changeLi(1)">用户基本信息</li>
@@ -452,15 +452,20 @@
 	.content{
 		padding: 0 70px;
 		padding-bottom: 700px;
-		padding-top: 30px;
+		/*padding-top: 30px;*/
 	}
 	.content .head{
 		height: 80px;
 		line-height: 80px;
 		font-weight: bold;
 		font-size: 24px;
-		border-bottom: 1px #D8D8D8 solid;
-		margin-bottom: 20px;
+		/*border-bottom: 1px #D8D8D8 solid;*/
+		margin-bottom: .1rem;
+	}
+	.content .head button{
+		float: right;
+		margin-left: 20px;
+		margin-top: 20px;
 	}
 	.el-tabs{
 		/*padding-left: 50px;*/
@@ -474,9 +479,10 @@
 		display: flex;
 		background: #fff;
 		padding-top: 10px;
+		border-bottom: 1px #E3E7F1 solid;
 	}
 	.tabs-ul li{
-		margin: .1rem .1rem;
+		margin: .1rem .1rem 0 .1rem;
 		padding: 0 5px;
 		padding-bottom: 20px;
 	}

@@ -3,7 +3,7 @@
     <input id="excel-upload-input" type="file" accept=".xlsx, .xls" class="c-hide" @change="handkeFileChange">
     <!--<div id="drop" @drop="handleDrop" @dragover="handleDragover" @dragenter="handleDragover">
       Drop excel file here or-->
-      <el-button style="margin-left:16px;" size="mini" type="primary" @click="handleUpload">选择文件</el-button>
+      <el-button style="margin-left:16px;" size="mini"  @click="handleUpload"><img src="../../../static/images/reconcil/update.png" alt="" /><span class="span1">文件上传 </span></el-button><span class="tip">(只支持.xls文件，切勿更改文件后缀名。)</span>
    <!-- </div>-->
   </div>
 </template>
@@ -109,4 +109,30 @@ export default {
   color: #bbb;
   position: relative;
 }
+button{
+		position: relative;
+		width: 80px;
+		height: 80px;
+		text-align: center;
+	}
+	button img{
+		width: 40px;
+		height: 40px;
+		position: absolute;
+		left: 20px;
+		top: 10px;
+	}
+	button .span1{
+		width: 60px;
+		height: 20px;
+		position: absolute;
+		left: 10px;
+		bottom: 0;
+	}
+	 .tip{
+		display: inline-block;
+		color: #666;
+		margin-left: 10px;
+		font-size: 14px;
+	}
 </style>

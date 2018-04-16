@@ -8,14 +8,14 @@
           <el-input v-model="formSearch.realName" placeholder="客户姓名"></el-input>
         </el-form-item>
         <el-form-item label="">
-		    <el-input v-model="formSearch.mobileNo" placeholder="发起人"></el-input>
+		    <el-input v-model="formSearch.applyer" placeholder="发起人"></el-input>
 		  </el-form-item>
 		  <el-form-item label="">
-		    <el-input v-model="formSearch.idNo" placeholder="协商金额"></el-input>
+		    <el-input v-model="formSearch.amount" placeholder="协商金额"></el-input>
 		  </el-form-item>
 		   <el-form-item>
 		    <el-button type="primary" @click="onSearch" :loading="loading1">查询</el-button>
-		    <el-button type="primary" @click="clear" >清空</el-button>
+		    <el-button  @click="clear" >清空</el-button>
 		  </el-form-item>
 		</el-form>
 	  </div>
@@ -29,7 +29,7 @@
 	  		<span >{{ele.remark|remarkFilter}}</span>
 	  		<span >{{ele.deadline}}</span>
 	  		<span >{{ele.applyer}}</span>
-	  		<span @click="checkDetail(ele.commit_id)" class="span-check">查看</span>
+	  		<span @click="checkDetail(ele.commit_id)" class="span-check"><el-button type="text">查看</el-button></span>
 	  	</li>
 	  </ul>
 	  <div class="block" id="foot-page">
@@ -59,10 +59,8 @@
       	clientList:[],
       	formSearch:{
       		realName:"",
-      		start:0,
-      		length:10,
-      		sortWay:"",
       		applyer:"",
+      		amount:""
       	},
       	currentPage:1,
       }
@@ -78,12 +76,12 @@
     },
     mounted:function(){
     	  $(window).unbind ('scroll');
-    	   if(this.userInfo.mobileNo){
 	           var data = new FormData();
 	           data.append('userId', this.userInfo.id);
 	           data.append('page', 1);
 	           data.append('applyer', this.formSearch.applyer);
 	           data.append('customer', this.formSearch.realName);
+//	           data.append('amount', this.formSearch.amount);
 	           const url=this.$checkStage('/charge/commit/get')
 	           this.$http.post(url, data).then((response) => {
 	           	            console.log(response)
@@ -92,10 +90,6 @@
 	                    }, (response) => {
 
 	                    });
-	        }else{
-	        	this.$router.push({path:'/reconcil/checkList'})
-	        }
-	        	
     },
      methods: {
      	checkDetail(data){
@@ -104,11 +98,8 @@
      	},
       clear(){
       	this.formSearch.realName=""
-      	this.formSearch.mobileNo=""
-      	this.formSearch.idNo=""
-      	this.formSearch.latestReportStatus=""
-      	this.formSearch.latestReportType=""
-      	this.formSearch.latestReportTimeDatetime=""
+      	this.formSearch.applyer=""
+      	this.formSearch.amount=""
       },
       handleCurrentChange(val) {
       	  if(val!=1){
@@ -119,6 +110,7 @@
 	           data.append('page', val);
 	           data.append('applyer', this.formSearch.applyer);
 	           data.append('customer', this.formSearch.realName);
+//	           data.append('amount', this.formSearch.amount);
 	           const url=this.$checkStage('/charge/commit/get')
 	           this.$http.post(url, data).then((response) => {
 	           	            console.log(response)
@@ -135,6 +127,7 @@
 	           data.append('page', 1);
 	           data.append('applyer', this.formSearch.applyer);
 	           data.append('customer', this.formSearch.realName);
+//	           data.append('amount', this.formSearch.amount);
 	           const url=this.$checkStage('/charge/commit/get')
 	           this.$http.post(url, data).then((response) => {
 	           	             this.loading1=false
@@ -199,6 +192,9 @@
 		display: flex;
 		border-bottom: 1px #E3E7F1 solid;
 	}
+	.content .client-ul li:hover{
+		background: #ecf5ff;
+	}
 	.content .client-ul .client-li{
 		background: #F1F2F8;
 		font-size: .16rem;
@@ -212,7 +208,8 @@
 		text-align: center;
 		padding: .1rem 0;
 		border-right: 1px #E3E7F1 solid;
-		line-height: .4rem;
+		line-height: 50px;
+		font-size: 14px;
 	}
 	.content .client-ul li .client-span-card{
 		flex: 1.5;

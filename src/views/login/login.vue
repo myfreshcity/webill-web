@@ -25,7 +25,7 @@
 						</span>
 						<img src="../../../static/images/login/qingchu.png" v-show="passwordClear" @click="clearPassword()"/>
 					</p>
-					<p class="p-code" v-show="!passwordLogin"><input placeholder="请输入短信验证码" v-model="code" maxlength="6" @blur="onBlurCode"/><span @click="getCode()">{{codeText|msgTime}}</span><img src="../../../static/images/login/qingchu.png" v-show="codeClear" v-on:click="clearCode()"/></p>
+					<p class="p-code" v-show="!passwordLogin"><input placeholder="请输入短信验证码" v-model="code" maxlength="6" @blur="onBlurCode"/><span @click="getCode()" :class="{'codeSpan':codeText=='获取验证码'}">{{codeText|msgTime}}</span><img src="../../../static/images/login/qingchu.png" v-show="codeClear" v-on:click="clearCode()"/></p>
 				</div>
 				<el-button type="primary" style="width:80%;" :loading="loading" @click.native.prevent="login()">
 	                                  登录
@@ -182,10 +182,11 @@
 //			  		 	 Cookies.set('Admin-Token', "admin")
 //					     this.$router.push({ path: '/' })
 				  		 const url=this.$backStage('/api/user/login')
-					     this.$http.post(url,{"mobileNo":this.mobileNo,"password":md5(this.password),'checkFlag':"pwd"})
+				  		 let _this=this
+					     _this.$http.post(url,{"mobileNo":_this.mobileNo,"password":md5(_this.password),'checkFlag':"pwd"})
 					      .then((response) => { 
 					      	  console.log(response)
-					      	  this.loading=false
+					      	  _this.loading=false
 					          if(response.data.status==200){
 					          	 Cookies.set('Admin-Token', "admin",7)
 					          	 Cookies.set('_wibn',response.data.obj.mobileNo,7 )
@@ -193,18 +194,21 @@
 					             this.$store.dispatch('UserInfo', response.data.obj)
 					             localStorage.setItem('jwt_token',response.data.obj.jwtToken)
 					             if(response.data.obj.realName){
-					             	this.$router.push({ path: '/client/clientList' })
+					             	_this.$router.push({ path: '/client/clientList' })
 					             }else{
-					             	this.$router.push({ path: '/' })
+					             	_this.$router.push({ path: '/' })
 					             }
 					          }else{
-					          	this.$alert(response.data.msg, '系统提示', {
+					          	_this.$alert(response.data.msg, '系统提示', {
 							          confirmButtonText: '确定',
 							    });
 					          }
 					         
 					      }).catch(function(response){
-//				              this.loading=false
+				                _this.loading=false
+				                _this.$alert("网络错误，请稍后重试", '系统提示', {
+									          confirmButtonText: '确定',
+							    });
 				          })
 				      }
 			     }else{
@@ -226,26 +230,30 @@
 				        });
 			  		 }else{
 			     	            const url=this.$backStage('/api/user/login')
-							    this.$http.post(url,{"mobileNo":this.mobileNo,"inCode":this.code,'checkFlag':"quick"})
+			     	            let _this=this
+							    _this.$http.post(url,{"mobileNo":_this.mobileNo,"inCode":_this.code,'checkFlag':"quick"})
 							      .then((response) => { 
 							          if(response.data.status==200){
 							              Cookies.set('Admin-Token', "admin")
 							              Cookies.set('_wibn',response.data.obj.mobileNo,7 )
 					          	          Cookies.set('_wibp',response.data.obj.password,7 )
-					                      this.$store.dispatch('UserInfo', response.data.obj)
+					                      _this.$store.dispatch('UserInfo', response.data.obj)
 					                      localStorage.setItem('jwt_token',response.data.obj.jwtToken)
 					                       if(response.data.obj.realName){
-								             	this.$router.push({ path: '/client/clientList' })
+								             	_this.$router.push({ path: '/client/clientList' })
 								             }else{
-								             	this.$router.push({ path: '/' })
+								             	_this.$router.push({ path: '/' })
 								             }
 							          }else{
-							             this.$alert(response.data.msg, '系统提示', {
+							             _this.$alert(response.data.msg, '系统提示', {
 									          confirmButtonText: '确定',
 									    });
 							          }
 							      }).catch(function(response){
-//			                          this.loading=false
+			                            _this.loading=false
+			                            _this.$alert("网络错误，请稍后重试", '系统提示', {
+									          confirmButtonText: '确定',
+									    });
 			                      })
 					}
 			     }
@@ -420,6 +428,10 @@
 		width: 120px;
 		height: 38px;
 		font-size: 14px;
+	}
+	.nav .p-code .codeSpan{
+		background: #0BB1FF;
+		color: #fff;
 	}
 	.nav .p-code .time-active{
 		opacity: 1;

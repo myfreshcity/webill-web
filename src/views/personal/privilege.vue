@@ -158,7 +158,8 @@
 		padding: 30px;
 	}
 	.svg-icon{
-		color: #0BB1FF;
+		color: #10C55B;
+		font-size: 16px;
 	}
 	.content .p-head{
 		font-size: 20px;

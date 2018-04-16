@@ -1,4 +1,4 @@
-<!--还款详情-->
+<!--合同列表-->
 
 <template>
 	<div class="content">
@@ -8,25 +8,28 @@
           <el-input v-model="formSearch.realName" placeholder="客户姓名"></el-input>
         </el-form-item>
         <el-form-item label="">
-		    <el-input v-model="formSearch.mobileNo" placeholder="合同编号"></el-input>
+		    <el-input v-model="formSearch.contractNo" placeholder="合同编号"></el-input>
 		  </el-form-item>
 		  <el-form-item label="">
 		    <el-input v-model="formSearch.idNo" placeholder="证件号码"></el-input>
 		  </el-form-item>
 		   <el-form-item label="">
 		    <el-select v-model="formSearch.checkStatus" placeholder="合同状态">
-		      <el-option label="逾期" value="0"></el-option>
-		      <el-option label="正常" value="1"></el-option>
+		      <el-option label="还款中" value="0"></el-option>
+		      <el-option label="逾期" value="100"></el-option>
+		      <el-option label="移交外催" value="200"></el-option>
+		      <el-option label="结清" value="300"></el-option>
 		    </el-select>
 		  </el-form-item>
 		  <el-form-item>
 		    <el-button type="primary" @click="onSearch" :loading="loading1">查询</el-button>
-		    <el-button type="primary" @click="clear" >清空</el-button>
+		    <el-button  @click="clear" >清空</el-button>
 		  </el-form-item>
 		</el-form>
 	  </div>
+	  <p class="ul-head"><span class="client-spanLeft">数据列表</span><el-button type="primary" @click="guide()" :loading="downloadLoading">导入合同</el-button></p>
 	  <ul class="client-ul">
-	  	<p><span class="client-spanLeft">数据列表</span><el-button type="primary" @click="guide()" :loading="downloadLoading">导入合同</el-button></p>
+	  	
 	  	<li class="client-li"><span>合同编号</span><span>客户姓名</span><span class="client-span-card">身份证</span><span>借款金额</span><span >放款日期</span><span>期数</span><span>合同状态</span><span>操作</span></li>
 	  	<li v-for="(ele,k) in contractList">
 	  		<span >{{ele.contract_no}}</span>
@@ -35,8 +38,8 @@
 	  		<span >{{ele.loan_amount}}</span>
 	  		<span >{{ele.loan_date}}</span>
 	  		<span >{{ele.tensor}}</span>
-	  		<span :class="{'redSpan':ele.check_status==0}">{{ele.check_status|checkFilter}}</span>
-	  		<span @click="checkDetail(ele.contract_no)" class="span-check">还款计划</span>
+	  		<span :class="{'redSpan':ele.check_status==0}">{{ele.is_settled|checkFilter}}</span>
+	  		<span @click="checkDetail(ele.contract_no)" class="span-check"><el-button type="text">还款计划</el-button></span>
 	  	</li>
 	  </ul>
 	  <div class="block" id="foot-page">
@@ -91,7 +94,7 @@
 	      	bgShow:false,
 	      	formSearch:{
 	      		realName:"",
-	      		date:"",
+	      		idNo:"",
 	      		contractNo:"",
 	      		checkStatus:"",
 	      	},
@@ -109,9 +112,13 @@
     filters:{
     	checkFilter(index){
     		if(index==0){
+    			return "还款中"
+    		}else if(index==100){
     			return "逾期"
-    		}else if(index==1){
-    			return "正常"
+    		}else if(index==200){
+    			return "移交外催"
+    		}else if(index==300){
+    			return "结清"
     		}
     	}
     },
@@ -126,16 +133,15 @@
     },
     mounted:function(){
 		 $(window).unbind ('scroll');
-    	   if(this.userInfo.mobileNo){
 	           var data = new FormData();
-	           data.append('userId', 'this.userInfo.id');
+	           data.append('userId', this.userInfo.id);
 	           data.append('page', 1);
 	           data.append('contract_no', this.formSearch.contractNo);
 	           data.append('customer', this.formSearch.realName);
 	           data.append('all',1);
-	           data.append('checkStatus',this.formSearch.checkStatus);
-	           data.append('check_date', this.formSearch.date);
-	           const url=this.$checkStage('/charge/contract/get')
+	           data.append('check_status',this.formSearch.checkStatus);
+	           data.append('id_number', this.formSearch.idNo);
+	           const url=this.$checkStage('/charge/contract/select')
 	           this.$http.post(url, data).then((response) => {
 	           	            console.log(response)
 	                        this.contractList=response.data.contract_list
@@ -143,9 +149,6 @@
 	                    }, (response) => {
 
 	                    });
-	        }else{
-	        	this.$router.push({path:'/reconcil/checkList'})
-	        }
     },
      methods: {
      	checkDetail(data){
@@ -207,11 +210,9 @@
      	},
       clear(){
       	this.formSearch.realName=""
-      	this.formSearch.mobileNo=""
-      	this.formSearch.idNo=""
-      	this.formSearch.latestReportStatus=""
-      	this.formSearch.latestReportType=""
-      	this.formSearch.latestReportTimeDatetime=""
+      	this.formSearch.date=""
+      	this.formSearch.contractNo=""
+      	this.formSearch.checkStatus=""
       },
       
       handleCurrentChange(val) {
@@ -219,14 +220,14 @@
        	   	   $(".el-pager").children("li").eq(0).removeClass("active");
        	   }
       	    var data = new FormData();
-	           data.append('userId', 'this.userInfo.id');
+	           data.append('userId', this.userInfo.id);
 	           data.append('page', val);
 	           data.append('contract_no', this.formSearch.contractNo);
 	           data.append('customer', this.formSearch.realName);
 	           data.append('all',1);
-	           data.append('checkStatus',this.formSearch.checkStatus);
-	           data.append('check_date', this.formSearch.date);
-	           const url=this.$checkStage('/charge/contract/get')
+	           data.append('check_status',this.formSearch.checkStatus);
+	            data.append('id_number', this.formSearch.idNo);
+	           const url=this.$checkStage('/charge/contract/select')
 	           this.$http.post(url, data).then((response) => {
 	           	            console.log(response)
 	                        this.contractList=response.data.contract_list
@@ -238,14 +239,14 @@
       onSearch(){
       	this.loading1=true
       	 var data = new FormData();
-	           data.append('userId', 'this.userInfo.id');
+	           data.append('userId', this.userInfo.id);
 	           data.append('page', 1);
 	           data.append('contract_no', this.formSearch.contractNo);
 	           data.append('customer', this.formSearch.realName);
 	           data.append('all',1);
-	           data.append('checkStatus',this.formSearch.checkStatus);
-	           data.append('check_date', this.formSearch.date);
-	           const url=this.$checkStage('/charge/contract/get')
+	           data.append('check_status',this.formSearch.checkStatus);
+	           data.append('id_number', this.formSearch.idNo);
+	           const url=this.$checkStage('/charge/contract/select')
 	           this.$http.post(url, data).then((response) => {
 	           	            this.loading1=false
 	           	            console.log(response)
@@ -289,30 +290,34 @@
 		border: 1px #E3E7F1 solid;
 		border-right:none ;
 		border-bottom: none;
-		font-size: .14rem;
+		font-size: 12px;
 		border-radius: 5px;
 	}
-	.content .client-ul p{
-		overflow: hidden;
-		border-bottom: 1px #E3E7F1 solid;
+	.ul-head{
 		padding: .1rem .2rem;
-		background: #F1F2F8;
+		overflow: hidden;
+		margin-bottom: .1rem;
 	}
-	.content .client-ul p .client-spanLeft{
+	.ul-head .client-spanLeft{
 		float: left;
 		padding: .1rem 0;
+		font-weight: bold;	
+		font-size: 16px;	
 	}
-	.content .client-ul p button{
+	.ul-head button{
 		float: right;
-		margin-right: .3rem;
+		/*margin-right: .3rem;*/
 	}
 	.content .client-ul li{
 		display: flex;
 		border-bottom: 1px #E3E7F1 solid;
 	}
+	.content .client-ul li:hover{
+		background: #ecf5ff;
+	}
 	.content .client-ul .client-li{
 		background: #F1F2F8;
-		font-size: .16rem;
+		font-size: 14px;
 		font-weight: bold;
 	}
 	.content .client-ul .client-li span{
@@ -323,7 +328,8 @@
 		text-align: center;
 		padding: .1rem 0;
 		border-right: 1px #E3E7F1 solid;
-		line-height: .4rem;
+		line-height: 50px;
+		font-size: 14px;
 	}
 	.content .client-ul li .client-span-card{
 		flex: 1.5;

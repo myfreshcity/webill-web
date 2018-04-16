@@ -2,7 +2,7 @@
   <scroll-bar>
     <el-menu mode="vertical" unique-opened :default-active="$route.path" :collapse="isCollapse" background-color="#304156" text-color="#fff" active-text-color="#409EFF">
       <div class="title-head" text-color="#fff">
-      	<img src="../../../../../static/images/logo/logo02.png" />
+      	<img :src=imgUrl :class='{"smallImage":!sidebar.opened}'/>
       </div>
       <sidebar-item :routes="routes"></sidebar-item>
     </el-menu>
@@ -16,6 +16,11 @@ import ScrollBar from '@/components/ScrollBar'
 
 export default {
   components: { SidebarItem, ScrollBar },
+  data(){
+  	return{
+  		imgUrl:"",
+  	}
+  },
   computed: {
     ...mapGetters([
       'sidebar'
@@ -24,6 +29,11 @@ export default {
       return this.$router.options.routes
     },
     isCollapse() {
+    	if(this.sidebar.opened){
+    		this.imgUrl="../../../../../static/images/logo/logo02.png"
+    	}else{
+    		this.imgUrl="../../../../../static/images/logo/minLogo.png"
+    	}
       return !this.sidebar.opened
     }
   }
@@ -37,6 +47,9 @@ export default {
 	}
 	.title-head img{
 		width: 50%;
-		height: 50px;
+		/*height: 50px;*/
+	}
+	.title-head .smallImage{
+		margin-top: 20px;
 	}
 </style>

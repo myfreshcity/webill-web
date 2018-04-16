@@ -59,9 +59,11 @@ export default {
 	          type: 'warning'
 	        }).then(() => {
 	        	 localStorage.clear()
-	           this.$store.dispatch('LogOut').then(() => {
-				        location.reload() // 为了重新实例化vue-router对象 避免bug
-				      })
+//	           this.$store.dispatch('LogOut').then(() => {
+//				        location.reload() // 为了重新实例化vue-router对象 避免bug
+//				      })
+             console.log(111)
+             this.$router.push({path:'/login'})
 	        }).catch(() => {
 	                
 	        });

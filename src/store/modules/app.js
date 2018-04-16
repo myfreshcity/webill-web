@@ -1,4 +1,5 @@
 import Cookies from 'js-cookie'
+import { login, logout, getInfo } from '@/api/login'
 
 const app = {
   state: {
@@ -8,6 +9,7 @@ const app = {
     msgType:0,   //0=>基础版  1=>标准版
     msgdetail:{},    //报告详情
     userInfo:{},     //用户信息
+    userMsg:{},
     clientMsg:{},     //客户信息
     reportKey:"",     //报告的key
   },
@@ -34,7 +36,11 @@ const app = {
     },
     REPORT_KEY:(state,obj) => {
     	state.reportKey = obj
-    }
+    },
+    GET_INFO:(state,obj) =>{
+    	state.userInfo=obj
+    },
+  
   },
   actions: {
     ToggleSideBar: ({ commit }) => {
@@ -54,7 +60,23 @@ const app = {
     },
     ReportKey: ({ commit },reportKey) => {
     	commit('REPORT_KEY',reportKey)
-    }
+    },
+   
+    GetInfo({ commit,state}){
+    	var mobileNo=Cookies.get('_wibn')
+    	var password=Cookies.get('_wibp')
+    	var checkFlag="pwd"
+//    return new Promise((resolve, reject) => {
+        getInfo(mobileNo,password,checkFlag).then(response => {
+          const data = response.data.obj
+          commit('GET_INFO', data)
+          
+//        resolve(response)
+//      }).catch(error => {
+//        reject(error)
+//      })
+      })
+    },
   }
 }
 

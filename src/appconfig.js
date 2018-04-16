@@ -1,7 +1,7 @@
 export default class AppConfig {
   install (Vue, options) {
-    let basePath ='http://yadong.test.manmanh.com/webill-app'
-    let checkPath ='http://yadong.test.manmanh.com'
+    let basePath ='http://longfei.test.manmanh.com/webill-app'
+    let checkPath ='http://longfei.test.manmanh.com'
 //  let basePath ='http://webill.test.manmanh.com/webill'
 //  let checkPath ='http://webill.test.manmanh.com'
 //  let basePath ='http://www.vebill.com/webill'

@@ -10,10 +10,14 @@
         <el-form-item label="">
 		    <el-input v-model="formSearch.shop" placeholder="门店"></el-input>
 		  </el-form-item>
+		  <el-form-item label="">
+		    <el-input v-model="formSearch.wasteId" placeholder="流水单号"></el-input>
+		  </el-form-item>
 		   <el-form-item label="">
 		    <el-select v-model="formSearch.checkStatus" placeholder="流水状态">
-		      <el-option label="未匹配" value="0"></el-option>
+		      <el-option label="匹配中" value="0"></el-option>
 		      <el-option label="已匹配" value="1"></el-option>
+		      <el-option label="未匹配" value="2"></el-option>
 		    </el-select>
 		  </el-form-item>
 		  <el-form-item label="">
@@ -26,25 +30,27 @@
 		  </el-form-item>
 		  <el-form-item>
 		    <el-button type="primary" @click="onSearch" :loading="loading1">查询</el-button>
-		    <el-button type="primary" @click="clear" >清空</el-button>
+		    <el-button  @click="clear" >清空</el-button>
 		  </el-form-item>
 		</el-form>
 	  </div>
+	  <p class="ul-head"><span class="client-spanLeft">数据列表</span><el-button type="primary" @click="guide()" :loading="downloadLoading">导入流水</el-button></p>
 	  <ul class="client-ul">
-	  	<p><span class="client-spanLeft">数据列表</span><el-button type="primary" @click="guide()" :loading="downloadLoading">导入流水</el-button></p>
-	  	<li class="client-li"><span>创建时间</span><span>客户姓名</span><span>所在门店</span><span>还款金额</span><span >支付时间</span><span>渠道</span><span>收款卡号尾号</span><span>流水状态</span></li>
+	  	<li class="client-li"><span class="client-span-time">创建时间</span><span>客户姓名</span><span>所在门店</span><span>还款金额</span><span class="client-span-time">支付时间</span><span>渠道</span><span>收款卡号尾号</span><span>流水单号</span><span>流水状态</span><span>操作</span></li>
 	  	<li v-for="(ele,k) in contractList">
-	  		<span >{{ele.contract_no}}</span>
-	  		<span >{{ele.customer}}</span>
-	  		<span >{{ele.id_number}}</span>
-	  		<span >{{ele.loan_amount}}</span>
-	  		<span >{{ele.loan_date}}</span>
-	  		<span >{{ele.tensor}}</span>
-	  		<span >{{ele.tensor}}</span>
-	  		<span >{{ele.tensor}}</span>
+	  		<span class="client-span-time">{{ele.create_time}}</span>
+	  		<span >{{ele.refund_name}}</span>
+	  		<span >{{ele.shop}}</span>
+	  		<span >{{ele.amount}}</span>
+	  		<span class="client-span-time">{{ele.refundTime}}</span>
+	  		<span >{{ele.way}}</span>
+	  		<span >{{ele.card_id}}</span>
+	  		<span>{{ele.file_id}}</span>
+	  		<span><i class="el-icon-check" v-show="ele.t_status==1"></i><i class="el-icon-close" v-show="ele.t_status==2"></i><svg-icon icon-class="shousuo" v-show="ele.t_status==0"/></span>
+	  		<span @click="check(ele)" class="span-check"><el-button type="text" v-if="ele.t_status==1">查看</el-button><el-button type="text" v-if="ele.t_status==2">重试</el-button></span>
 	  	</li>
 	  </ul>
-	  <!--<div class="block" id="foot-page">
+	  <div class="block" id="foot-page">
 	    <el-pagination
 	      @current-change="handleCurrentChange"
 	      :current-page="currentPage"
@@ -53,22 +59,6 @@
 	      :total="totalCount">
 	    </el-pagination>
 	  </div>
-	  <div class="contract" v-show="isGuide">
-	  	  选择模板  <el-select v-model="value" placeholder="请选择">
-		    <el-option
-		      v-for="item in options"
-		      :key="item.value"
-		      :label="item.label"
-		      :value="item.value">
-		    </el-option>
-		  </el-select>
-	  	 <p class="p1 component-item"><span>模板下载</span><el-button v-waves type="primary" @click="downLoad"><svg-icon icon-class="downLoad" /> 模 板</el-button></p>
-         <p class="p2">(请先下载Excel模板，按照模板格式填写数据，以确保数据格式正确)</p>
-         <p class="p1"><span>上传合同文件</span><input type="file" id="file" name="myfile" multiple="multiple" accept=".xls"/></p>
-         <p class="p2">(只支持.xls文件，切勿更改文件后缀名。） </p>
-         <p class="p4"><el-button v-waves type="primary" @click="cancel()">取消</el-button><el-button v-waves type="primary" @click="UpladFile()" :loading="loading">上传</el-button></p>
-	  </div>
-	  <div class="bg" v-show="bgShow" @click="showBg()"></div>-->
 	</div>
 </template>
 
@@ -97,6 +87,7 @@
 	      		date:"",
 	      		shop:"",
 	      		checkStatus:"",
+	      		wasteId:"",
 	      	},
 	      	 options: [{
 	          value: '选项1',
@@ -116,6 +107,13 @@
     		}else if(index==1){
     			return "正常"
     		}
+    	},
+    	fileFilter(index){
+    		if(index){
+    			return "已匹配"
+    		}else{
+    			return "未匹配"
+    		}
     	}
     },
     watch:{
@@ -123,44 +121,74 @@
     },
     mounted:function(){
 		 $(window).unbind ('scroll');
-    	   if(this.userInfo.mobileNo){
+		       this.formSearch.wasteId=this.wasteId
 	           var data = new FormData();
-	           data.append('userId', 'this.userInfo.id');
+	           data.append('userId', this.userInfo.id);
 	           data.append('page', 1);
-	           data.append('customer', this.formSearch.realName);
-	           data.append('all',1);
-	           data.append("file_id",this.serialId)
-//	           data.append('checkStatus',this.formSearch.shop);
-	           data.append('checkStatus',this.formSearch.checkStatus);
-	           data.append('check_date', this.formSearch.date);
-	           const url=this.$checkStage('/charge/contract/get')
+	           data.append('refund_name', this.formSearch.realName);
+	           data.append("file_id",this.formSearch.wasteId)
+	           data.append('shop',this.formSearch.shop);
+	           data.append('is_match',this.formSearch.checkStatus);
+	           data.append('create_time', this.formSearch.date);
+	           const url=this.$checkStage('/charge/refund/search')
 	           this.$http.post(url, data).then((response) => {
 	           	            console.log(response)
-	                        this.contractList=response.data.contract_list
+	                        this.contractList=response.data.search_refund_list
 	                        this.totalCount=response.data.num
 	                    }, (response) => {
 
 	                    });
-	        }else{
-	        	this.$router.push({path:'/reconcil/checkList'})
-	        }
     },
      methods: {
-     	checkDetail(data){
-     		this.$store.dispatch('ContractNo', data)
-     		this.$router.push({path:'/reconcil/repaymentPlan'})
-     	},
-     	
+ 	 check(obj){
+ 	 	if(obj.t_status==1){
+ 	 		this.$store.dispatch('ContractId', obj.contract_id)
+ 		    this.$router.push({path:'/reconcil/repaymentPlan'})
+ 	 	}else if(obj.t_status==2){
+ 	 		   var data = new FormData();
+	           data.append('refund_id', obj.refund_id);
+	           const url=this.$checkStage('/charge/refund/rematch')
+	           this.$http.post(url, data).then((response) => {
+	           	            console.log(response)
+	           	            if(response.data.isSucceed==200){
+           	            	  this.$message({
+						          message: '匹配成功',
+						          type: 'success'
+						        });
+	           	               var data = new FormData();
+					           data.append('userId', this.userInfo.id);
+					           data.append('page', 1);
+					           data.append('refund_name', this.formSearch.realName);
+					           data.append("file_id",this.formSearch.wasteId)
+					           data.append('shop',this.formSearch.shop);
+					           data.append('is_match',this.formSearch.checkStatus);
+					           data.append('create_time', this.formSearch.date);
+					           const url=this.$checkStage('/charge/refund/search')
+					           this.$http.post(url, data).then((response) => {
+					                        this.contractList=response.data.search_refund_list
+					                        this.totalCount=response.data.num
+					                    }, (response) => {
+					                    });
+	           	            }else{
+	           	            	this.$alert(response.data.message, '系统提示', {
+					                  confirmButtonText: '确定',
+							    });
+	           	            }
+	                    }, (response) => {
+	                    	
+	                        
+	                    });
+ 	 	}
+ 		
+ 	 },
 	  guide(){
 	  	this.$router.push({path:'/reconcil/checkSelf'})
 	  },
       clear(){
       	this.formSearch.realName=""
-      	this.formSearch.mobileNo=""
-      	this.formSearch.idNo=""
-      	this.formSearch.latestReportStatus=""
-      	this.formSearch.latestReportType=""
-      	this.formSearch.latestReportTimeDatetime=""
+      	this.formSearch.date=""
+      	this.formSearch.shop=""
+      	this.formSearch.checkStatus=""
       },
       
       handleCurrentChange(val) {
@@ -168,17 +196,17 @@
        	   	   $(".el-pager").children("li").eq(0).removeClass("active");
        	   }
       	    var data = new FormData();
-	           data.append('userId', 'this.userInfo.id');
+	           data.append('userId', this.userInfo.id);
 	           data.append('page', val);
-	           data.append('contract_no', this.formSearch.contractNo);
-	           data.append('customer', this.formSearch.realName);
-	           data.append('all',1);
-	           data.append('checkStatus',this.formSearch.shop);
-	           data.append('checkStatus',this.formSearch.checkStatus);
-	           data.append('check_date', this.formSearch.date);
-	           const url=this.$checkStage('/charge/contract/get')
+	           data.append('refund_name', this.formSearch.realName);
+	           data.append("file_id",this.formSearch.wasteId)
+	           data.append('shop',this.formSearch.shop);
+	           data.append('is_match',this.formSearch.checkStatus);
+	           data.append('create_time', this.formSearch.date);
+	           const url=this.$checkStage('/charge/refund/search')
 	           this.$http.post(url, data).then((response) => {
-	                        this.contractList=response.data.contract_list
+	           	            console.log(response)
+	                        this.contractList=response.data.search_refund_list
 	                        this.totalCount=response.data.num
 	                    }, (response) => {
 
@@ -187,18 +215,18 @@
       onSearch(){
       	this.loading1=true
       	 var data = new FormData();
-	           data.append('userId', 'this.userInfo.id');
+	           data.append('userId', this.userInfo.id);
 	           data.append('page', 1);
-	           data.append('contract_no', this.formSearch.contractNo);
-	           data.append('customer', this.formSearch.realName);
-	           data.append('all',1);
-	           data.append('checkStatus',this.formSearch.shop);
-	           data.append('checkStatus',this.formSearch.checkStatus);
-	           data.append('check_date', this.formSearch.date);
-	           const url=this.$checkStage('/charge/contract/get')
+	           data.append('refund_name', this.formSearch.realName);
+	           data.append("file_id",this.formSearch.wasteId)
+	           data.append('shop',this.formSearch.shop);
+	           data.append('is_match',this.formSearch.checkStatus);
+	           data.append('create_time', this.formSearch.date);
+	           const url=this.$checkStage('/charge/refund/search')
 	           this.$http.post(url, data).then((response) => {
+	           	            
 	           	            this.loading1=false
-	                        this.contractList=response.data.contract_list
+	                        this.contractList=response.data.search_refund_list
 	                        this.totalCount=response.data.num
 	                    }, (response) => {
                             this.loading1=false
@@ -210,7 +238,7 @@
 	    ...mapGetters([
 	      'msgType',
 	      'userInfo',
-	      'serialId'
+	      'wasteId'
 	    ])
 	}
   }
@@ -239,43 +267,50 @@
 		border: 1px #E3E7F1 solid;
 		border-right:none ;
 		border-bottom: none;
-		font-size: .14rem;
+		font-size: 12px;
 		border-radius: 5px;
 	}
-	.content .client-ul p{
-		overflow: hidden;
-		border-bottom: 1px #E3E7F1 solid;
+
+	.ul-head{
 		padding: .1rem .2rem;
-		background: #F1F2F8;
+		overflow: hidden;
+		margin-bottom: .1rem;
 	}
-	.content .client-ul p .client-spanLeft{
+	.ul-head .client-spanLeft{
 		float: left;
-		padding: .1rem 0;
+		padding: .2rem 0 .1rem 0;
+		font-size: 16px;
+		font-weight: bold;
+		
 	}
-	.content .client-ul p button{
+	.ul-head button{
 		float: right;
-		margin-right: .3rem;
+		/*margin-right: .3rem;*/
 	}
 	.content .client-ul li{
 		display: flex;
 		border-bottom: 1px #E3E7F1 solid;
 	}
+	.content .client-ul li:hover{
+		background: #ecf5ff;
+	}
 	.content .client-ul .client-li{
 		background: #F1F2F8;
-		font-size: .16rem;
+		font-size: 14px;
 		font-weight: bold;
 	}
 	.content .client-ul .client-li span{
 		font-weight: bold;
 	}
 	.content .client-ul li span{
+		font-size: 14px;
 		flex: 1;
 		text-align: center;
 		padding: .1rem 0;
 		border-right: 1px #E3E7F1 solid;
-		line-height: .4rem;
+		line-height: 50px;
 	}
-	.content .client-ul li .client-span-card{
+	.content .client-ul li .client-span-time{
 		flex: 1.5;
 	}
 	/*导入合同窗口*/
@@ -345,4 +380,15 @@
 	.redSpan{
 		color: red;
 	}
+	.el-icon-check{
+		font-size: 20px;
+		font-weight: bold;
+		color: #10C55B;
+	}
+	.el-icon-close{
+		font-size: 20px;
+		font-weight: bold;
+		color: #FF3F3F;
+	}
+	
 </style>

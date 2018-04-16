@@ -15,9 +15,10 @@ import rem from "./utils/rem"
 import App from './App'
 import router from './router'
 import store from './store'
-
+Vue.prototype.HOST = '/api'
 import '@/icons' // icon
 import '@/permission' // permission control
+import {Message} from 'element-ui'
 
 //import * as filters from './filters'
 Vue.use(ElementUI)
@@ -34,6 +35,7 @@ axios.interceptors.request.use(
         return config;
     },
     err => {
+    	alert("请求超时")
         return Promise.reject(err);
     });
     
@@ -51,12 +53,22 @@ axios.interceptors.response.use(
     error => {
         if (error.response) {
             switch (error.response.status) {
+            	case 400:
+            	    Message.error('请求错误')
+            	    break
                 case 401:
                     // 这里写清除token的代码
                     router.replace({
                         path: 'login',
                         query: {redirect: router.currentRoute.fullPath}//登录成功后跳入浏览的当前页面
                     })
+                    break
+                case 500:
+            	    Message.error('服务器内部错误')
+            	    break
+                case 504:
+                     Message.error('请求超时，请稍后重试')
+                     break
             }
         }
         return Promise.reject(error.response.data) 

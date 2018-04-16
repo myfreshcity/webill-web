@@ -42,7 +42,6 @@
 		},
 		mounted:function(){
 			const _this=this
-			if(_this.userInfo.mobileNo){
 				 const url=_this.$backStage('/api/user/getUserById/'+_this.userInfo.id)
 					     this.$http.get(url)
 					      .then((response) => { 
@@ -66,33 +65,6 @@
 							});
 				})
 				
-			}  else{
-          	 if (getToken()) {
-    	         const url=_this.$backStage('/api/user/login')
-					     _this.$http.post(url,{"mobileNo":Cookies.get("_wibn"),"password":Cookies.get("_wibp"),'checkFlag':"pwd"})
-					      .then((response) => { 
-					          if(response.data.status==200){
-					             _this.$store.dispatch('UserInfo', response.data.obj)
-					             localStorage.setItem('jwt_token',response.data.obj.jwtToken)
-					             _this.user=_this.userInfo
-								 if(_this.user.isVerified==0){
-									_this.isReal=false
-								 }else{
-									_this.isReal=true
-								 }
-					          }else{
-					          	_this.$alert("登录信息有误，请退出后重新登录", '系统提示', {
-							          confirmButtonText: '确定',
-							        });
-					          }
-					         
-					      }).catch(function(response){
-				             _this.$alert("登录信息有误，请退出后重新登录", '系统提示', {
-							          confirmButtonText: '确定',
-							        });
-				        })
-             }
-          }
 		},
 		methods:{
 			goAutonym(){

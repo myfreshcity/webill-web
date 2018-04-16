@@ -131,6 +131,7 @@
 	    <div class="nav2 nav4 nav6" v-show="step4">
 	    	<p class="fillPwd"><span><svg-icon icon-class="tip" />标准版需要您再次输入验证码请耐心等待</span></p>
 	    	<p class="nav4-p" ><span>短信验证码</span><el-input class="nav-input"  v-model="jxlCode" placeholder="请输入短信验证码" max="6"></el-input></p>
+	    	<p class="nav4-p" v-if="jxlRCodeShow"><span>短信随机码</span><el-input class="nav-input"  v-model="jxlRandomCode" placeholder="请输入短信随机码" max="4"></el-input></p>
 	    	<p class="nav4-p"><el-button  @click="lastStep(3)" class="subPwd" v-show="pwdShow">上一步</el-button>
 			<el-button type="primary" @click="submitSms()" v-show="pwdShow" :loading="loading4">提交</el-button></p>
 	    </div>
@@ -145,6 +146,8 @@
   export default {
     data() {
       return {
+      	jxlRandomCode:"",         //聚信立随机码
+      	jxlRCodeShow:false,       //聚信立随机码显示
       	imgCode:"",
       	imgCodeShow:false,
       	imgCodeUrl:"",       //图形验证码地址
@@ -325,6 +328,7 @@
 						       	this.step2=true
 						       	this.active=2
 						       	this.options=JSON.parse(response.data.obj.areaJson)
+						       	console.log(this.options)
 					          	this.baseCount=response.data.obj.standardTimes
 					          	this.normCount=response.data.obj.advancedTimes
 					          	this.clientId=response.data.obj.id
@@ -575,32 +579,36 @@
       		this.$http.post(url,{"contacts":this.relationList,"userId":this.userInfo.id,"id":this.clientId,"temReportType":this.selectType,"workAddrCode":work,"workAddrDetail":this.workAddress,"homeAddrCode":home,"homeAddrDetail":this.homeAddress})
 	        .then(response => {
 	        	console.log(response)
-	        	if(response.data.status==300){
+	        	if(response.status==300){
 	        			this.$alert('您的报告正在查询中请稍后', '系统提示', {
 				          confirmButtonText: '确定',
 				        });
+	        	}else if(response.status==200){
+	        		 this.loading2=false
+	                 this.dhbObj=response.data.dhbGetLogin
+		             if(this.dhbObj.smsDuration){
+		             	this.needCode=true
+		             }else{
+		             	this.needCode=false
+		             }
+		             if(this.dhbObj.captchaImage){
+		             	this.imgCodeShow=true
+		             	this.imgCodeUrl=this.dhbObj.captchaImage
+		             }else{
+		             	this.imgCodeShow=false
+		             }
+		             if(this.selectType==0){
+		             	this.subText="提交"
+		             }else{
+		             	this.subText="下一步"
+		             }
+		             this.step2=false
+			      	 this.step3=true
+			      	 this.active=3
 	        	}else{
-	        		this.loading2=false
-	             this.dhbObj=response.data.dhbGetLogin
-	             if(this.dhbObj.smsDuration){
-	             	this.needCode=true
-	             }else{
-	             	this.needCode=false
-	             }
-	             if(this.dhbObj.captchaImage){
-	             	this.imgCodeShow=true
-	             	this.imgCodeUrl=this.dhbObj.captchaImage
-	             }else{
-	             	this.imgCodeShow=false
-	             }
-	             if(this.selectType==0){
-	             	this.subText="提交"
-	             }else{
-	             	this.subText="下一步"
-	             }
-	             this.step2=false
-		      	 this.step3=true
-		      	 this.active=3
+	        		this.$alert(response.data.msg, '系统提示', {
+				          confirmButtonText: '确定',
+				     });
 	        	}
 	        })
       	}
@@ -621,6 +629,8 @@
       		this.step2=true
       	    this.step3=false
       	    this.active=2
+      	}else if(index==3){
+      		 this.jxlRCodeShow=false
       	}
       },
       submitPwd(){
@@ -641,7 +651,7 @@
 								  }
 								},{timeout:0})
 	      	.then(response =>{
-//	      		console.log(response)
+	      		console.log(response)
 	      		if(response.data.dhbCollect.action=="done"){
 	      			if(this.selectType==0){
 		             		this.loading3=false
@@ -664,12 +674,15 @@
 											  "reportKey":this.reportKey
 		      	            })
 		      	             .then(response => {
-//		      	             	console.log(response)
+		      	             	console.log(response)
 		      	             	if(response.data.jxlCollect.processCode==10008){
 		      	             		this.loading3=false
 		      	             		this.$router.push({path:'/client/wait'})
 		      	             		this.$store.dispatch('ClientMsg', "")
 		      	             	}else{
+		      	             		this.$alert(response.data.jxlCollect.content, '系统提示', {
+							          confirmButtonText: '确定',
+							        });
 		      	             		this.jxlObj=response.data.jxlSubmitForm
 		      	             		this.step3=false
 		      	             		this.step4=true
@@ -707,7 +720,7 @@
 								  }
 								},{timeout:0})
 		        .then(response => {
-//		        	console.log(response)
+		        	console.log(response)
 		             if(response.data.dhbCollect.action=="done"){
 		             	if(this.selectType==0){
 		             		this.loading3=false
@@ -730,11 +743,15 @@
 											  "reportKey":this.reportKey
 		      	            })
 		      	             .then(response => {
+		      	             	console.log(response)
 		      	             	if(response.data.jxlCollect.processCode==10008){
 		      	             		this.loading3=false
 		      	             		this.$router.push({path:'/client/wait'})
 		      	             		this.$store.dispatch('ClientMsg', "")
 		      	             	}else{
+		      	             		this.$alert(response.data.jxlCollect.content, '系统提示', {
+							          confirmButtonText: '确定',
+							        });
 		      	             		this.jxlObj=response.data.jxlSubmitForm
 		      	             		this.step3=false
 		      	             		this.step4=true
@@ -767,11 +784,15 @@
       submitSms(){
       	 this.loading4=true
       	  const url=this.$backStage('/api/customer/jxlCollect')
+      	            var code=this.jxlCode
+      	            if( this.jxlRCodeShow){
+      	            	code=this.jxlRandomCode
+      	            }
       	            this.$http.post(url,{"jxlCollectReq":{
 									     "token":this.jxlObj.token,
 									     "account":this.ruleForm.mobile,
 									     "password":this.servePwd,
-									     "captcha":this.jxlCode,
+									     "captcha":code,
 									     "website":this.jxlObj.website,
 									     "type":"SUBMIT_CAPTCHA"
 									  },
@@ -782,13 +803,18 @@
 									  "reportKey":this.reportKey
       	            })
       	             .then(response => {
-//    	             	console.log(response)
+      	             	console.log(response)
       	             	this.loading4=false
       	             	if(response.data.jxlCollect.processCode==10008){
       	             		this.$router.push({path:'/client/wait'})
       	             		this.$store.dispatch('ClientMsg', "")
+      	             	}else if(response.data.jxlCollect.processCode==10002){
+      	             		this.$alert("请输入四位短信随机码", '系统提示', {
+					          confirmButtonText: '确定',
+					        });
+					        this.jxlRCodeShow=true
       	             	}else{
-      	             		this.$alert(response.data.jxlCollect.msg, '系统提示', {
+      	             		this.$alert(response.data.jxlCollect.content, '系统提示', {
 					          confirmButtonText: '确定',
 					        });
       	             	}

@@ -2,11 +2,11 @@
 
 <template>
 	<div class="content">
-		<p class="msgType">
+		<!--<p class="msgType">
 			<el-button type="primary">基础版</el-button>
 			<el-button  @click="changeType()">标准版</el-button>
-		</p>
-		<p class="head">{{msgTitle}}</p>
+		</p>-->
+		<p class="head">{{msgTitle}}<el-button  @click="changeType()">标准版</el-button><el-button type="primary">基础版</el-button></p>
 		<!--<el-tabs v-model="activeName" @tab-click="handleClick" class="report-tabs">
 		    <el-tab-pane label="用户基本信息" name="first"></el-tab-pane>
 		    <el-tab-pane label="金融类通话信息" name="second"></el-tab-pane>
@@ -472,7 +472,7 @@
 	.content{
 		padding: 0 70px;
 		padding-bottom: 700px;
-		padding-top: 30px;
+		/*padding-top: 30px;*/
 	}
 	#labelSpan{
 		display: inline-block;
@@ -484,8 +484,13 @@
 		line-height: 80px;
 		font-weight: bold;
 		font-size: 24px;
-		border-bottom: 1px #D8D8D8 solid;
-		margin-bottom: 20px;
+		/*border-bottom: 1px #D8D8D8 solid;*/
+		margin-bottom: .1rem;
+	}
+	.content .head button{
+		float: right;
+		margin-left: 20px;
+		margin-top: 20px;
 	}
 	.el-tabs{
 		/*padding-left: 50px;*/
@@ -499,11 +504,11 @@
 		display: flex;
 		background: #fff;
 		padding-top: 10px;
-		/*box-shadow: 0px 10px 5px #888888;*/
+		border-bottom: 1px #E3E7F1 solid;
 	}
 	.tabs-ul li{
 		
-		margin: .1rem .1rem;
+		margin: .1rem .1rem 0 .1rem;
 		padding: 0 5px;
 		padding-bottom: 20px;
 	}

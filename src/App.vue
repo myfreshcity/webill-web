@@ -48,4 +48,20 @@ export default {
 	.autoNav2 .el-form-item .el-form-item__label{
 		width: 150px !important;
 	}
+	
+	.nav3-span-right input{
+		height: .4rem;
+	}
+	.nav3-span-right .el-input__prefix{
+		height: .4rem;
+		line-height: .4rem;
+	}
+	.nav3-span-right .el-radio-group .el-radio-button__inner{
+		height: .4rem;
+		line-height: .4rem;
+		padding: 0 .1rem;
+	}
+	.nav3-span-right textarea{
+		min-height: 0rem !important;
+	}
 </style>

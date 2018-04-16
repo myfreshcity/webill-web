@@ -164,9 +164,42 @@ export const DateDiff = function(sDate) {  //sDate是"2002-12-18"格式
 	oDate2 = new Date(nowDate[0], nowDate[1] - 1, nowDate[2]);
 	iDays = parseInt(Math.abs(oDate1 - oDate2) / 1000 / 60 / 60 / 24);
 	if ((oDate1 - oDate2) < 0) {
-	    return "";
+	    return -iDays;
 	}
 	return iDays;
+}
+
+//时间先后对比
+export const MyFormatTime=function(str){  
+     
+    var year=str.split('-')[0];  
+    var month=str.split('-')[1];  
+    var date = str.split('-')[2].split(' ')[0];  
+    var h = str.split('-')[2].split(' ')[1].split(':')[0];  
+    var m = str.split('-')[2].split(' ')[1].split(':')[1];  
+    var s = str.split('-')[2].split(' ')[1].split(':')[2];      
+    return new Date(year,month,date,h,m,s);  
+}  
+//时间格式转化 xx/xx/xx/ 转化为xxxx-xx-xx
+export const timeChange=function(str){
+	var list=str.split('/')
+		      var time=[]
+		      if(list[2].length==2){
+		      	time.push('20'+list[2])
+		      }else{
+		      	time.push(list[2])
+		      }
+		      if(list[0]<10){
+		      	time.push('0'+list[0])
+		      }else{
+		      	time.push(list[0])
+		      }
+		       if(list[1]<10){
+		      	time.push('0'+list[1])
+		      }else{
+		      	time.push(list[1])
+		      }
+		      return time.join('-')
 }
 
 //隐藏密码
@@ -230,7 +263,7 @@ export function formatNumber(value){
 }  
 export function getLoginUser(){    
     if (getToken()) {
-    	         const url=('http://yadong.test.manmanh.com/webill-app/api/user/login')
+    	         const url=('http://longfei.test.manmanh.com/webill-app/api/user/login')
 					     this.$http.post(url,{"mobileNo":Cookies.get(username),"password":Cookies.get(password),'checkFlag':"pwd"})
 					      .then((response) => { 
 					          if(response.data.status==200){

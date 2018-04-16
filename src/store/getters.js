@@ -10,7 +10,9 @@ const getters = {
   name: state => state.user.name,
   roles: state => state.user.roles,
   contractNo: state => state.check.contractNo,
+  contractId: state => state.check.contractId,
   commitId: state => state.check.commitId,
-  serialId: state => state.check.serialId
+  userMsg:state =>state.app.userMsg,
+  wasteId:state =>state.check.wasteId
 }
 export default getters

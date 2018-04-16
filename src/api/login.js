@@ -1,22 +1,23 @@
 import request from '@/utils/request'
 
-export function login(username, password) {
+export function getInfo(mobileNo, password,checkFlag) {
   return request({
-    url: '/user/login',
+    url: '/api/user/login',
     method: 'post',
     data: {
-      username,
-      password
+      mobileNo,
+      password,
+      checkFlag
     }
   })
 }
 
-export function getInfo(token) {
-  return request({
+export function login(token) {
+return request({
     url: '/user/info',
     method: 'get',
     params: { token }
-  })
+})
 }
 
 export function logout() {

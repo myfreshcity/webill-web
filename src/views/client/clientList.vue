@@ -36,7 +36,7 @@
 		  </el-form-item>
 		  <el-form-item>
 		    <el-button type="primary" @click="onSearch" :loading="loading1">查询</el-button>
-		    <el-button type="primary" @click="clear" >清空</el-button>
+		    <el-button  @click="clear" >清空</el-button>
 		  </el-form-item>
 		</el-form>
 	  </div>
@@ -123,7 +123,6 @@
     },
     mounted:function(){
     	   $(window).unbind ('scroll');
-    	   if(this.userInfo.mobileNo){
 	           var data = new FormData();
 	           data.append('userId', this.userInfo.id);
 	           data.append('start', 1);
@@ -137,52 +136,12 @@
 	           data.append('timeFrom',this.formSearch.latestReportTimeDatetime)
 	           const url=this.$backStage('/api/customer/list')
 	           this.$http.post(url, data).then((response) => {
-	           	            console.log(response)
+//	           	            console.log(response)
 	                        this.clientList=response.data.records
 	                        this.totalCount=response.data.total
 	                    }, (response) => {
 
 	                    });
-          }  else{
-          	 if (getToken()) {
-    	         const url=this.$backStage('/api/user/login')
-    	         const _this=this
-					     _this.$http.post(url,{"mobileNo":Cookies.get("_wibn"),"password":Cookies.get("_wibp"),'checkFlag':"pwd"})
-					      .then((response) => {
-					          if(response.data.status==200){
-					          	 localStorage.setItem('jwt_token',response.data.obj.jwtToken)
-					             this.$store.dispatch('UserInfo', response.data.obj)
-					             var data = new FormData();
-						           data.append('userId', _this.userInfo.id);
-						           data.append('start', 1);
-						           data.append('length', 10);
-						           data.append('realName', _this.formSearch.realName);
-						           data.append('mobileNo', _this.formSearch.mobileNo);
-						           data.append('idNo', _this.formSearch.idNo);
-						           data.append('latestReportStatus', _this.formSearch.latestReportStatus);
-						           data.append('latestReportType', _this.formSearch.latestReportType);
-						           data.append('sortWay', _this.formSearch.sortWay);
-						           data.append('timeFrom',_this.formSearch.latestReportTimeDatetime)
-						           const url=_this.$backStage('/api/customer/list')
-						           _this.$http.post(url, data).then((response) => {
-						                        _this.clientList=response.data.records
-						                        _this.totalCount=response.data.total
-						                    }, (response) => {
-
-						                    });
-					          }else{
-					          	_this.$alert("登录信息有误，请退出后重新登录", '系统提示', {
-							          confirmButtonText: '确定',
-							        });
-					          }
-
-					      }).catch(function(response){
-				             _this.$alert("登录信息有误，请退出后重新登录", '系统提示', {
-							          confirmButtonText: '确定',
-							        });
-				        })
-             }
-          }
 
     },
      methods: {
@@ -303,7 +262,8 @@
     computed: {
 	    ...mapGetters([
 	      'msgType',
-	      'userInfo'
+	      'userInfo',
+	      'userMsg'
 	    ])
 	}
   }
@@ -338,6 +298,9 @@
 	.content .client-ul li{
 		display: flex;
 		border-bottom: 1px #E3E7F1 solid;
+	}
+	.content .client-ul li:hover{
+		background: #ecf5ff;
 	}
 	.content .client-ul .client-li{
 		background: #F1F2F8;

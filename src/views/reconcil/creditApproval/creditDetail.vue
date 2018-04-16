@@ -31,15 +31,15 @@
 				<li class="li-head"><span class="span-left">申请状态</span><span class="span-right">{{creditDetail.result|resultFilter}}</span></li>
 				<li><span class="span-left">协商金额</span><span class="span-right">{{creditDetail.commit_amount}}</span></li>
 				<li><span class="span-left">处理备注</span><span class="span-right">{{creditDetail.remark}}</span></li>
-				<li><span class="span-left">协商有效期</span><span class="span-right">{{creditDetail.deadline}}</span></li>
+				<!--<li><span class="span-left">协商有效期</span><span class="span-right">{{creditDetail.deadline}}</span></li>-->
 				<li>
 					<span class="span-left">审核操作</span>
 					<span class="span-right">
-					    <el-radio v-model="selectType" label="1">&nbsp;通过</el-radio>
-					    <el-radio v-model="selectType" label="2">&nbsp;拒绝</el-radio>
+					    <el-radio v-model="selectType" label="100">&nbsp;通过</el-radio>
+					    <el-radio v-model="selectType" label="200">&nbsp;拒绝</el-radio>
 					</span>
 				</li>
-				<li><span class="span-left">拒绝原因</span><span class="span-right"><el-input v-model="remark" :disabled="selectType==1" class="remark-input" placeholder=""></el-input></span></li>
+				<li><span class="span-left">拒绝原因</span><span class="span-right nav3-span-right"><el-input v-model="remark" :disabled="selectType==1" class="remark-input" placeholder=""></el-input></span></li>
 			</ul>
 			 <p class="nav3-sub" v-if="creditShow"><el-button v-waves type="primary" @click=creditSub>提交</el-button></p>
 		</div>
@@ -57,7 +57,7 @@
 		 data(){
 			return {
 				creditShow:true,
-				selectType:'1',    
+				selectType:'',    
 				creditDetail:{},   //协商详情
 				overtimeList:[],
 				remark:"",
@@ -66,11 +66,11 @@
 		filters:{
 			resultFilter(data){
 				if(data==0){
-					return "拒绝"
-				}else if(data==1){
+					return "待审核"
+				}else if(data==100){
 					return "通过"
 				}else{
-					return "未审核"
+					return "拒绝"
 				}
 			}
 		},
@@ -80,17 +80,24 @@
 					   const checkUrl=this.$checkStage('/charge/commit/detail/get')
 			           this.$http.post(checkUrl, {'commit_id':this.commitId}).then((response) => {
 	           	            console.log(response)
-	           	            this.creditDetail=response.data
-	           	            this.overtimeList=this.creditDetail.ovetime_list
-	           	            if(this.creditDetail.result==0||this.creditDetail.result==1){
-	           	            	this.creditShow=false
-	           	            	this.selectType=String(this.creditDetail.result)
+	           	            if(response.data.isSucceed==200){
+		           	            this.creditDetail=response.data
+		           	            this.overtimeList=this.creditDetail.ovetime_list
+//		           	            if(this.creditDetail.result==0||this.creditDetail.result==1){
+//		           	            	this.creditShow=false
+//		           	            	this.selectType=String(this.creditDetail.result)
+//		           	            }
+	           	            }else{
+	           	            	this.$alert(response.data.message, '系统提示', {
+							                  confirmButtonText: '确定',
+								});
+							    this.$router.go(-1)
 	           	            }
 	                    }, (response) => {
 
 	                    });
 	          }else{
-	          	this.$router.push({path:'/reconcil/checkList'})
+	          	this.$router.push({path:'/reconcil/creditList'})
 	          }
          },
          methods:{

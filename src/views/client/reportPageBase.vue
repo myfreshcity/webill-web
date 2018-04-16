@@ -773,8 +773,8 @@
 		line-height: 80px;
 		font-weight: bold;
 		font-size: 24px;
-		border-bottom: 1px #D8D8D8 solid;
-		margin-bottom: 20px;
+		/*border-bottom: 1px #D8D8D8 solid;*/
+		margin-bottom: .1rem;
 	}
 	.el-tabs{
 		/*padding-left: 50px;*/
@@ -788,10 +788,11 @@
 		display: flex;
 		background: #fff;
 		padding-top: 10px;
+		border-bottom: 1px #E3E7F1 solid;
 	}
 	.tabs-ul li{
 		
-		margin: .1rem .1rem;
+		margin: .1rem .1rem 0 .1rem;
 		padding: 0 5px;
 		padding-bottom: 20px;
 	}

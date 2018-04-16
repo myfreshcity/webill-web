@@ -522,6 +522,8 @@
 		            crosshair:false
 		        }],
 		        yAxis: [{ // Primary yAxis
+//		        	tickPixelInterval:10 ,
+                    tickLength:2,
 		            labels: {
 		                format: '',
 		                style: {
@@ -566,7 +568,7 @@
 		            data:this.contactInList,
 		            tooltip: {
 		                valueSuffix: '次'
-		            }
+		            },
 		        },{
 		            name: '呼出次数',
 		            type: 'column',
@@ -756,31 +758,29 @@
 	.content{
 		padding: 0 70px;
 		padding-bottom: 700px;
-		padding-top: 30px;
+		padding-top: 10px;
 	}
 	.content .head{
-		height: 80px;
-		line-height: 80px;
+		height: 50px;
+		line-height: 50px;
 		font-weight: bold;
 		font-size: 24px;
-		border-bottom: 1px #D8D8D8 solid;
-		margin-bottom: 20px;
-	}
-	.el-tabs{
-		/*padding-left: 50px;*/
+		/*border-bottom: 1px #D8D8D8 solid;*/
+		margin-bottom: .1rem;
 	}
 	.el-tabs__nav-wrap::after{
 		display: none;
 		height: 0;
 	}
 	.tabs-ul{
-		margin-bottom: 50px;
+		margin-bottom: 20px;
 		display: flex;
 		background: #fff;
 		padding-top: 10px;
+		border-bottom: 1px #E3E7F1 solid;
 	}
 	.tabs-ul li{
-		margin: .1rem .1rem;
+		margin: .1rem .1rem 0 .1rem;
 		padding: 0 5px;
 		padding-bottom: 20px;
 	}
@@ -789,7 +789,7 @@
 		border-bottom: 3px #409EFF solid;
 	}
 	.nav{
-		padding-top: 70px;
+		padding-top: 60px;
 	}
 	.nav .navP-title{
 		text-align: center;
@@ -808,7 +808,7 @@
 	}
 	.nav .nav1-ul{
 		border-radius:5px ;
-		font-size: 14px;
+		font-size: 12px;
 		border-top: 1px #E3E7F1 solid;
 		border-left: 1px #E3E7F1 solid;
 	}

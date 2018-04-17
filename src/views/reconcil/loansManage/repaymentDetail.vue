@@ -21,6 +21,9 @@
 		      <el-option label="结清" value="300"></el-option>
 		    </el-select>
 		  </el-form-item>
+		   <el-form-item label="">
+		    <el-input v-model="formSearch.file_id" placeholder="合同批次号"></el-input>
+		  </el-form-item>
 		  <el-form-item>
 		    <el-button type="primary" @click="onSearch" :loading="loading1">查询</el-button>
 		    <el-button  @click="clear" >清空</el-button>
@@ -30,7 +33,7 @@
 	  <p class="ul-head"><span class="client-spanLeft">数据列表</span><el-button type="primary" @click="guide()" :loading="downloadLoading">导入合同</el-button></p>
 	  <ul class="client-ul">
 	  	
-	  	<li class="client-li"><span>合同编号</span><span>客户姓名</span><span class="client-span-card">身份证</span><span>借款金额</span><span >放款日期</span><span>期数</span><span>合同状态</span><span>操作</span></li>
+	  	<li class="client-li"><span>合同编号</span><span>客户姓名</span><span class="client-span-card">身份证</span><span>借款金额</span><span >放款日期</span><span>期数</span><span>合同状态</span><span>合同批次号</span><span>操作</span></li>
 	  	<li v-for="(ele,k) in contractList">
 	  		<span >{{ele.contract_no}}</span>
 	  		<span >{{ele.customer}}</span>
@@ -39,6 +42,7 @@
 	  		<span >{{ele.loan_date}}</span>
 	  		<span >{{ele.tensor}}</span>
 	  		<span :class="{'redSpan':ele.check_status==0}">{{ele.is_settled|checkFilter}}</span>
+	  		<span>{{ele.file_id}}</span>
 	  		<span @click="checkDetail(ele.contract_no)" class="span-check"><el-button type="text">还款计划</el-button></span>
 	  	</li>
 	  </ul>
@@ -97,6 +101,7 @@
 	      		idNo:"",
 	      		contractNo:"",
 	      		checkStatus:"",
+	      		file_id:""
 	      	},
 	      	 options: [{
 	          value: '选项1',
@@ -139,8 +144,9 @@
 	           data.append('contract_no', this.formSearch.contractNo);
 	           data.append('customer', this.formSearch.realName);
 	           data.append('all',1);
-	           data.append('check_status',this.formSearch.checkStatus);
+	           data.append('is_settled',this.formSearch.checkStatus);
 	           data.append('id_number', this.formSearch.idNo);
+	           data.append('file_id', this.formSearch.file_id);
 	           const url=this.$checkStage('/charge/contract/select')
 	           this.$http.post(url, data).then((response) => {
 	           	            console.log(response)
@@ -152,6 +158,7 @@
     },
      methods: {
      	checkDetail(data){
+     		this.$store.dispatch('ContractId', "")
      		this.$store.dispatch('ContractNo', data)
      		this.$router.push({path:'/reconcil/repaymentPlan'})
      	},
@@ -213,6 +220,7 @@
       	this.formSearch.date=""
       	this.formSearch.contractNo=""
       	this.formSearch.checkStatus=""
+      	this.formSearch.file_id=""
       },
       
       handleCurrentChange(val) {
@@ -225,8 +233,9 @@
 	           data.append('contract_no', this.formSearch.contractNo);
 	           data.append('customer', this.formSearch.realName);
 	           data.append('all',1);
-	           data.append('check_status',this.formSearch.checkStatus);
-	            data.append('id_number', this.formSearch.idNo);
+	           data.append('is_settled',this.formSearch.checkStatus);
+	           data.append('id_number', this.formSearch.idNo);
+	           data.append('file_id', this.formSearch.file_id);
 	           const url=this.$checkStage('/charge/contract/select')
 	           this.$http.post(url, data).then((response) => {
 	           	            console.log(response)
@@ -244,8 +253,9 @@
 	           data.append('contract_no', this.formSearch.contractNo);
 	           data.append('customer', this.formSearch.realName);
 	           data.append('all',1);
-	           data.append('check_status',this.formSearch.checkStatus);
+	           data.append('is_settled',this.formSearch.checkStatus);
 	           data.append('id_number', this.formSearch.idNo);
+	           data.append('file_id', this.formSearch.file_id);
 	           const url=this.$checkStage('/charge/contract/select')
 	           this.$http.post(url, data).then((response) => {
 	           	            this.loading1=false

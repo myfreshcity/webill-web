@@ -20,7 +20,7 @@
 		</el-form>
 	  </div>
 	  <ul class="client-ul">
-	  	<li class="client-li"><span>合同编号</span><span>客户姓名</span><span>逾期期数</span><span>协商金额</span><span>处理备注</span><span>减免有效期</span><span>发起人</span><span>操作</span></li>
+	  	<li class="client-li"><span>合同编号</span><span>客户姓名</span><span>逾期期数</span><span>减免金额</span><span>处理备注</span><span>减免有效期</span><span>发起人</span><span>操作</span></li>
 	  	<li v-for="(ele,k) in clientList">
 	  		<span >{{ele.contract_no}}</span>
 	  		<span >{{ele.customer}}</span>

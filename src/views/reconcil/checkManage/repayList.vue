@@ -24,7 +24,7 @@
 		    <el-date-picker class="dataInp"
                           v-model="formSearch.date"
                           type="date"
-                          placeholder="创建时间"
+                          placeholder="支付时间"
                           value-format="yyyy-MM-dd">
             </el-date-picker>
 		  </el-form-item>
@@ -36,17 +36,22 @@
 	  </div>
 	  <p class="ul-head"><span class="client-spanLeft">数据列表</span><el-button type="primary" @click="guide()" :loading="downloadLoading">导入流水</el-button></p>
 	  <ul class="client-ul">
-	  	<li class="client-li"><span class="client-span-time">创建时间</span><span>客户姓名</span><span>所在门店</span><span>还款金额</span><span class="client-span-time">支付时间</span><span>渠道</span><span>收款卡号尾号</span><span>流水单号</span><span>流水状态</span><span>操作</span></li>
+	  	<li class="client-li"><span class="client-span-time">支付时间</span><span>客户姓名</span><span>所在门店</span><span>还款金额</span><span>余额</span><span>渠道</span><span>收款尾号</span><span>流水单号</span><span>流水状态</span><span class="client-span-time">创建时间</span><span>操作</span></li>
 	  	<li v-for="(ele,k) in contractList">
-	  		<span class="client-span-time">{{ele.create_time}}</span>
+	  		<span class="client-span-time">{{ele.refundTime}}</span>
 	  		<span >{{ele.refund_name}}</span>
 	  		<span >{{ele.shop}}</span>
 	  		<span >{{ele.amount}}</span>
-	  		<span class="client-span-time">{{ele.refundTime}}</span>
+	  		<span>{{ele.remain_amt}}</span>
 	  		<span >{{ele.way}}</span>
 	  		<span >{{ele.card_id}}</span>
 	  		<span>{{ele.file_id}}</span>
-	  		<span><i class="el-icon-check" v-show="ele.t_status==1"></i><i class="el-icon-close" v-show="ele.t_status==2"></i><svg-icon icon-class="shousuo" v-show="ele.t_status==0"/></span>
+	  		<span>
+	  			<el-tooltip class="item" effect="dark" content="已匹配" placement="right"><i class="el-icon-check" v-show="ele.t_status==1"></i></el-tooltip>
+	  			<el-tooltip class="item" effect="dark" content="未匹配" placement="right"><i class="el-icon-close" v-show="ele.t_status==2"></i></el-tooltip>
+	  			<el-tooltip class="item" effect="dark" content="匹配中" placement="right"><svg-icon icon-class="wait" v-show="ele.t_status==0"/></el-tooltip>
+	  		</span>
+	  		<span class="client-span-time">{{ele.create_time}}</span>
 	  		<span @click="check(ele)" class="span-check"><el-button type="text" v-if="ele.t_status==1">查看</el-button><el-button type="text" v-if="ele.t_status==2">重试</el-button></span>
 	  	</li>
 	  </ul>
@@ -129,7 +134,7 @@
 	           data.append("file_id",this.formSearch.wasteId)
 	           data.append('shop',this.formSearch.shop);
 	           data.append('is_match',this.formSearch.checkStatus);
-	           data.append('create_time', this.formSearch.date);
+	           data.append('refund_time', this.formSearch.date);
 	           const url=this.$checkStage('/charge/refund/search')
 	           this.$http.post(url, data).then((response) => {
 	           	            console.log(response)
@@ -143,6 +148,7 @@
  	 check(obj){
  	 	if(obj.t_status==1){
  	 		this.$store.dispatch('ContractId', obj.contract_id)
+ 	 		this.$store.dispatch('ContractNo', "")
  		    this.$router.push({path:'/reconcil/repaymentPlan'})
  	 	}else if(obj.t_status==2){
  	 		   var data = new FormData();
@@ -162,7 +168,7 @@
 					           data.append("file_id",this.formSearch.wasteId)
 					           data.append('shop',this.formSearch.shop);
 					           data.append('is_match',this.formSearch.checkStatus);
-					           data.append('create_time', this.formSearch.date);
+					           data.append('refund_time', this.formSearch.date);
 					           const url=this.$checkStage('/charge/refund/search')
 					           this.$http.post(url, data).then((response) => {
 					                        this.contractList=response.data.search_refund_list
@@ -189,6 +195,7 @@
       	this.formSearch.date=""
       	this.formSearch.shop=""
       	this.formSearch.checkStatus=""
+      	this.formSearch.wasteId=""
       },
       
       handleCurrentChange(val) {
@@ -202,7 +209,7 @@
 	           data.append("file_id",this.formSearch.wasteId)
 	           data.append('shop',this.formSearch.shop);
 	           data.append('is_match',this.formSearch.checkStatus);
-	           data.append('create_time', this.formSearch.date);
+	           data.append('refund_time', this.formSearch.date);
 	           const url=this.$checkStage('/charge/refund/search')
 	           this.$http.post(url, data).then((response) => {
 	           	            console.log(response)
@@ -221,7 +228,7 @@
 	           data.append("file_id",this.formSearch.wasteId)
 	           data.append('shop',this.formSearch.shop);
 	           data.append('is_match',this.formSearch.checkStatus);
-	           data.append('create_time', this.formSearch.date);
+	           data.append('refund_time', this.formSearch.date);
 	           const url=this.$checkStage('/charge/refund/search')
 	           this.$http.post(url, data).then((response) => {
 	           	            
@@ -311,7 +318,7 @@
 		line-height: 50px;
 	}
 	.content .client-ul li .client-span-time{
-		flex: 1.5;
+		flex: 2;
 	}
 	/*导入合同窗口*/
 	.contract{

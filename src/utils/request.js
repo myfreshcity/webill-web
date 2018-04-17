@@ -5,9 +5,9 @@ import { getToken } from '@/utils/auth'
 
 // 创建axios实例
 const service = axios.create({
-//baseURL: "http://longfei.test.manmanh.com/webill-app", // api的base_url
+baseURL: "http://longfei.test.manmanh.com/webill-app", // api的base_url
 //baseURL: "http://webill.test.manmanh.com/webill",
-  baseURL: "http://www.vebill.com/webill",
+//baseURL: "http://www.vebill.com/webill",
   timeout: 0 // 请求超时时间
 })
 

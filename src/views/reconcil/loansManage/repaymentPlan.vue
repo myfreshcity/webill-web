@@ -2,22 +2,70 @@
 
 <template>
 	<div class="content">
-	  <ul class="client-ul">
-	  	<p><span class="client-spanLeft">数据列表</span></p>
-	  	<li class="client-li"><span>合同编号</span><span>还款日期</span><span>还款期数</span><span >应还本息</span><span>应还滞纳金</span><span>实还本息</span><span>实还滞纳金</span><span>实际还款日期</span><span>还款状态</span></li>
-	  	<li v-for="(ele,k) in repaymentList">
-	  		<span >{{ele.contract_no}}</span>
-	  		<span >{{ele.deadline}}</span>
-	  		<span >{{ele.tensor}}</span>
-	  		<span >{{ele.amount}}</span>
-	  		<span >{{ele.fee}}</span>
-	  		<span >{{ele.actual_amt}}</span>
-	  		<span >{{ele.actual_fee}}</span>
-	  		<span >{{ele.settled_date}}</span>
-	  		<span ><svg-icon icon-class="wait" v-show="ele.is_settled==0&&ele.delay_day<1"/><svg-icon icon-class="duihao" v-show="ele.is_settled==1" class="duihao"/><svg-icon icon-class="yuqi" v-show="ele.is_settled==0&&ele.delay_day>0"/></span>
-	  	</li>
-	  </ul>
-	 
+	  <div class="nav1">
+			<p class="p-title"><span class="span-line"></span>合同信息</p>
+			<p class="nav1-p">手机号码：<span>{{checkDetail.mobile_no}}</span></p>
+			<p class="nav1-p">客户姓名：<span>{{checkDetail.customer}}</span></p>
+			<p class="nav1-p">身份证号：<span>{{checkDetail.id_number}}</span></p>
+			<p class="nav1-p">合同编号：<span>{{checkDetail.contract_no}}</span></p>
+			<p class="nav1-p">借款金额：<span>{{checkDetail.loan_amount}}</span></p>
+			<p class="nav1-p">放款日期：<span>{{checkDetail.loan_date}}</span></p>
+	  </div>
+	  <div class="nav1">
+	  	  <p class="p-title"><span class="span-line"></span>还款计划</p>
+		  <ul class="client-ul">
+		  	<p><span class="client-spanLeft">数据列表</span></p>
+		  	<li class="client-li"><span>合同编号</span><span>还款日期</span><span>还款期数</span><span >应还本息</span><span>应还滞纳金</span><span>实还本息</span><span>实还滞纳金</span><span>实际还款日期</span><span>还款状态</span></li>
+		  	<li v-for="(ele,k) in repaymentList">
+		  		<span >{{ele.contract_no}}</span>
+		  		<span >{{ele.deadline}}</span>
+		  		<span >{{ele.tensor}}</span>
+		  		<span >{{ele.amount}}</span>
+		  		<span >{{ele.fee}}</span>
+		  		<span >{{ele.actual_amt}}</span>
+		  		<span >{{ele.actual_fee}}</span>
+		  		<span >{{ele.settled_date}}</span>
+		  		<span >
+		  			<el-tooltip class="item" effect="dark" content="还款中" placement="right"><svg-icon icon-class="wait" v-show="ele.is_settled==0&&ele.delay_day<1"/></el-tooltip>
+		  			<el-tooltip class="item" effect="dark" content="结清" placement="right"><svg-icon icon-class="duihao" v-show="ele.is_settled==1" class="duihao"/></el-tooltip>
+		  			<el-tooltip class="item" effect="dark" content="逾期" placement="right"><svg-icon icon-class="yuqi" v-show="ele.is_settled==0&&ele.delay_day>0"/></el-tooltip>
+		  		</span>
+		  	</li>
+		  </ul>
+	  </div>
+	  <div class="nav1">
+	  	  <p class="p-title"><span class="span-line"></span>处理历史</p>
+	  	  <ul class="client-ul">
+		  	<li class="client-li">
+		  		<span class="date-span">申请时间</span>
+			 	<span>申请方式</span>
+			 	<span>协商金额</span>
+			 	<span>是否有效</span>
+			 	<span class="remark-span">备注</span>
+		  	</li>
+		  	<li v-for="(ele,k) in historyList">
+		  		<span class="date-span">{{ele.apply_date}}</span>
+			 	<span>{{ele.type|applyType}}</span>
+			 	<span>{{ele.amount}}</span>
+			 	<span>{{ele.result|resultFilter}}</span>
+			 	<span  class="remark-span">{{ele.remark}}</span>
+		  	</li>
+		  	<li v-if="historyList.length==0" class="noRecord">无记录</li>
+		  </ul>
+	  </div>
+	  <div class="nav1">
+	  	  <p class="p-title"><span class="span-line"></span>冲账历史</p>
+	  	  <ul class="client-ul">
+		  	<li class="client-li"><span>支付时间</span><span>姓名</span><span>还款金额</span><span>冲账余额</span><span >还款渠道</span></li>
+		  	<li v-for="(ele,k) in checkDetail.real_pays">
+					<span>{{ele.refund_time}}</span>
+					<span>{{ele.refund_name}}</span>
+					<span>{{ele.amount}}</span>
+					<span>{{ele.remain_amt}}</span>
+					<span>{{ele.way}}</span>
+				</li>
+		  </ul>
+	  </div>
 	</div>
 </template>
 
@@ -30,6 +78,8 @@
   export default {
     data() {
       return {
+      	historyList:[],
+      	checkDetail:{},
       	downloadLoading:false,
       	repaymentList:[], 
       	loading1:false,
@@ -42,7 +92,7 @@
       		idNo:"",
       		start:0,
       		length:10,
-      		sortWay:""
+      		sortWay:"",
       	},
       	currentPage:1,
       }
@@ -54,15 +104,39 @@
     		}else{
     			return "未结清"
     		}
-    	}
+    	},
+    	resultFilter(index){
+			if(index===0){
+				return "待审核"
+			}else if(index===100){
+				return "通过"
+			}else if(index===200){
+				return "拒绝"
+			}else{
+				return ""
+			}
+		},
+		applyType(index){
+			if(index==0){
+				return "提醒还款"
+			}else if(index==1){
+				return "申请减免"
+			}else{
+				return "移交外催"
+			}
+		},
     },
     mounted:function(){
 			 $(window).unbind ('scroll');
 			 if(this.userInfo.mobileNo){
 			   const checkUrl=this.$checkStage('/charge/contract/detail/get')
 	           this.$http.post(checkUrl, {'contract_no':this.contractNo,"is_overtime":0,contract_id:this.contractId}).then((response) => {
+//	           	            this.$store.dispatch('ContractId', "")
+//   		                this.$store.dispatch('ContractNo', "")
 	           	            console.log(response)
+	           	            this.checkDetail=response.data
 	           	            this.repaymentList=response.data.overtime_list
+	           	            this.historyList=response.data.commit_history
 	                    }, (response) => {
 
 	                    });
@@ -105,6 +179,7 @@
 	}
 	.content .client-ul{
 		margin: 0 20px;
+		margin-top: 20px;
 		border: 1px #E3E7F1 solid;
 		border-right:none ;
 		border-bottom: none;
@@ -156,5 +231,38 @@
 	}
 	.duihao{
 		color: #10C55B;
+	}
+	.p-title{
+		font-size: 14px;
+	}
+	.span-line{
+		float: left;
+		width: 5px;
+		height: 16px;
+		background: #0BB1FF;
+		margin-right: 5px;
+	}
+	.nav1{
+		padding: .2rem .3rem;
+	}
+	.nav1 .nav1-p{
+		padding-left: 30px;
+		margin-top: 20px;
+		font-size: 14px;
+	}
+	.nav1 .nav1-p span{
+		margin-right: 30px;
+	}
+	.nav1 ul li .remark-span{
+		flex:3;
+	}
+	.nav1 ul li .date-span{
+		flex:2;
+	}
+	.nav1 ul .noRecord{
+		display: block;
+		text-align: center;
+		line-height: 50px;
+		font-size: 14px;
 	}
 </style>

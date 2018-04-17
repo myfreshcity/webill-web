@@ -16,7 +16,7 @@
 			<div class="nav2-box">
 			 <el-tabs  v-model="activeName2" type="border-card" @tab-click="repayClick">
 			    <el-tab-pane label="逾期" name="first">逾期</el-tab-pane>
-			    <el-tab-pane label="结清" name="second">提前结清</el-tab-pane>
+			    <el-tab-pane label="结清" name="second">结清</el-tab-pane>
 			    <el-tab-pane label="还款中" name="third">还款中</el-tab-pane>
 			    <el-tab-pane label="全部" name="fourth">全部</el-tab-pane>
 			  </el-tabs>
@@ -31,7 +31,7 @@
 					<span>{{ele.fee}}</span>
 					<span>{{ele.actual_amt}}</span>
 					<span>{{ele.actual_fee}}</span>
-					<span>{{ele.refund_status}}</span>
+					<span><b v-if="ele.is_settled==0&&ele.delay_day>0">逾期</b><b v-if="ele.is_settled==0&&ele.delay_day<1">还款中</b><b v-if="ele.is_settled==1">结清</b></span>
 				</li>
 				<li class="last-li">
 					<span class="total-span">小计</span><span>{{shouldPay1}}</span><span>{{shouldPay2}}</span><span>{{truePay1}}</span><span>{{truePay2}}</span><span></span>
@@ -41,9 +41,9 @@
 		<div class="nav1 nav3">
 			<p class="p-title"><span class="span-line"></span>处理面板</p>
 			<ul>
-				<li class="li-head"><span class="span-left" >审批结果</span><span class="span-right">{{approveResult|resultFilter}}</span></li>
-				<li v-if="approveResult==200"><span class="span-left" >拒绝理由</span><span class="span-right">{{approveRemark}}</span></li>
-				<li >
+				<!--<li class="li-head"><span class="span-left" >审批结果</span><span class="span-right">{{approveResult|resultFilter}}</span></li>
+				<li v-if="approveResult==200"><span class="span-left" >拒绝理由</span><span class="span-right">{{approveRemark}}</span></li>-->
+				<li class="li-head">
 					<span class="span-left">处理方式</span>
 					<span class="span-right nav3-span-right">
 						     <el-radio-group v-model="dealDetail">
@@ -53,21 +53,21 @@
 						    </el-radio-group>
 					</span>
 				</li>
-				<li ><span class="span-left">应还总额</span><span class="span-right span-right-money">{{minSum}} (<b>减免金额：{{reduceMoney}}</b>)&nbsp;&nbsp;&nbsp;<el-checkbox v-model="selectType" :disabled="radioDisable||handOver">一次结清</el-checkbox></span></li>
+				<li ><span class="span-left">应还总额</span><span class="span-right span-right-money"><i>{{minSum}}</i> (<b>减免金额：{{reduceMoney}}</b>)&nbsp;&nbsp;&nbsp;<el-checkbox v-model="selectType" :disabled="radioDisable||handOver">一次结清</el-checkbox></span></li>
 				<li><span class="span-left">协商金额</span><span class="span-right nav3-span-right"><el-input v-model="consultValue" :disabled="radioDisable||handOver" class="work-input" type="number" placeholder="协商后的还款金额"></el-input></span></li>
 				<li><span class="span-left">处理备注</span><span class="span-right nav3-span-right"><el-input   v-model="remark" :disabled="radioDisable" class="remark-input" placeholder="选填"></el-input></span></li>
 			</ul>
 			 <p class="nav3-sub" ><el-button v-if="!radioDisable" @click="goBack">返回</el-button><el-button v-if="!radioDisable" v-waves type="primary" @click="commitSub">提交</el-button><el-button class="history-span"  @click="showHistory"><svg-icon icon-class="zhankai" v-show="!historyShow"/><svg-icon icon-class="shousuo" v-show="historyShow"/>历史记录 </el-button></p>
 			 <ul class="history" v-show="historyShow">
 			 	<li class="li-head">
-			 		<span >申请时间</span>
+			 		<span class="date-span">申请时间</span>
 				 	<span>申请方式</span>
 				 	<span>协商金额</span>
 				 	<span>是否有效</span>
 				 	<span class="remark-span">备注</span>
 			 	</li>
 			 	<li v-for="(ele,k) in historyList">
-			 		<span >{{ele.apply_date}}</span>
+			 		<span class="date-span">{{ele.apply_date}}</span>
 				 	<span>{{ele.type|applyType}}</span>
 				 	<span>{{ele.amount}}</span>
 				 	<span>{{ele.result|resultFilter}}</span>
@@ -86,7 +86,7 @@
 			  </el-tabs>
 			</div>
 			<ul>
-				<li class="nav2-li-head"><span>支付时间</span><span>姓名</span><span>还款金额</span><span>冲账余额</span><span class="nav2-span-right">还款渠道</span></li>
+				<li class="nav2-li-head"><span>支付时间</span><span>姓名</span><span>还款金额</span><span>冲账余额</span><span >还款渠道</span></li>
 				<li v-for="(ele,k) in realPay">
 					<span>{{ele.refund_time}}</span>
 					<span>{{ele.refund_name}}</span>
@@ -123,7 +123,7 @@
 				</el-form>
 			  </div>
 		  <ul class="client-ul">
-		  	<li class="client-li"><span>支付日期</span><span>支付时间</span><span>姓名</span><span>门店</span><span>收款卡号尾号</span><span>还款金额</span><span>还款渠道</span><span>操作</span></li>
+		  	<li class="client-li"><span>支付日期</span><span>支付时间</span><span>姓名</span><span>门店</span><span>收款卡号尾号</span><span>还款金额</span><span>余额</span><span>还款渠道</span><span>操作</span></li>
 		  	<li v-for="(ele,k) in contractList">
 		  		<span>{{ele.refund_date}}</span>
 		  		<span>{{ele.refund_time}}</span>
@@ -131,6 +131,7 @@
 		  		<span>{{ele.shop}}</span>
 		  		<span>{{ele.card_id}}</span>
 		  		<span>{{ele.amount}}</span>
+		  		<span>{{ele.remain_amt}}</span>
 		  		<span>{{ele.type}}</span>
 		  		<span @click="strike(ele)" class="span-check"><el-button type="text">冲账</el-button></span>
 		  	</li>
@@ -180,18 +181,18 @@
 				truePay3:0,    
 				truePay4:0,    
 				isSettle:1,
-				dealDetail:"提醒减免",
+				dealDetail:"提醒还款",
 				dealType:"0",
 				activeName1: 'first',
 				activeName2: 'first',
 				overList:[],  //逾期列表
-				minSum:"",   //最低还款额
+				minSum:0,   //最低还款额
 				isStrike:false,
 				strikeDetail:{},
 				bgShow:false,
 				radioDisable:false, 
-				handOver:false,
-				selectType:true,    
+				handOver:true,
+				selectType:false,    
 				consultValue:"",
 				repayDate:'',      //承诺还款日期
 				remark:'',         //备注
@@ -278,9 +279,9 @@
 		           	            this.repayPlan4=this.checkDetail.overtime_list
 		           	            
 		           	            for(let i=0;i<this.repayPlan4.length;i++){
-		           	            	if(this.repayPlan4[i].is_settled==0){
+		           	            	if(this.repayPlan4[i].is_settled==1){
 		           	            		this.repayPlan2.push(this.repayPlan4[i])
-		           	            	}else if(this.repayPlan4[i].is_settled==1){
+		           	            	}else if(this.repayPlan4[i].is_settled==0){
 		           	            		this.repayPlan3.push(this.repayPlan4[i])
 		           	            	}
 		           	            }
@@ -320,30 +321,30 @@
 								  }
 		           	             this.minSum1=this.shouldPay1+this.shouldPay2-this.truePay1-this.truePay2
 		           	             this.minSum2=this.shouldPay3+this.shouldPay4-this.truePay3-this.truePay4
-		           	             this.minSum=this.minSum2
-		           	             console.log(this.minSum)
-		           	            if(this.checkDetail.commit.type){
-		           	            	if(this.checkDetail.commit.type==0){
-		           	            		this.dealDetail="提醒还款"
-		           	            	}else if(this.checkDetail.commit.type==1){
-		           	            		this.dealDetail="申请减免"
-		           	            	}else{
-		           	            		this.dealDetail="移交外催"
-		           	            	}
-		           	            	this.repayDate=this.checkDetail.commit.deadline
-		           	            	this.remark=this.checkDetail.commit.remark
-		           	            	this.reduceMoney=this.checkDetail.commit.amount
-		           	            	this.consultValue=this.minSum-this.checkDetail.commit.amount
-		           	            	
-		           	            	if(this.checkDetail.commit.type==1&&this.checkDetail.commit.is_dealt==1){
-		           	            		this.radioDisable=false
-		           	            	}else if(this.checkDetail.commit.is_dealt==1){
-		           	            		this.radioDisable=true
-		           	            	}
-		           	            	
-		           	            }else{
-		           	            	this.dealDetail="提醒还款"
-		           	            }
+//		           	             this.minSum=this.minSum2
+//		           	             console.log(this.minSum)
+//		           	            if(this.checkDetail.commit.type){
+//		           	            	if(this.checkDetail.commit.type==0){
+//		           	            		this.dealDetail="提醒还款"
+//		           	            	}else if(this.checkDetail.commit.type==1){
+//		           	            		this.dealDetail="申请减免"
+//		           	            	}else{
+//		           	            		this.dealDetail="移交外催"
+//		           	            	}
+//		           	            	this.repayDate=this.checkDetail.commit.deadline
+//		           	            	this.remark=this.checkDetail.commit.remark
+//		           	            	this.reduceMoney=this.checkDetail.commit.amount
+//		           	            	this.consultValue=this.minSum-this.checkDetail.commit.amount
+//		           	            	
+//		           	            	if(this.checkDetail.commit.type==1&&this.checkDetail.commit.is_dealt==1){
+//		           	            		this.radioDisable=false
+//		           	            	}else if(this.checkDetail.commit.is_dealt==1){
+//		           	            		this.radioDisable=true
+//		           	            	}
+//		           	            	
+//		           	            }else{
+//		           	            	this.dealDetail="提醒还款"
+//		           	            }
 		                    }, (response) => {
 	
 		                    });
@@ -355,6 +356,7 @@
 		           data.append('refund_date', this.formSearch.date);
 		           const url=this.$checkStage('/charge/refund/unlink/get')
 		           this.$http.post(url, data).then((response) => {
+		           	            console.log(response)
 		                        this.contractList=response.data.unlinked_list
 		                        this.totalCount=response.data.num
 		                       
@@ -387,7 +389,7 @@
 		     	}else if(str=="申请减免"){
 		     		this.handOver=false;
 		     		this.dealType='1'
-		     		this.selectType=true
+		     		this.selectType=false
 		     	}else{
 		     		this.handOver=true;
 		     		this.dealType='2'
@@ -640,6 +642,9 @@
 	.nav1 ul li .remark-span{
 		flex:3;
 	}
+	.nav1 ul li .date-span{
+		flex:2;
+	}
 	.nav1 ul li .look-span{
 		color: #0BB1FF;
 	}
@@ -654,6 +659,11 @@
 	}
 	.nav1 ul li .span-right-money{
 		font-size: 14px;
+	}
+	.nav1 ul li .span-right-money i{
+		/*display: inline-block;
+		width: 40px;*/
+		font-style: normal;
 	}
 	.nav2{
 		padding: .1rem .3rem;

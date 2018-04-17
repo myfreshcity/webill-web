@@ -29,7 +29,7 @@
 		<div class="nav1 nav3">
 			<ul>
 				<li class="li-head"><span class="span-left">申请状态</span><span class="span-right">{{creditDetail.result|resultFilter}}</span></li>
-				<li><span class="span-left">协商金额</span><span class="span-right">{{creditDetail.commit_amount}}</span></li>
+				<li><span class="span-left">减免金额</span><span class="span-right">{{creditDetail.commit_amount}}</span></li>
 				<li><span class="span-left">处理备注</span><span class="span-right">{{creditDetail.remark}}</span></li>
 				<!--<li><span class="span-left">协商有效期</span><span class="span-right">{{creditDetail.deadline}}</span></li>-->
 				<li>

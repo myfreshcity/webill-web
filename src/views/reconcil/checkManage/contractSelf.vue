@@ -36,14 +36,7 @@
 		 	}
 		 },
 		 mounted:function(){
-		 	if(!this.userInfo.mobileNo){
-		 		this.$router.push({path:'/recomcil/checkList'})
-		 	}else{
-		 		var url= this.$checkStage('/charge/refund/newest')
-		 		this.$http.get(url).then(response=>{  
-	            	console.log(response)
-	            })
-		 	}
+		 	
 		 },
 		 methods:{
 		 	UpladFile(){
@@ -52,12 +45,7 @@
 			                  confirmButtonText: '确定',
 					});
 		 		}else{
-		 		 const loading = this.$loading({
-		          lock: true,
-		          text: '上传中',
-		          spinner: 'el-icon-loading',
-		          background: 'rgba(0, 0, 0, 0.7)'
-		        });
+		 		this.fullscreenLoading = true;
 	     		var fileObj = document.getElementById("excel-upload-input").files; // 获取文件对象
 	            var FileController = this.$checkStage('/charge/plan/upload');                    // 接收上传文件的后台地址 
 	            // FormData 对象
@@ -69,22 +57,17 @@
                 var _this=this
 	            _this.$http.post(FileController, form).then(response=>{  
 //	            	console.log(response)
-	            	loading.close();
+	            	this.fullscreenLoading = false;
 	            	if(response.data.isSucceed==200){
-//	            		_this.$alert("上传成功", '系统提示', {
-//			                  confirmButtonText: '确定',
-//					    });
 					     _this.$message({
 				          message: '上传文件成功',
 				          type: 'success'
 				        });
-					    _this.loading=false
 		                _this.$router.push({path:'/reconcil/repaymentDetail'})
 	            	}else{
 	            		_this.$alert(response.data.message, '系统提示', {
 					        confirmButtonText: '确定',
 					    });
-					    _this.loading=false
 	            	}
 		         }) 
 		        }

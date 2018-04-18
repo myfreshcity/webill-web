@@ -54,6 +54,7 @@ axios.interceptors.response.use(
         if (error.response) {
             switch (error.response.status) {
             	case 400:
+            	    router.replace({path:'404'}),
             	    Message.error('请求错误')
             	    break
                 case 401:
@@ -64,6 +65,7 @@ axios.interceptors.response.use(
                     })
                     break
                 case 500:
+                    router.replace({path:'404'}),
             	    Message.error('服务器内部错误')
             	    break
                 case 504:

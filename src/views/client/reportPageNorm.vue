@@ -322,7 +322,6 @@
 	    },
 	    mounted:function(){
 	    	if(this.userInfo.mobileNo){
-	    		console.log(this.msgDetail)
 		    	this.msg=this.msgDetail
 		    	this.baseMsg=this.msg.cus_basic_info
 		    	this.tripList=this.msg.trip_info

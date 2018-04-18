@@ -533,7 +533,9 @@
 				           confirmButtonText: '确定',
 				        });
 		      		}
-		      	})
+		      	},(response) => {
+                        this.loading5=false
+                 });
 	      	}
       },
       nextStep(){
@@ -579,12 +581,12 @@
       		this.$http.post(url,{"contacts":this.relationList,"userId":this.userInfo.id,"id":this.clientId,"temReportType":this.selectType,"workAddrCode":work,"workAddrDetail":this.workAddress,"homeAddrCode":home,"homeAddrDetail":this.homeAddress})
 	        .then(response => {
 	        	console.log(response)
+	        	this.loading2=false
 	        	if(response.status==300){
 	        			this.$alert('您的报告正在查询中请稍后', '系统提示', {
 				          confirmButtonText: '确定',
 				        });
 	        	}else if(response.status==200){
-	        		 this.loading2=false
 	                 this.dhbObj=response.data.dhbGetLogin
 		             if(this.dhbObj.smsDuration){
 		             	this.needCode=true
@@ -610,7 +612,9 @@
 				          confirmButtonText: '确定',
 				     });
 	        	}
-	        })
+	        },(response) => {
+                    this.loading2=false
+             });
       	}
 
       },
@@ -674,9 +678,9 @@
 											  "reportKey":this.reportKey
 		      	            })
 		      	             .then(response => {
+		      	             	this.loading3=false
 		      	             	console.log(response)
 		      	             	if(response.data.jxlCollect.processCode==10008){
-		      	             		this.loading3=false
 		      	             		this.$router.push({path:'/client/wait'})
 		      	             		this.$store.dispatch('ClientMsg', "")
 		      	             	}else{
@@ -687,9 +691,9 @@
 		      	             		this.step3=false
 		      	             		this.step4=true
 		      	             	}
-		      	             }).catch(function(response){
-		      	             	this.$router.push({path:'/404'})
-		      	             })
+		      	             },(response) => {
+		                            this.loading3=false
+			                 });
 	      	             }
 	      		}else if(this.response.data.dhbCollect.smsDuration){
 	      			this.$alert(response.data.dhbCollect.msg, '系统提示', {
@@ -744,8 +748,8 @@
 		      	            })
 		      	             .then(response => {
 		      	             	console.log(response)
+		      	             	this.loading3=false
 		      	             	if(response.data.jxlCollect.processCode==10008){
-		      	             		this.loading3=false
 		      	             		this.$router.push({path:'/client/wait'})
 		      	             		this.$store.dispatch('ClientMsg', "")
 		      	             	}else{
@@ -762,18 +766,16 @@
 		             	this.$alert("请输入验证码", '系统提示', {
 					          confirmButtonText: '确定',
 					        });
+					    this.loading3=false
 		             	if(response.data.dhbCollect.smsDuration){
 		             		
 					        this.dhbSmsShow=true
-			             	this.loading3=false
 		             	}
 		             	if(response.data.dhbCollect.captchaImage){
 		             		this.imgCodeShow=true
 		             		this.imgCodeUrl=response.data.dhbCollect.captchaImage
-			             	this.loading3=false
 		             	}
 		             }else{
-		             	this.loading3=false
 		             	this.$alert(response.data.dhbCollect.msg, '系统提示', {
 					          confirmButtonText: '确定',
 					        });
@@ -818,7 +820,9 @@
 					          confirmButtonText: '确定',
 					        });
       	             	}
-      	             })
+      	             },(response) => {
+                            this.loading4=false
+	                 });
       }
     },
      computed: {

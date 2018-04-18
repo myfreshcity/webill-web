@@ -75,10 +75,9 @@
 			}
 		},
 		mounted:function(){
-			 if(this.userInfo.mobileNo){
 					   $(window).unbind ('scroll');
 					   const checkUrl=this.$checkStage('/charge/commit/detail/get')
-			           this.$http.post(checkUrl, {'commit_id':this.commitId}).then((response) => {
+			           this.$http.post(checkUrl, {'commit_id':sessionStorage.getItem('extraData')}).then((response) => {
 	           	            console.log(response)
 	           	            if(response.data.isSucceed==200){
 		           	            this.creditDetail=response.data
@@ -96,9 +95,6 @@
 	                    }, (response) => {
 
 	                    });
-	          }else{
-	          	this.$router.push({path:'/reconcil/creditList'})
-	          }
          },
          methods:{
          	creditSub(){
@@ -109,16 +105,17 @@
          	   }else{
 	         	   var data = new FormData();
 		           data.append('userId', this.userInfo.id);
-		           data.append('commit_id', this.commitId);
+		           data.append('commit_id', sessionStorage.getItem('extraData'));
 		           data.append('result', this.selectType);
 		           data.append('comments', this.remark);
 		           const url=this.$checkStage('/charge/commit/approve')
 		           this.$http.post(url, data).then((response) => {
 		           	            if(response.data.isSucceed==200){
 		           	            	this.$router.push({path:'/reconcil/creditList'})
-		           	            	this.$alert("审核成功", '系统提示', {
-							                  confirmButtonText: '确定',
-									    });
+		           	            	 this.$message({
+								          message: '审核成功',
+								          type: 'success'
+							         });
 		           	            }else{
 		           	            	this.$alert("审核失败", '系统提示', {
 							                  confirmButtonText: '确定',

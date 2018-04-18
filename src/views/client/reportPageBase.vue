@@ -337,8 +337,6 @@
 	    },
 	    mounted:function(){
 	    	if(this.userInfo.mobileNo){
-	    		console.log(this.msgDetail)
-	    		console.log(this.reportKey)
 		    	this.msg=this.msgDetail
 		    	this.baseMsg=this.msg.cus_basic_info
 		    	this.tongdunObj=this.msg.tongdun
@@ -410,7 +408,6 @@
 	           data.append('timeTo', this.formSearch.lastTime);
 	           const url=this.$backStage('/api/dhbReport/callsRecord')
 	           this.$http.post(url, data).then((response) => {
-	           	            console.log(response)
 	                        this.mobileList=response.data.obj.dataList
 	                        this.totalCount=response.data.obj.totalSize
 	                    }, (response) => {
@@ -436,7 +433,6 @@
 	           data.append('timeTo', this.formSearch.lastTime);
 	           const url=this.$backStage('/api/dhbReport/callsRecord')
 	           this.$http.post(url, data).then((response) => {
-	           	            console.log(response)
 	                        this.mobileList=response.data.obj.dataList
 	                        this.totalCount=response.data.obj.totalSize
 	                    }, (response) => {

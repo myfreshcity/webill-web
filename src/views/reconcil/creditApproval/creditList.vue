@@ -93,7 +93,7 @@
     },
      methods: {
      	checkDetail(data){
-     		this.$store.dispatch('CommitId', data)
+     		sessionStorage.setItem('extraData',data)
      		this.$router.push({path:'/reconcil/creditDetail'})
      	},
       clear(){

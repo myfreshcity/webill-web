@@ -62,7 +62,7 @@
 			 	<li class="li-head">
 			 		<span class="date-span">申请时间</span>
 				 	<span>申请方式</span>
-				 	<span>协商金额</span>
+				 	<span>减免金额</span>
 				 	<span>是否有效</span>
 				 	<span class="remark-span">备注</span>
 			 	</li>
@@ -86,13 +86,14 @@
 			  </el-tabs>
 			</div>
 			<ul>
-				<li class="nav2-li-head"><span>支付时间</span><span>姓名</span><span>还款金额</span><span>冲账余额</span><span >还款渠道</span></li>
+				<li class="nav2-li-head"><span>支付时间</span><span>姓名</span><span>还款金额</span><span>冲账余额</span><span >还款渠道</span><span>流水创建时间</span></li>
 				<li v-for="(ele,k) in realPay">
 					<span>{{ele.refund_time}}</span>
 					<span>{{ele.refund_name}}</span>
 					<span>{{ele.amount}}</span>
 					<span>{{ele.remain_amt}}</span>
 					<span>{{ele.way}}</span>
+					<span>{{ele.create_time}}</span>
 				</li>
 				<!--<li class="last-li"><p>冲账余额：{{checkDetail.remain_sum}} <b>注：冲账余额>0,为客户多还金额</b></p></li>-->
 			</ul>
@@ -259,7 +260,7 @@
 			 $(window).unbind ('scroll');
 //			 if(this.userInfo.mobileNo){
 			 	  const checkUrl=this.$checkStage('/charge/contract/detail/get')
-		           this.$http.post(checkUrl, {'contract_no':this.contractNo,"contract_id":"","is_overtime":0}).then((response) => {
+		           this.$http.post(checkUrl, {'contract_no':sessionStorage.getItem('extraData'),"contract_id":"","is_overtime":0}).then((response) => {
 		           	            console.log(response)
 		           	            this.checkDetail=response.data
 		           	            this.overList=response.data.overtime_list
@@ -458,7 +459,7 @@
 			},
 			confirm(){
 			   var data = new FormData();
-	           data.append('contract_no', this.contractNo);
+	           data.append('contract_no', sessionStorage.getItem('extraData'));
 	           data.append('user_id',this.userInfo.id);
 	           data.append('refund_id', this.strikeDetail.refund_id);
 	           const url=this.$checkStage('/charge/refund/unlink/link')
@@ -466,6 +467,10 @@
 	           	            console.log(response)
 	           	            if(response.data.isSucceed==200){
 	           	            	 this.$router.push({path:'/backPage'})
+	           	            	  this.$message({
+							          message: '冲账成功',
+							          type: 'success'
+							      });
 	           	            }else{
 	           	            	this.$alert(response.data.message, '系统提示', {
 					                  confirmButtonText: '确定',
@@ -504,7 +509,7 @@
 				   
 			   }else{
 				   var data = new FormData();
-		           data.append('contract_no', this.contractNo);
+		           data.append('contract_no', sessionStorage.getItem('extraData'));
 		           data.append('user_id',this.userInfo.id);
 		           data.append('type', this.dealType);
 		           data.append('discount_type', this.isSettle);
@@ -514,6 +519,10 @@
 		           this.$http.post(url, data).then((response) => {
 		           	            console.log(response)
 		           	            if(response.data.isSucceed==200){
+		           	            	 this.$message({
+								          message: this.dealDetail+'成功',
+								          type: 'success'
+							         });
 		           	            	this.$router.push({path:'/reconcil/checkList'})
 		           	            }else{
 		           	            	this.$alert(response.data.message, '系统提示', {

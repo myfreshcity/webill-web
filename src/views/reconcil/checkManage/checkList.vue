@@ -33,13 +33,12 @@
 	  <p class="ul-head"><span class="client-spanLeft">数据列表</span><el-button type="primary" @click="handleDownload()" :loading="downloadLoading">导出数据</el-button></p>
 	  <ul class="client-ul">
 	  	
-	  	<li class="client-li"><span>合同编号</span><span>客户姓名</span><span class="client-span-card">身份证</span><span >还款期数</span><span>对账日期</span><span>合同状态</span><span>处理状态</span><span>操作</span></li>
+	  	<li class="client-li"><span>合同编号</span><span>客户姓名</span><span class="client-span-card">身份证</span><span >还款期数</span><span>合同状态</span><span>处理状态</span><span>操作</span></li>
 	  	<li v-for="(ele,k) in contractList">
 	  		<span >{{ele.contract_no}}</span>
 	  		<span >{{ele.customer}}</span>
 	  		<span class="client-span-card">{{ele.id_number}}</span>
 	  		<span >{{ele.tensor}}</span>
-	  		<span >{{ele.upload_time}}</span>
 	  		<span >{{ele.is_settled|checkStatus}}</span>
 	  		<span >
 	  			<el-tooltip class="item" effect="dark" content="未处理" placement="right"><svg-icon icon-class="wait" v-show="ele.deal_status==0"/></el-tooltip>
@@ -124,7 +123,8 @@
     },
      methods: {
      	checkDetail(data){
-     		this.$store.dispatch('ContractNo', data)
+//   		this.$store.dispatch('ContractNo', data)
+     		sessionStorage.setItem('extraData',data)
      		this.$router.push({path:'/reconcil/checkDetail'})
      	},
 	    handleDownload() {
@@ -193,7 +193,7 @@
 	                        this.contractList=response.data.contract_list
 	                        this.totalCount=response.data.num
 	                    }, (response) => {
-
+                            this.loading1=false
 	                    });
 
       }
@@ -282,5 +282,8 @@
 	}
 	.duihao{
 		color: #10C55B;
+	}
+	.content .client-ul li  .svg-icon{
+		font-size: 20px;
 	}
 </style>

@@ -56,13 +56,14 @@
 	  <div class="nav1">
 	  	  <p class="p-title"><span class="span-line"></span>冲账历史</p>
 	  	  <ul class="client-ul">
-		  	<li class="client-li"><span>支付时间</span><span>姓名</span><span>还款金额</span><span>冲账余额</span><span >还款渠道</span></li>
+		  	<li class="client-li"><span>支付时间</span><span>姓名</span><span>还款金额</span><span>冲账余额</span><span >还款渠道</span><span>流水创建时间</span></li>
 		  	<li v-for="(ele,k) in checkDetail.real_pays">
 					<span>{{ele.refund_time}}</span>
 					<span>{{ele.refund_name}}</span>
 					<span>{{ele.amount}}</span>
 					<span>{{ele.remain_amt}}</span>
 					<span>{{ele.way}}</span>
+					<span>{{ele.create_time}}</span>
 				</li>
 		  </ul>
 	  </div>
@@ -128,11 +129,8 @@
     },
     mounted:function(){
 			 $(window).unbind ('scroll');
-			 if(this.userInfo.mobileNo){
 			   const checkUrl=this.$checkStage('/charge/contract/detail/get')
-	           this.$http.post(checkUrl, {'contract_no':this.contractNo,"is_overtime":0,contract_id:this.contractId}).then((response) => {
-//	           	            this.$store.dispatch('ContractId', "")
-//   		                this.$store.dispatch('ContractNo', "")
+	           this.$http.post(checkUrl, {'contract_no':sessionStorage.getItem('extraData'),"is_overtime":0,contract_id:sessionStorage.getItem('extraData')}).then((response) => {
 	           	            console.log(response)
 	           	            this.checkDetail=response.data
 	           	            this.repaymentList=response.data.overtime_list
@@ -140,9 +138,6 @@
 	                    }, (response) => {
 
 	                    });
-	         }else{
-	         	this.$router.push({path:'/reconcil/repaymentDetail'})
-	         }
      },
      methods: {
 	   
@@ -227,7 +222,7 @@
 		flex: 1.5;
 	}
 	.content .client-ul li  .svg-icon{
-		font-size: 24px;
+		font-size: 20px;
 	}
 	.duihao{
 		color: #10C55B;

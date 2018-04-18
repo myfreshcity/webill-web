@@ -19,15 +19,14 @@ import Layout from '../views/layout/Layout'
   }
 **/
 export const constantRouterMap = [
-//{ path: '/login', component: _import('login/index'), hidden: true },
   { path: '/login', component: _import('login/login'), hidden: true },
   { path: '/register', component: _import('login/register'), hidden: true },
   { path: '/reset', component: _import('login/reset'), hidden: true },
   { path: '/agreement', component: _import('login/agreement'), hidden: true },
   { path: '/404', component: _import('404'), hidden: true },
   { path: '/backPage', component: _import('backPage'), hidden: true },
-  
-  {
+//{ path: '/', component: _import('dashboard/index'), hidden: true },
+{
     path: '/',
     component: Layout,
     redirect: '/dashboard',
@@ -35,9 +34,9 @@ export const constantRouterMap = [
     hidden: true,
     children: [{
       path: 'dashboard',
-      component: _import('dashboard/index')
+      component: _import('dashboard/welcome')
     }]
-  },
+},
   {
     path: '/client',
     component: Layout,

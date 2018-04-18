@@ -147,8 +147,7 @@
      methods: {
  	 check(obj){
  	 	if(obj.t_status==1){
- 	 		this.$store.dispatch('ContractId', obj.contract_id)
- 	 		this.$store.dispatch('ContractNo', "")
+ 	 		sessionStorage.setItem('extraData',obj.contract_id)
  		    this.$router.push({path:'/reconcil/repaymentPlan'})
  	 	}else if(obj.t_status==2){
  	 		   var data = new FormData();

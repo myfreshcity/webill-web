@@ -33,12 +33,13 @@
 	  <p class="ul-head"><span class="client-spanLeft">数据列表</span><el-button type="primary" @click="handleDownload()" :loading="downloadLoading">导出数据</el-button></p>
 	  <ul class="client-ul">
 	  	
-	  	<li class="client-li"><span>合同编号</span><span>客户姓名</span><span class="client-span-card">身份证</span><span >逾期天数</span><span>合同状态</span><span>处理状态</span><span>操作</span></li>
+	  	<li class="client-li"><span>合同编号</span><span>客户姓名</span><span class="client-span-card">身份证</span><span>放款日期</span><span >逾期天数</span><span>合同状态</span><span>处理状态</span><span>操作</span></li>
 	  	<li v-for="(ele,k) in contractList">
 	  		<span >{{ele.contract_no}}</span>
 	  		<span >{{ele.customer}}</span>
 	  		<span class="client-span-card">{{ele.id_number}}</span>
-	  		<span >{{ele.delay_days|decorateDelayDay}}</span>
+	  		<span>{{ele.loan_date}}</span>
+	  		<span :class="{'leadDay':ele.delay_days<0}">{{ele.delay_days|decorateDelayDay}}</span>
 	  		<span >{{ele.is_settled|checkStatus}}</span>
 	  		<span >
 	  			<el-tooltip class="item" effect="dark" content="未处理" placement="right"><svg-icon icon-class="wait" v-show="ele.deal_status==0"/></el-tooltip>
@@ -62,7 +63,7 @@
 <script>
   import $ from 'jquery'
   import { mapGetters } from 'vuex'
-  import { getLoginUser } from '@/utils/utils'
+  import { getLoginUser,timeStampToDate } from '@/utils/utils'
   import { getToken } from '@/utils/auth' // 验权
   import Cookies from 'js-cookie'
   export default {
@@ -113,6 +114,8 @@
     },
     mounted:function(){
     	   $(window).unbind ('scroll');
+    	       var dd = new Date(); 
+    	       this.formSearch.date=timeStampToDate(dd.getTime());
 	           var data = new FormData();
 	           data.append('userId', this.userInfo.id);
 	           data.append('page', 1);
@@ -279,6 +282,9 @@
 		padding: .1rem 0;
 		border-right: 1px #E3E7F1 solid;
 		line-height: 50px;
+	}
+	.content ul li .leadDay{
+		color: #10C55B;
 	}
 	.content .client-ul li .client-span-card{
 		flex: 1.5;

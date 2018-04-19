@@ -151,7 +151,7 @@
 		  	 <p class="p1">冲账确认</p>
 		  	 <p class="p2"><span class="unlinked_span1">客户姓名：</span><span class="unlinked_span2">{{checkDetail.customer}}</span></p>
 		  	 <p class="p2"><span class="unlinked_span1">合同编号：</span><span class="unlinked_span2">{{checkDetail.contract_no}}</span></p>
-		  	 <p class="p2"><span class="unlinked_span1">冲账金额：</span><span class="unlinked_span2">{{strikeDetail.amount}}</span></p>
+		  	 <p class="p2"><span class="unlinked_span1">冲账金额：</span><span class="unlinked_span2">{{strikeDetail.remain_amt}}</span></p>
 		  	 <p class="p3"><el-button  @click="cancel" >取消</el-button><el-button type="primary" @click="confirm" >确定</el-button></p>
 		  </div>
 		<div class="bg" v-show="bgShow" @click="showBg()"></div>
@@ -260,7 +260,7 @@
 			 $(window).unbind ('scroll');
 //			 if(this.userInfo.mobileNo){
 			 	  const checkUrl=this.$checkStage('/charge/contract/detail/get')
-		           this.$http.post(checkUrl, {'contract_no':sessionStorage.getItem('extraData'),"contract_id":"","is_overtime":0}).then((response) => {
+		           this.$http.post(checkUrl, {'contract_id':sessionStorage.getItem('extraData'),"is_overtime":0}).then((response) => {
 		           	            console.log(response)
 		           	            this.checkDetail=response.data
 		           	            this.overList=response.data.overtime_list
@@ -459,7 +459,7 @@
 			},
 			confirm(){
 			   var data = new FormData();
-	           data.append('contract_no', sessionStorage.getItem('extraData'));
+	           data.append('contract_no', this.checkDetail.contract_no);
 	           data.append('user_id',this.userInfo.id);
 	           data.append('refund_id', this.strikeDetail.refund_id);
 	           const url=this.$checkStage('/charge/refund/unlink/link')
@@ -509,7 +509,7 @@
 				   
 			   }else{
 				   var data = new FormData();
-		           data.append('contract_no', sessionStorage.getItem('extraData'));
+		           data.append('contract_no', this.checkDetail.contract_no);
 		           data.append('user_id',this.userInfo.id);
 		           data.append('type', this.dealType);
 		           data.append('discount_type', this.isSettle);

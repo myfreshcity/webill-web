@@ -130,7 +130,7 @@
     mounted:function(){
 			 $(window).unbind ('scroll');
 			   const checkUrl=this.$checkStage('/charge/contract/detail/get')
-	           this.$http.post(checkUrl, {'contract_no':sessionStorage.getItem('extraData'),"is_overtime":0,contract_id:sessionStorage.getItem('extraData')}).then((response) => {
+	           this.$http.post(checkUrl, {"is_overtime":0,"contract_id":sessionStorage.getItem('extraData')}).then((response) => {
 	           	            console.log(response)
 	           	            this.checkDetail=response.data
 	           	            this.repaymentList=response.data.overtime_list
@@ -145,10 +145,7 @@
     },
     computed: {
 	    ...mapGetters([
-	      'msgType',
 	      'userInfo',
-	      'contractNo',
-	      'contractId'
 	    ])
 	}
   }

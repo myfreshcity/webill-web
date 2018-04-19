@@ -43,7 +43,7 @@
 	  		<span >{{ele.tensor}}</span>
 	  		<span :class="{'redSpan':ele.check_status==0}">{{ele.is_settled|checkFilter}}</span>
 	  		<span>{{ele.file_id}}</span>
-	  		<span @click="checkDetail(ele.contract_no)" class="span-check"><el-button type="text">还款计划</el-button></span>
+	  		<span @click="checkDetail(ele.contract_id)" class="span-check"><el-button type="text">还款计划</el-button></span>
 	  	</li>
 	  </ul>
 	  <div class="block" id="foot-page">
@@ -158,8 +158,7 @@
     },
      methods: {
      	checkDetail(data){
-     		this.$store.dispatch('ContractId', "")
-     		this.$store.dispatch('ContractNo', data)
+     		sessionStorage.setItem('extraData',data)
      		this.$router.push({path:'/reconcil/repaymentPlan'})
      	},
      	UpladFile(){

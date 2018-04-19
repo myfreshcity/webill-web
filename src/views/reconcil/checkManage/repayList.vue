@@ -73,11 +73,7 @@
   import { getLoginUser } from '@/utils/utils'
   import { getToken } from '@/utils/auth' // 验权
   import Cookies from 'js-cookie'
-  import waves from '@/directive/waves/index.js' // 水波纹指令
   export default {
-  	directives: {
-		waves
-    },
     data(){
         return {
 	      	downloadLoading:false,

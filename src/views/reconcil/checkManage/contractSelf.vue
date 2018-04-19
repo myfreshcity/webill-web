@@ -10,7 +10,7 @@
          <p class="p-download p-download1"><el-button   @click="downLoad"><img src="../../../../static/images/reconcil/downLoad.png" alt="" /><span class="span1">点击下载 </span></el-button><span class="tip">(请先下载Excel模板，按照模板格式填写数据，以确保数据格式正确)</span></p>
          <p class="p-title">上传合同文件</p>
          <p class="p-download"><upload-excel-component @on-selected-file='selected'></upload-excel-component></p>
-         <p class="p4"><el-button v-waves type="primary" @click="UpladFile()" >确认上传</el-button></p>
+         <p class="p4"><el-button v-waves type="primary" @click="UpladFile()" :loading="loading">确认上传</el-button></p>
          <el-table :data="tableData" border highlight-current-row style="width: 100%;margin-top:20px;">
 	      <el-table-column v-for='item of tableHeader' :prop="item" :label="item" :key='item'>
 	      </el-table-column>
@@ -36,7 +36,7 @@
 		 	}
 		 },
 		 mounted:function(){
-		 	
+		 	$(window).unbind ('scroll');
 		 },
 		 methods:{
 		 	UpladFile(){
@@ -45,7 +45,7 @@
 			                  confirmButtonText: '确定',
 					});
 		 		}else{
-		 		this.fullscreenLoading = true;
+		 		this.loading=true
 	     		var fileObj = document.getElementById("excel-upload-input").files; // 获取文件对象
 	            var FileController = this.$checkStage('/charge/plan/upload');                    // 接收上传文件的后台地址 
 	            // FormData 对象
@@ -57,7 +57,7 @@
                 var _this=this
 	            _this.$http.post(FileController, form).then(response=>{  
 //	            	console.log(response)
-	            	this.fullscreenLoading = false;
+                    this.loading=false
 	            	if(response.data.isSucceed==200){
 					     _this.$message({
 				          message: '上传文件成功',
@@ -69,7 +69,9 @@
 					        confirmButtonText: '确定',
 					    });
 	            	}
-		         }) 
+		         }, response => {
+				  	this.loading=false
+				  })
 		        }
 	        },
 	     	downLoad(){

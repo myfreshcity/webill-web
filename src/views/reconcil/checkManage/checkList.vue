@@ -45,7 +45,7 @@
 	  			<el-tooltip class="item" effect="dark" content="未处理" placement="right"><svg-icon icon-class="wait" v-show="ele.deal_status==0"/></el-tooltip>
 	  			<el-tooltip class="item" effect="dark" content="已处理" placement="right"><svg-icon icon-class="duihao" v-show="ele.deal_status==1" class="duihao"/></el-tooltip>
 	  		</span>
-	  		<span @click="checkDetail(ele.contract_no)" class="span-check"><el-button type="text">查看详情</el-button></span>
+	  		<span @click="checkDetail(ele.contract_id)" class="span-check"><el-button type="text">查看详情</el-button></span>
 	  	</li>
 	  </ul>
 	  <div class="block" id="foot-page">

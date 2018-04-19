@@ -707,7 +707,9 @@
 				    });
 				    this.loading3=false
 	      		}
-	      	})
+	      	},(response) => {
+		          this.loading3=false
+			});
       	}else{
 	      	const url=this.$backStage('/api/customer/dhbCollect')
 	      	this.$http.post(url,{
@@ -760,7 +762,9 @@
 		      	             		this.step3=false
 		      	             		this.step4=true
 		      	             	}
-		      	             })
+		      	             },(response) => {
+					                this.loading3=false
+						    });
 	      	             }
 		             }else if(response.data.dhbCollect.smsDuration||response.data.dhbCollect.captchaImage){
 		             	this.$alert("请输入验证码", '系统提示', {
@@ -780,7 +784,9 @@
 					          confirmButtonText: '确定',
 					        });
 		             }
-		        })
+		        },(response) => {
+		                this.loading3=false
+			    });
 	        }
       },
       submitSms(){

@@ -10,14 +10,14 @@
         <el-form-item label="">
 		    <el-input v-model="formSearch.contractNo" placeholder="合同编号"></el-input>
 		  </el-form-item>
-		  <!--<el-form-item label="">
+		  <el-form-item label="">
 		    <el-date-picker class="dataInp"
                           v-model="formSearch.date"
                           type="date"
-                          placeholder="对账日期"
+                          placeholder="还款日"
                           value-format="yyyy-MM-dd">
             </el-date-picker>
-		  </el-form-item>-->
+		  </el-form-item>
 		   <el-form-item label="">
 		    <el-select v-model="formSearch.dealType" placeholder="处理状态">
 		      <el-option label="未处理" value="0"></el-option>
@@ -33,12 +33,12 @@
 	  <p class="ul-head"><span class="client-spanLeft">数据列表</span><el-button type="primary" @click="handleDownload()" :loading="downloadLoading">导出数据</el-button></p>
 	  <ul class="client-ul">
 	  	
-	  	<li class="client-li"><span>合同编号</span><span>客户姓名</span><span class="client-span-card">身份证</span><span >还款期数</span><span>合同状态</span><span>处理状态</span><span>操作</span></li>
+	  	<li class="client-li"><span>合同编号</span><span>客户姓名</span><span class="client-span-card">身份证</span><span >逾期天数</span><span>合同状态</span><span>处理状态</span><span>操作</span></li>
 	  	<li v-for="(ele,k) in contractList">
 	  		<span >{{ele.contract_no}}</span>
 	  		<span >{{ele.customer}}</span>
 	  		<span class="client-span-card">{{ele.id_number}}</span>
-	  		<span >{{ele.tensor}}</span>
+	  		<span >{{ele.delay_days|decorateDelayDay}}</span>
 	  		<span >{{ele.is_settled|checkStatus}}</span>
 	  		<span >
 	  			<el-tooltip class="item" effect="dark" content="未处理" placement="right"><svg-icon icon-class="wait" v-show="ele.deal_status==0"/></el-tooltip>
@@ -77,7 +77,7 @@
       		realName:"",
       		date:"",
       		contractNo:"",
-      		dealType:"0",
+      		dealType:"",
       	},
       	currentPage:1,
       }
@@ -100,6 +100,15 @@
     		}else if(index==300){
     			return "结清"
     		}
+    	},
+    	decorateDelayDay(index){
+    		if(index<0){
+    			return '('+Math.abs(index)+')'
+    		}else if(index==null){
+    			return '-'
+    		}else{
+    			return index
+    		}
     	}
     },
     mounted:function(){
@@ -110,8 +119,8 @@
 	           data.append('contract_no', this.formSearch.contractNo);
 	           data.append('customer', this.formSearch.realName);
 	           data.append('all',0);
-	           data.append('is_dealt',0);
-//	           data.append('check_date', this.formSearch.date);
+	           //data.append('is_dealt',0);
+	           data.append('repay_date', this.formSearch.date);
 	           const url=this.$checkStage('/charge/contract/select')
 	           this.$http.post(url, data).then((response) => {
 	           	            console.log(response)
@@ -150,7 +159,7 @@
 	    },
       clear(){
       	this.formSearch.realName=""
-//    	this.formSearch.date=""
+    	this.formSearch.date=""
       	this.formSearch.contractNo=""
       	this.formSearch.dealType=""
       },
@@ -166,7 +175,7 @@
 	           data.append('customer', this.formSearch.realName);
 	           data.append('all',0);
 	           data.append('is_dealt',this.formSearch.dealType);
-//	           data.append('check_date', this.formSearch.date);
+	           data.append('repay_date', this.formSearch.date);
 	           const url=this.$checkStage('/charge/contract/select')
 	           this.$http.post(url, data).then((response) => {
 	           	            console.log(response)
@@ -185,7 +194,7 @@
 	           data.append('customer', this.formSearch.realName);
 	           data.append('all',0);
 	           data.append('is_dealt',this.formSearch.dealType);
-//	           data.append('check_date', this.formSearch.date);
+	           data.append('repay_date', this.formSearch.date);
 	           const url=this.$checkStage('/charge/contract/select')
 	           this.$http.post(url, data).then((response) => {
 	           	            this.loading1=false

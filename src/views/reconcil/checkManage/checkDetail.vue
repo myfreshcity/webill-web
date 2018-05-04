@@ -286,9 +286,9 @@
 		           	            		this.repayPlan3.push(this.repayPlan4[i])
 		           	            	}
 		           	            }
-		           	            for(let j=0;j<this.repayPlan2.length;j++){
-		           	            	if(this.repayPlan2[j].delay_day>0){
-		           	            		this.repayPlan1.push(this.repayPlan2[j])
+		           	            for(let j=0;j<this.repayPlan3.length;j++){
+		           	            	if(this.repayPlan3[j].delay_day>0){
+		           	            		this.repayPlan1.push(this.repayPlan3[j])
 		           	            	}
 		           	            }
 		           	            this.repayPlan=this.repayPlan1
@@ -322,7 +322,7 @@
 								  }
 		           	             this.minSum1=this.shouldPay1+this.shouldPay2-this.truePay1-this.truePay2
 		           	             this.minSum2=this.shouldPay3+this.shouldPay4-this.truePay3-this.truePay4
-//		           	             this.minSum=this.minSum2
+		           	             this.minSum=this.minSum1
 //		           	             console.log(this.minSum)
 //		           	            if(this.checkDetail.commit.type){
 //		           	            	if(this.checkDetail.commit.type==0){

@@ -160,8 +160,8 @@
 		<div class="nav nav5" id="section-7">
 			<p class="navP-title">多平台借贷分析</p>
 			<ul class="contact-ul blacklist-ul">
-				<li class="contact-li"><span>检查项</span><span>检查结果</span><span class="blacklist-span tongdun-span">依据</span><span>综合结果</span></li>
-				<li v-if="!tongdunShow"><span>无</span><span>无</span><span class="blacklist-span tongdun-span">无</span><span>无</span></li>
+				<li class="contact-li"><span>检查项</span><span>检查结果</span><span class="blacklist-span tongdun-span">依据</span></li>
+				<li v-if="!tongdunShow"><span>无</span><span>无</span><span class="blacklist-span tongdun-span">无</span></li>
 			    <li v-for="(ele,k) in tongdunObj.risk_items">
 			    	<span class="span-mid"><b>{{ele.group}}</b></span>
 			    	<span class="span-mid"><b>{{ele.item_name}}</b></span>
@@ -171,7 +171,7 @@
 			    		
 			    		<p v-if="ele.item_detail"><b  v-for="(item,m) in ele.item_detail.platform_detail"><svg-icon icon-class="dian" />{{item}}</b></p>
 			    	</span>
-			    	<span class="span-mid"><b>{{tongdunObj.final_decision|decisionFilter}}</b></span>
+			    	
 			    </li>
 			</ul>
 		</div>

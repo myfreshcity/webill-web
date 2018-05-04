@@ -38,12 +38,12 @@
 	  		<span >{{ele.contract_no}}</span>
 	  		<span >{{ele.customer}}</span>
 	  		<span class="client-span-card">{{ele.id_number}}</span>
-	  		<span >{{ele.loan_amount}}</span>
+	  		<span >{{ele.contract_amount}}</span>
 	  		<span >{{ele.loan_date}}</span>
 	  		<span >{{ele.tensor}}</span>
 	  		<span :class="{'redSpan':ele.check_status==0}">{{ele.is_settled|checkFilter}}</span>
 	  		<span>{{ele.file_id}}</span>
-	  		<span @click="checkDetail(ele.contract_id)" class="span-check"><el-button type="text">还款计划</el-button></span>
+	  		<span @click="checkDetail(ele.contract_id)" class="span-check"><el-button type="text">查看详情</el-button></span>
 	  	</li>
 	  </ul>
 	  <div class="block" id="foot-page">

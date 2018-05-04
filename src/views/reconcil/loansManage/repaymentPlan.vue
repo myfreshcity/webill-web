@@ -8,7 +8,8 @@
 			<p class="nav1-p">客户姓名：<span>{{checkDetail.customer}}</span></p>
 			<p class="nav1-p">身份证号：<span>{{checkDetail.id_number}}</span></p>
 			<p class="nav1-p">合同编号：<span>{{checkDetail.contract_no}}</span></p>
-			<p class="nav1-p">借款金额：<span>{{checkDetail.loan_amount}}</span></p>
+			<p class="nav1-p">借款金额：<span>{{checkDetail.contract_amount}}</span></p>
+			<p class="nav1-p">放款金额：<span>{{checkDetail.loan_amount}}</span></p>
 			<p class="nav1-p">放款日期：<span>{{checkDetail.loan_date}}</span></p>
 	  </div>
 	  <div class="nav1">

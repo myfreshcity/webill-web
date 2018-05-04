@@ -167,7 +167,7 @@ export const constantRouterMap = [
 	        name: 'RepaymentPlan',
 	        hidden: true,
 	        component: _import('reconcil/loansManage/repaymentPlan'),
-	        meta: { title: '还款计划', icon: '' }
+	        meta: { title: '合同详情', icon: '' }
 	      },
 	      {
 	        path: 'creditDetail',

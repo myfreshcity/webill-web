@@ -15,6 +15,7 @@
 	      <el-table-column v-for='item of tableHeader' :prop="item" :label="item" :key='item'>
 	      </el-table-column>
 	    </el-table>
+	    <div class="bg" v-show="bgShow"  v-loading="loading1"></div>
 	</div>
 </template>
 
@@ -30,6 +31,8 @@
 		 components: { UploadExcelComponent },
 		 data(){
 		 	return{
+		 		bgShow:false,
+		 		loading1:false,
 		 		loading:false,
 		 		tableData: [],
                 tableHeader: []
@@ -45,7 +48,8 @@
 			                  confirmButtonText: '确定',
 					});
 		 		}else{
-		 		this.loading=true
+		 		this.loading1=true
+		 		this.bgShow=true
 	     		var fileObj = document.getElementById("excel-upload-input").files; // 获取文件对象
 	            var FileController = this.$checkStage('/charge/plan/upload');                    // 接收上传文件的后台地址 
 	            // FormData 对象
@@ -57,7 +61,8 @@
                 var _this=this
 	            _this.$http.post(FileController, form).then(response=>{  
 //	            	console.log(response)
-                    this.loading=false
+                    this.loading1=false
+		 		    this.bgShow=false
 	            	if(response.data.isSucceed==200){
 					     _this.$message({
 				          message: '上传文件成功',
@@ -70,7 +75,8 @@
 					    });
 	            	}
 		         }, response => {
-				  	this.loading=false
+				  	this.loading1=false
+		 		    this.bgShow=false
 				  })
 		        }
 	        },
@@ -137,5 +143,14 @@
 	.p-download1{
 		margin-left: 16px;
 		margin-bottom: 30px;
+	}
+	.bg{
+		width: 100%;
+		height: 100%;
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
 	}
 </style>

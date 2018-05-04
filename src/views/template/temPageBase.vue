@@ -107,7 +107,7 @@
 		<div class="nav nav5" id="section-7">
 			<p class="navP-title">多平台借贷分析</p>
 			<ul class="contact-ul blacklist-ul">
-				<li class="contact-li"><span>检查项</span><span>检查结果</span><span class="blacklist-span tongdun-span">依据</span><span>综合结果</span></li>
+				<li class="contact-li"><span>检查项</span><span>检查结果</span><span class="blacklist-span tongdun-span">依据</span></li>
 				<li >
 			    	<span class="span-mid"><b>客户行为检测</b></span>
 			    	<span class="span-mid"><b>身份证在多个网贷平台进行借款申请</b></span>
@@ -116,7 +116,6 @@
 			    		<b>总个数：30</b>
 			    		<b><svg-icon icon-class="dian" />互联网金融门户：1</b>
 			    	</span>
-			    	<span class="span-mid"><b>建议拒绝</b></span>
 			    </li>
 			    <li >
 			    	<span class="span-mid"><b>客户行为检测</b></span>
@@ -126,7 +125,6 @@
 			    		<b>总个数：30</b>
 			    		<b><svg-icon icon-class="dian" />互联网金融门户：1</b>
 			    	</span>
-			    	<span class="span-mid"><b>建议拒绝</b></span>
 			    </li>
 			</ul>
 		</div>

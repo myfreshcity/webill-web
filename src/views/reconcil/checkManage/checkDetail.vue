@@ -26,7 +26,7 @@
 				<li v-for="(ele,k) in repayPlan">
 					<span>{{ele.deadline}}</span>
 					<span>第{{ele.tensor}}期</span>
-					<span>{{ele.overtime_date|overtimeFilter}}</span>
+					<span>{{ele.delay_day|overtimeFilter}}</span>
 					<span>{{ele.amount}}</span>
 					<span>{{ele.fee}}</span>
 					<span>{{ele.actual_amt}}</span>

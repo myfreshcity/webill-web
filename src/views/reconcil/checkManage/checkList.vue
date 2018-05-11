@@ -13,21 +13,13 @@
         <el-form-item label="">
 		    <el-input v-model="formSearch.contractNo" placeholder="合同编号"></el-input>
 		  </el-form-item>
-		  <el-form-item label="">
-		    <el-date-picker class="dataInp"
-                          v-model="formSearch.date"
-                          type="date"
-                          placeholder="还款日"
-                          value-format="yyyy-MM-dd">
-            </el-date-picker>
-		  </el-form-item>
 		   <el-form-item label="">
 		    <el-select v-model="formSearch.dealType" placeholder="处理状态">
 		      <el-option label="未处理" value="0"></el-option>
 		      <el-option label="已处理" value="1"></el-option>
 		    </el-select>
 		  </el-form-item>
-		  <el-form-item label="逾期范围">
+		  <el-form-item label="逾期天数">
 		    <el-input v-model="formSearch.startDate" placeholder="" class="dateRange"  type="number"></el-input>
 		  </el-form-item>
 		  <el-form-item label="—">
@@ -91,7 +83,8 @@
       		dealType:"",
       		shop:"",       //门店
       		startDate:"",
-      		endDate:""
+      		endDate:"",
+      		page:1
       	},
       	currentPage:1,
       }
@@ -126,30 +119,33 @@
     	}
     },
     mounted:function(){
-    	   $(window).unbind ('scroll');
-    	       var dd = new Date(); 
-    	       this.formSearch.date=timeStampToDate(dd.getTime());
-	           var data = new FormData();
+    	      $(window).unbind ('scroll');
+    	      this.formSearch.shop=sessionStorage.getItem('shop')
+    	      this.formSearch.page=1
+    	      this.$options.methods.inquire.bind(this)()
+    },
+     methods: {
+     	 inquire(){
+      	       var data = new FormData();
 	           data.append('userId', this.userInfo.id);
-	           data.append('page', 1);
+	           data.append('page', this.formSearch.page);
 	           data.append('contract_no', this.formSearch.contractNo);
 	           data.append('customer', this.formSearch.realName);
 	           data.append('all',0);
 	           data.append('shop',this.formSearch.shop);
-	           data.append('fromYuday',this.formSearch.startDay);
-	           data.append('toYuday',this.formSearch.endDay);
-	           //data.append('is_dealt',0);
-	           data.append('repay_date', this.formSearch.date);
+	           data.append('from_yu_day',this.formSearch.startDate);
+	           data.append('to_yu_day',this.formSearch.endDate);
+	           data.append('is_dealt',this.formSearch.dealType);
 	           const url=this.$checkStage('/charge/contract/select')
 	           this.$http.post(url, data).then((response) => {
+	           	            this.loading1=false
 	           	            console.log(response)
 	                        this.contractList=response.data.contract_list
 	                        this.totalCount=response.data.num
 	                    }, (response) => {
-
+                            this.loading1=false
 	                    });
-    },
-     methods: {
+        },
      	checkDetail(data){
 //   		this.$store.dispatch('ContractNo', data)
      		sessionStorage.setItem('extraData',data)
@@ -181,56 +177,25 @@
     	this.formSearch.date=""
       	this.formSearch.contractNo=""
       	this.formSearch.dealType=""
+      	this.formSearch.shop=""
+        this.formSearch.startDate=""
+      	this.formSearch.endDate=""
       },
       
       handleCurrentChange(val) {
       	  if(val!=1){
        	   	   $(".el-pager").children("li").eq(0).removeClass("active");
        	   }
-      	    var data = new FormData();
-	           data.append('userId', this.userInfo.id);
-	           data.append('page', val);
-	           data.append('contract_no', this.formSearch.contractNo);
-	           data.append('customer', this.formSearch.realName);
-	           data.append('all',0);
-	           data.append('shop',this.formSearch.shop);
-	           data.append('fromYuday',this.formSearch.startDay);
-	           data.append('toYuday',this.formSearch.endDay);
-	           data.append('is_dealt',this.formSearch.dealType);
-	           data.append('repay_date', this.formSearch.date);
-	           const url=this.$checkStage('/charge/contract/select')
-	           this.$http.post(url, data).then((response) => {
-	           	            console.log(response)
-	                        this.contractList=response.data.contract_list
-	                        this.totalCount=response.data.num
-	                    }, (response) => {
-
-	                    });
+      	    this.formSearch.page=val
+      	    this.$options.methods.inquire.bind(this)()
       },
       onSearch(){
+      	sessionStorage.setItem('shop',this.formSearch.shop)
       	this.loading1=true
-      	 var data = new FormData();
-	           data.append('userId', this.userInfo.id);
-	           data.append('page', 1);
-	           data.append('contract_no', this.formSearch.contractNo);
-	           data.append('customer', this.formSearch.realName);
-	           data.append('all',0);
-	           data.append('shop',this.formSearch.shop);
-	           data.append('fromYuday',this.formSearch.startDay);
-	           data.append('toYuday',this.formSearch.endDay);
-	           data.append('is_dealt',this.formSearch.dealType);
-	           data.append('repay_date', this.formSearch.date);
-	           const url=this.$checkStage('/charge/contract/select')
-	           this.$http.post(url, data).then((response) => {
-	           	            this.loading1=false
-	           	            console.log(response)
-	                        this.contractList=response.data.contract_list
-	                        this.totalCount=response.data.num
-	                    }, (response) => {
-                            this.loading1=false
-	                    });
-
-      }
+      	this.formSearch.page=1
+      	this.$options.methods.inquire.bind(this)()
+      },
+     
     },
     computed: {
 	    ...mapGetters([
@@ -249,7 +214,7 @@
 		width: 1.9rem;
 	}
 	.client-serach .dateRange{
-		width: .8rem;
+		width: 80px;
 	}
 	.client-serach .dataInp{
 		width: 2.1rem;

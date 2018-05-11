@@ -206,14 +206,12 @@
 		      	formSearch:{
 		      		realName:"",
 		      		range:"",
-		      		date:""
+		      		date:"",
+		      		page:1,
 		      	},
 		      	currentPage:1,
 		      	checkDetail:{},
 		      	realPay:[],   //实际还款列表
-//		      	realPay1:[],
-//		      	realPay2:[],
-//		      	realPay3:[],
 		      	repayPlan:[],  //还款计划列表
 		      	repayPlan1:[],
 		      	repayPlan2:[],
@@ -270,14 +268,6 @@
 		           	            this.approveResult=this.checkDetail.commit.result
 		           	            this.approveRemark=this.checkDetail.commit.approve_remark
 		           	            this.realPay=this.checkDetail.real_pays
-//		           	            this.realPay=this.realPay3
-//		           	            for(let i=0;i<this.realPay.length;i++){
-//		           	            	if(this.realPay[i].amount==0){
-//		           	            		this.realPay2.push(this.realPay[i])
-//		           	            	}else{
-//		           	            		this.realPay1.push(this.realPay[i])
-//		           	            	}
-//		           	            }
 		           	            this.repayPlan4=this.checkDetail.overtime_list
 		           	            
 		           	            for(let i=0;i<this.repayPlan4.length;i++){
@@ -325,29 +315,6 @@
 		           	             this.minSum2=this.shouldPay3+this.shouldPay4-this.truePay3-this.truePay4
 		           	             this.minSum=this.minSum1
 		           	             this.consultValue=this.minSum1
-//		           	             console.log(this.minSum)
-//		           	            if(this.checkDetail.commit.type){
-//		           	            	if(this.checkDetail.commit.type==0){
-//		           	            		this.dealDetail="提醒还款"
-//		           	            	}else if(this.checkDetail.commit.type==1){
-//		           	            		this.dealDetail="申请减免"
-//		           	            	}else{
-//		           	            		this.dealDetail="移交外催"
-//		           	            	}
-//		           	            	this.repayDate=this.checkDetail.commit.deadline
-//		           	            	this.remark=this.checkDetail.commit.remark
-//		           	            	this.reduceMoney=this.checkDetail.commit.amount
-//		           	            	this.consultValue=this.minSum-this.checkDetail.commit.amount
-//		           	            	
-//		           	            	if(this.checkDetail.commit.type==1&&this.checkDetail.commit.is_dealt==1){
-//		           	            		this.radioDisable=false
-//		           	            	}else if(this.checkDetail.commit.is_dealt==1){
-//		           	            		this.radioDisable=true
-//		           	            	}
-//		           	            	
-//		           	            }else{
-//		           	            	this.dealDetail="提醒还款"
-//		           	            }
 		                    }, (response) => {
 	
 		                    });
@@ -366,10 +333,6 @@
 		                    }, (response) => {
 	
 		                    });
-//			 }else{
-//			 	this.$router.push({path:'/reconcil/checkList'})
-//			 }
-			 
 		},
 		watch:{
 			 selectType:function(str){
@@ -404,15 +367,24 @@
 		     consultValue:function(str){
 		     	this.reduceMoney=this.minSum-str
 		     }
-//		     dealType:function(index){
-//		     	if(index==1||index==2){
-//		     		this.handOver=true;
-//		     	}else{
-//		     		this.handOver=false;
-//		     	}
-//		     }	
 		},
 		methods:{
+			inquire(){
+			   var data = new FormData();
+	           data.append('userId', this.userInfo.id);
+	           data.append('page', this.formSearch.page);
+	           data.append('range', this.formSearch.range);
+	           data.append('customer', this.formSearch.realName);
+	           data.append('refund_date', this.formSearch.date);
+	           const url=this.$checkStage('/charge/refund/unlink/get')
+	           this.$http.post(url, data).then((response) => {
+	           	            this.loading1=false
+	                        this.contractList=response.data.unlinked_list
+	                        this.totalCount=response.data.num
+	                    }, (response) => {
+                             this.loading1=false
+	                    });
+			},
 			showHistory(){
 				this.historyShow=!this.historyShow
 			},
@@ -485,14 +457,6 @@
 	                        
 	                    });
 			},
-//			lookRemark(data){
-//				    if(!data){
-//				    	data="未备注"
-//				    }
-//			        this.$alert(data, '备注', {
-//			          confirmButtonText: '确定',
-//			        });
-//			},
 			goBack(){
 				this.$router.push({path:'/reconcil/checkList'})
 			},
@@ -542,36 +506,13 @@
 	       	   if(val!=1){
 	       	   	   $(".el-pager").children("li").eq(0).removeClass("active");
 	       	   }
-	      	   var data = new FormData();
-	           data.append('userId', this.userInfo.id);
-	           data.append('page', val);
-	           data.append('range', this.formSearch.range);
-	           data.append('customer', this.formSearch.realName);
-	           data.append('refund_date', this.formSearch.date);
-	           const url=this.$checkStage('/charge/refund/unlink/get')
-	           this.$http.post(url, data).then((response) => {
-	                        this.contractList=response.data.unlinked_list
-	                        this.totalCount=response.data.num
-	                    }, (response) => {
-
-	                    });
+	      	   this.formSearch.page=val
+    	      this.$options.methods.inquire.bind(this)()
 	      },
 	      onSearch(){
 	      	this.loading1=true
-	      	var data = new FormData();
-	           data.append('userId', this.userInfo.id);
-	           data.append('page', 1);
-	           data.append('range', this.formSearch.range);
-	           data.append('customer', this.formSearch.realName);
-	           data.append('refund_date', this.formSearch.date);
-	           const url=this.$checkStage('/charge/refund/unlink/get')
-	           this.$http.post(url, data).then((response) => {
-	           	            this.loading1=false
-	                        this.contractList=response.data.unlinked_list
-	                        this.totalCount=response.data.num
-	                    }, (response) => {
-                             this.loading1=false
-	                    });
+	        this.formSearch.page=1
+    	    this.$options.methods.inquire.bind(this)()
 	                    
 	       },
 	       clear(){

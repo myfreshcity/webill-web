@@ -107,6 +107,7 @@
 	      		checkStatus:"",
 	      		file_id:"",
 	      		shop:"",
+	      		page:1
 	      	},
 	      	 options: [{
 	          value: '选项1',
@@ -143,9 +144,15 @@
     },
     mounted:function(){
 		 $(window).unbind ('scroll');
-	           var data = new FormData();
+		 this.formSearch.shop=sessionStorage.getItem('shop')
+	     this.formSearch.page=1
+    	 this.$options.methods.inquire.bind(this)()
+    },
+     methods: {
+     	inquire(){
+     		   var data = new FormData();
 	           data.append('userId', this.userInfo.id);
-	           data.append('page', 1);
+	           data.append('page', this.formSearch.page);
 	           data.append('contract_no', this.formSearch.contractNo);
 	           data.append('customer', this.formSearch.realName);
 	           data.append('all',1);
@@ -161,8 +168,7 @@
 	                    }, (response) => {
 
 	                    });
-    },
-     methods: {
+     	},
      	checkDetail(data){
      		sessionStorage.setItem('extraData',data)
      		this.$router.push({path:'/reconcil/repaymentPlan'})
@@ -226,52 +232,21 @@
       	this.formSearch.contractNo=""
       	this.formSearch.checkStatus=""
       	this.formSearch.file_id=""
+      	this.formSearch.shop=""
       },
       
       handleCurrentChange(val) {
       	  if(val!=1){
        	   	   $(".el-pager").children("li").eq(0).removeClass("active");
        	   }
-      	    var data = new FormData();
-	           data.append('userId', this.userInfo.id);
-	           data.append('page', val);
-	           data.append('contract_no', this.formSearch.contractNo);
-	           data.append('customer', this.formSearch.realName);
-	           data.append('all',1);
-	           data.append('shop',this.formSearch.shop);
-	           data.append('is_settled',this.formSearch.checkStatus);
-	           data.append('id_number', this.formSearch.idNo);
-	           data.append('file_id', this.formSearch.file_id);
-	           const url=this.$checkStage('/charge/contract/select')
-	           this.$http.post(url, data).then((response) => {
-	           	            console.log(response)
-	                        this.contractList=response.data.contract_list
-	                        this.totalCount=response.data.num
-	                    }, (response) => {
-
-	                    });
+      	  this.formSearch.page=val
+    	  this.$options.methods.inquire.bind(this)()
       },
       onSearch(){
       	this.loading1=true
-      	 var data = new FormData();
-	           data.append('userId', this.userInfo.id);
-	           data.append('page', 1);
-	           data.append('contract_no', this.formSearch.contractNo);
-	           data.append('customer', this.formSearch.realName);
-	           data.append('all',1);
-	           data.append('shop',this.formSearch.shop);
-	           data.append('is_settled',this.formSearch.checkStatus);
-	           data.append('id_number', this.formSearch.idNo);
-	           data.append('file_id', this.formSearch.file_id);
-	           const url=this.$checkStage('/charge/contract/select')
-	           this.$http.post(url, data).then((response) => {
-	           	            this.loading1=false
-	           	            console.log(response)
-	                        this.contractList=response.data.contract_list
-	                        this.totalCount=response.data.num
-	                    }, (response) => {
-                            this.loading1=false
-	                    });
+      	this.formSearch.page=1
+      	sessionStorage.setItem('shop',this.formSearch.shop)
+    	this.$options.methods.inquire.bind(this)()
 
       }
     },

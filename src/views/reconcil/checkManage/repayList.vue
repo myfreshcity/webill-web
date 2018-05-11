@@ -89,6 +89,7 @@
 	      		shop:"",
 	      		checkStatus:"",
 	      		wasteId:"",
+	      		page:1,
 	      	},
 	      	 options: [{
 	          value: '选项1',
@@ -122,25 +123,29 @@
     },
     mounted:function(){
 		 $(window).unbind ('scroll');
-		       this.formSearch.wasteId=this.wasteId
-	           var data = new FormData();
-	           data.append('userId', this.userInfo.id);
-	           data.append('page', 1);
-	           data.append('refund_name', this.formSearch.realName);
-	           data.append("file_id",this.formSearch.wasteId)
-	           data.append('shop',this.formSearch.shop);
-	           data.append('is_match',this.formSearch.checkStatus);
-	           data.append('refund_time', this.formSearch.date);
-	           const url=this.$checkStage('/charge/refund/search')
-	           this.$http.post(url, data).then((response) => {
-	           	            console.log(response)
-	                        this.contractList=response.data.search_refund_list
-	                        this.totalCount=response.data.num
-	                    }, (response) => {
-
-	                    });
+		      this.formSearch.wasteId=this.wasteId
+	          this.formSearch.page=1
+    	      this.$options.methods.inquire.bind(this)()
     },
-     methods: {
+    methods: {
+     inquire(){
+ 	       var data = new FormData();
+           data.append('userId', this.userInfo.id);
+           data.append('page', this.formSearch.page);
+           data.append('refund_name', this.formSearch.realName);
+           data.append("file_id",this.formSearch.wasteId)
+           data.append('shop',this.formSearch.shop);
+           data.append('is_match',this.formSearch.checkStatus);
+           data.append('refund_time', this.formSearch.date);
+           const url=this.$checkStage('/charge/refund/search')
+           this.$http.post(url, data).then((response) => {
+           	            this.loading1=false
+                        this.contractList=response.data.search_refund_list
+                        this.totalCount=response.data.num
+                    }, (response) => {
+                        this.loading1=false
+                    });
+     },
  	 check(obj){
  	 	if(obj.t_status==1){
  	 		sessionStorage.setItem('extraData',obj.contract_id)
@@ -156,20 +161,8 @@
 						          message: '匹配成功',
 						          type: 'success'
 						        });
-	           	               var data = new FormData();
-					           data.append('userId', this.userInfo.id);
-					           data.append('page', 1);
-					           data.append('refund_name', this.formSearch.realName);
-					           data.append("file_id",this.formSearch.wasteId)
-					           data.append('shop',this.formSearch.shop);
-					           data.append('is_match',this.formSearch.checkStatus);
-					           data.append('refund_time', this.formSearch.date);
-					           const url=this.$checkStage('/charge/refund/search')
-					           this.$http.post(url, data).then((response) => {
-					                        this.contractList=response.data.search_refund_list
-					                        this.totalCount=response.data.num
-					                    }, (response) => {
-					                    });
+	           	               this.formSearch.page=1
+    	                       this.$options.methods.inquire.bind(this)()
 	           	            }else{
 	           	            	this.$alert(response.data.message, '系统提示', {
 					                  confirmButtonText: '确定',
@@ -191,48 +184,21 @@
       	this.formSearch.shop=""
       	this.formSearch.checkStatus=""
       	this.formSearch.wasteId=""
+      	this.formSearch.shop=""
       },
       
       handleCurrentChange(val) {
       	  if(val!=1){
        	   	   $(".el-pager").children("li").eq(0).removeClass("active");
        	   }
-      	    var data = new FormData();
-	           data.append('userId', this.userInfo.id);
-	           data.append('page', val);
-	           data.append('refund_name', this.formSearch.realName);
-	           data.append("file_id",this.formSearch.wasteId)
-	           data.append('shop',this.formSearch.shop);
-	           data.append('is_match',this.formSearch.checkStatus);
-	           data.append('refund_time', this.formSearch.date);
-	           const url=this.$checkStage('/charge/refund/search')
-	           this.$http.post(url, data).then((response) => {
-	           	            console.log(response)
-	                        this.contractList=response.data.search_refund_list
-	                        this.totalCount=response.data.num
-	                    }, (response) => {
-
-	                    });
+      	    this.formSearch.page=val
+    	    this.$options.methods.inquire.bind(this)()
       },
       onSearch(){
       	this.loading1=true
-      	 var data = new FormData();
-	           data.append('userId', this.userInfo.id);
-	           data.append('page', 1);
-	           data.append('refund_name', this.formSearch.realName);
-	           data.append("file_id",this.formSearch.wasteId)
-	           data.append('shop',this.formSearch.shop);
-	           data.append('is_match',this.formSearch.checkStatus);
-	           data.append('refund_time', this.formSearch.date);
-	           const url=this.$checkStage('/charge/refund/search')
-	           this.$http.post(url, data).then((response) => {
-	           	            
-	           	            this.loading1=false
-	                        this.contractList=response.data.search_refund_list
-	                        this.totalCount=response.data.num
-	                    }, (response) => {
-                            this.loading1=false
-	                    });
+      	sessionStorage.setItem('shop',this.formSearch.shop)
+      	this.formSearch.page=1
+    	this.$options.methods.inquire.bind(this)()
 
       }
     },

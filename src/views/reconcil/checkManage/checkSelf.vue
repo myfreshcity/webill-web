@@ -47,111 +47,69 @@
 	            })
 		 },
 		 methods:{
-		 	UpladFile(){
-                if(document.getElementById("excel-upload-input").files.length==0){
-		 			this.$alert("未选择文件", '系统提示', {
-			                  confirmButtonText: '确定',
-					});
-		 		}else{
-		 			for(let i=0;i<this.timeList.length;i++){
+		 	inquire(){
+		 	   this.loading1=true
+	           this.bgShow=true
+	           var fileObj = document.getElementById("excel-upload-input").files; // 获取文件对象
+	            var FileController = this.$checkStage('/charge/refund/upload');                    // 接收上传文件的后台地址 
+	            var form = new FormData();
+	            form.append("file", fileObj[0])
+                var _this=this
+	            _this.$http.post(FileController, form).then(response=>{
+	            	console.log(response)
+	            	this.loading1=false
+	            	this.bgShow=false
+	            	if(response.data.isSucceed==200){
+					    _this.$message({
+				          message: '上传文件成功',
+				          type: 'success'
+				        });
+					    _this.$store.dispatch("WasteId",response.data.file_id)
+		                _this.$router.push({path:'/reconcil/repayList'})
+	            	}else{
+	            		_this.$alert(response.data.message, '系统提示', {
+					        confirmButtonText: '确定',
+					    });
+	            	}
+		         }, response => {
+				    this.loading1=false
+	            	this.bgShow=false
+				  })
+		 	},
+//		 	流水上传时间判断
+		 	dateJudge(){
+		 		for(let i=0;i<this.timeList.length;i++){
 				      	for(let j=0;j<this.tableData.length;j++){
 				      		if(this.tableData[j]['所在门店']==this.timeList[i].shop&&this.tableData[j]['渠道']==this.timeList[i].way){
-				      			if(MyFormatTime(this.timeList[i].refundTime)>MyFormatTime(timeChange(this.tableData[j]['支付日期'])+" "+this.tableData[j]['支付时间'])){
-				      				
+				      			var payTime=this.tableData[j]['支付时间']
+				      			if(!payTime){
+				      				payTime="00:00:00"
+				      			}
+				      			if(MyFormatTime(this.timeList[i].refundTime)>MyFormatTime(timeChange(this.tableData[j]['支付日期'])+" "+payTime)){
 								    this.$confirm('该支付流水可能在系统中已存在，重复导入会导致记账错误，仍然要上传吗？', '系统提示', {
 							          confirmButtonText: '坚持上传',
 							          cancelButtonText: '再想一想',
 							          type: 'warning'
 							        }).then(() => {
-							           this.loading1=true
-							           this.bgShow=true
-							           var fileObj = document.getElementById("excel-upload-input").files; // 获取文件对象
-							            var FileController = this.$checkStage('/charge/refund/upload');                    // 接收上传文件的后台地址 
-							            var form = new FormData();
-							            form.append("file", fileObj[0])
-						                var _this=this
-							            _this.$http.post(FileController, form).then(response=>{
-							            	console.log(response)
-							            	this.loading1=false
-							            	this.bgShow=false
-							            	if(response.data.isSucceed==200){
-											    _this.$message({
-										          message: '上传文件成功',
-										          type: 'success'
-										        });
-											    _this.$store.dispatch("WasteId",response.data.file_id)
-								                _this.$router.push({path:'/reconcil/repayList'})
-							            	}else{
-							            		_this.$alert(response.data.message, '系统提示', {
-											        confirmButtonText: '确定',
-											    });
-							            	}
-								         }, response => {
-										    this.loading1=false
-							            	this.bgShow=false
-										  })
+							           this.$options.methods.inquire.bind(this)()
 							        }).catch(() => {
 							           
 							        });
 							        return false;
 				      			}
 				      		}else if(j==(this.tableData.length-1)&&i==(this.timeList.length-1)){
-				      			this.loading1=true
-							    this.bgShow=true
-				      			var fileObj = document.getElementById("excel-upload-input").files; // 获取文件对象
-							            var FileController = this.$checkStage('/charge/refund/upload');                    // 接收上传文件的后台地址 
-							            var form = new FormData();
-							            form.append("file", fileObj[0])
-						                var _this=this
-							            _this.$http.post(FileController, form).then(response=>{
-							            	console.log(response)
-							            	this.loading1=false
-							            	 this.bgShow=false
-							            	if(response.data.isSucceed==200){
-											    _this.$message({
-										          message: '上传文件成功',
-										          type: 'success'
-										        });
-											    _this.$store.dispatch("WasteId",response.data.file_id)
-								                _this.$router.push({path:'/reconcil/repayList'})
-							            	}else{
-							            		_this.$alert(response.data.message, '系统提示', {
-											        confirmButtonText: '确定',
-											    });
-							            	}
-								         }, response => {
-										  	 this.loading1=false
-							            	 this.bgShow=false
-										  })
+				      			 this.$options.methods.inquire.bind(this)()
 				      		}
 				      	}
-				      }
-//		 		    this.loading=true
-//			 		this.fullscreenLoading = true;
-//		     		var fileObj = document.getElementById("excel-upload-input").files; // 获取文件对象
-//		            var FileController = this.$checkStage('/charge/refund/upload');                    // 接收上传文件的后台地址 
-//		            var form = new FormData();
-//		            form.append("file", fileObj[0])
-//	                var _this=this
-//		            _this.$http.post(FileController, form).then(response=>{
-//		            	console.log(response)
-//		            	this.loading=false
-////		            	this.fullscreenLoading = false;
-//		            	if(response.data.isSucceed==200){
-//						    _this.$message({
-//					          message: '上传文件成功',
-//					          type: 'success'
-//					        });
-//						    _this.$store.dispatch("WasteId",response.data.file_id)
-//			                _this.$router.push({path:'/reconcil/repayList'})
-//		            	}else{
-//		            		_this.$alert(response.data.message, '系统提示', {
-//						        confirmButtonText: '确定',
-//						    });
-//		            	}
-//			         }, response => {
-//					  	this.loading=false
-//					  })
+				 }
+		 	},
+		 	UpladFile(){
+                if(document.getElementById("excel-upload-input").files.length==0){
+		 			this.$alert("未选择文件", '系统提示', {
+			                  confirmButtonText: '确定',
+					});
+		 		}else{
+		 			 this.$options.methods.dateJudge.bind(this)()
 		        }
 	        },
 	     	downLoad(){
@@ -162,17 +120,6 @@
 //	     	  console.log(data)
 		      this.tableData = data.results
 		      this.tableHeader = data.header
-//		      for(let i=0;i<this.timeList.length;i++){
-//		      	for(let j=0;j<this.tableData.length;j++){
-//		      		if(this.tableData[j]['所在门店']==this.timeList[i].shop&&this.tableData[j]['渠道']==this.timeList[i].way){
-//		      			if(MyFormatTime(this.timeList[i].refundTime)>MyFormatTime(timeChange(this.tableData[j]['支付日期'])+" "+this.tableData[j]['支付时间'])){
-//		      				this.$alert("您上传的支付时间早于所在门店的最新更新时间，请确认无误", '系统提示', {
-//						        confirmButtonText: '确定',
-//						    });
-//		      			}
-//		      		}
-//		      	}
-//		      }
 		    }
 		 },
 		  computed: {

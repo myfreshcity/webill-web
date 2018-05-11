@@ -63,8 +63,6 @@
 							          cancelButtonText: '再想一想',
 							          type: 'warning'
 							        }).then(() => {
-							           
-							        }).catch(() => {
 							           this.loading1=true
 							           this.bgShow=true
 							           var fileObj = document.getElementById("excel-upload-input").files; // 获取文件对象
@@ -92,6 +90,8 @@
 										    this.loading1=false
 							            	this.bgShow=false
 										  })
+							        }).catch(() => {
+							           
 							        });
 							        return false;
 				      			}

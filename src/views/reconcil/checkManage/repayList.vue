@@ -301,6 +301,9 @@
 		font-size: 14px;
 		font-weight: bold;
 	}
+	.content .client-ul .client-li:hover{
+		background: #F1F2F8;
+	}
 	.content .client-ul .client-li span{
 		font-weight: bold;
 	}
@@ -310,7 +313,7 @@
 		text-align: center;
 		padding: .1rem 0;
 		border-right: 1px #E3E7F1 solid;
-		line-height: 50px;
+		line-height: 40px;
 	}
 	.content .client-ul li .client-span-time{
 		flex: 2;
@@ -392,5 +395,7 @@
 		font-weight: bold;
 		color: #FF3F3F;
 	}
-	
+	.content .client-ul li  .svg-icon{
+		font-size: 20px;
+	}
 </style>

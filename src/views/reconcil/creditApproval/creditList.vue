@@ -8,6 +8,9 @@
           <el-input v-model="formSearch.realName" placeholder="客户姓名"></el-input>
         </el-form-item>
         <el-form-item label="">
+		    <el-input v-model="formSearch.shop" placeholder="门店"></el-input>
+		</el-form-item>
+        <el-form-item label="">
 		    <el-input v-model="formSearch.applyer" placeholder="发起人"></el-input>
 		  </el-form-item>
 		  <el-form-item label="">
@@ -20,10 +23,11 @@
 		</el-form>
 	  </div>
 	  <ul class="client-ul">
-	  	<li class="client-li"><span>合同编号</span><span>客户姓名</span><span>逾期期数</span><span>减免金额</span><span>处理备注</span><span>减免有效期</span><span>发起人</span><span>操作</span></li>
+	  	<li class="client-li"><span>合同编号</span><span>客户姓名</span><span>所在门店</span><span>逾期期数</span><span>减免金额</span><span>处理备注</span><span>减免有效期</span><span>发起人</span><span>操作</span></li>
 	  	<li v-for="(ele,k) in clientList">
 	  		<span >{{ele.contract_no}}</span>
 	  		<span >{{ele.customer}}</span>
+	  		<span>{{ele.shop}}</span>
 	  		<span >{{ele.overtime_num}}</span>
 	  		<span >{{ele.commit_amount}}</span>
 	  		<span >{{ele.remark|remarkFilter}}</span>
@@ -60,7 +64,8 @@
       	formSearch:{
       		realName:"",
       		applyer:"",
-      		amount:""
+      		amount:"",
+      		shop:"",
       	},
       	currentPage:1,
       }
@@ -81,7 +86,7 @@
 	           data.append('page', 1);
 	           data.append('applyer', this.formSearch.applyer);
 	           data.append('customer', this.formSearch.realName);
-//	           data.append('amount', this.formSearch.amount);
+	           data.append('shop',this.formSearch.shop);
 	           const url=this.$checkStage('/charge/commit/get')
 	           this.$http.post(url, data).then((response) => {
 	           	            console.log(response)
@@ -110,7 +115,7 @@
 	           data.append('page', val);
 	           data.append('applyer', this.formSearch.applyer);
 	           data.append('customer', this.formSearch.realName);
-//	           data.append('amount', this.formSearch.amount);
+	          data.append('shop',this.formSearch.shop);
 	           const url=this.$checkStage('/charge/commit/get')
 	           this.$http.post(url, data).then((response) => {
 	           	            console.log(response)
@@ -127,7 +132,7 @@
 	           data.append('page', 1);
 	           data.append('applyer', this.formSearch.applyer);
 	           data.append('customer', this.formSearch.realName);
-//	           data.append('amount', this.formSearch.amount);
+	           data.append('shop',this.formSearch.shop);
 	           const url=this.$checkStage('/charge/commit/get')
 	           this.$http.post(url, data).then((response) => {
 	           	             this.loading1=false

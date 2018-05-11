@@ -307,6 +307,9 @@
 		font-size: .16rem;
 		font-weight: bold;
 	}
+	.content .client-ul .client-li:hover{
+		background: #F1F2F8;
+	}
 	.content .client-ul .client-li span{
 		font-weight: bold;
 	}
@@ -315,7 +318,7 @@
 		text-align: center;
 		padding: .2rem 0;
 		border-right: 1px #E3E7F1 solid;
-		line-height: .4rem;
+		line-height: .3rem;
 	}
 	.content .client-ul li .client-span{
 		flex: 1.5;

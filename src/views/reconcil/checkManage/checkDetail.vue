@@ -5,6 +5,7 @@
 		<p class="title">
 			对账信息
 		</p>
+		
 		<div class="nav1">
 			<p class="p-title"><span class="span-line"></span>客户信息</p>
 			<p class="nav1-p">手机号码：<span>{{checkDetail.mobile_no}}</span></p>
@@ -323,6 +324,7 @@
 		           	             this.minSum1=this.shouldPay1+this.shouldPay2-this.truePay1-this.truePay2
 		           	             this.minSum2=this.shouldPay3+this.shouldPay4-this.truePay3-this.truePay4
 		           	             this.minSum=this.minSum1
+		           	             this.consultValue=this.minSum1
 //		           	             console.log(this.minSum)
 //		           	            if(this.checkDetail.commit.type){
 //		           	            	if(this.checkDetail.commit.type==0){
@@ -374,9 +376,11 @@
 		     	if(str){
 		     		    this.isSettle=1
 				  		this.minSum=this.minSum2
+				  		this.consultValue=this.minSum2
 				  		this.reduceMoney=this.minSum-this.consultValue
 				 }else{
 				 	    this.isSettle=0
+				  		this.consultValue=this.minSum1
 				  		this.minSum=this.minSum1
 				  		this.reduceMoney=this.minSum-this.consultValue
 				}
@@ -503,7 +507,7 @@
 			},
 			commitSub(){
 			   if((!this.consultValue)&&!this.handOver){
-			   	  this.$alert("协商金额", '系统提示', {
+			   	  this.$alert("协商金额不能为空", '系统提示', {
 					     confirmButtonText: '确定',
 				   });
 				   
@@ -788,6 +792,9 @@
 		font-size: 14px;
 		font-weight: bold;
 	}
+	.content .client-ul .client-li:hover{
+		background: #F1F2F8;
+	}
 	.content .client-ul .client-li span{
 		font-weight: bold;
 	}
@@ -796,7 +803,7 @@
 		text-align: center;
 		padding: .1rem 0;
 		border-right: 1px #E3E7F1 solid;
-		line-height: 50px;
+		line-height: 30px;
 		font-size: 14px;
 	}
 	/*冲账提示框*/

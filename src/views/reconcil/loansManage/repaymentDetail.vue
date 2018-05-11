@@ -8,6 +8,9 @@
           <el-input v-model="formSearch.realName" placeholder="客户姓名"></el-input>
         </el-form-item>
         <el-form-item label="">
+		    <el-input v-model="formSearch.shop" placeholder="门店"></el-input>
+		 </el-form-item>
+        <el-form-item label="">
 		    <el-input v-model="formSearch.contractNo" placeholder="合同编号"></el-input>
 		  </el-form-item>
 		  <el-form-item label="">
@@ -33,10 +36,11 @@
 	  <p class="ul-head"><span class="client-spanLeft">数据列表</span><el-button type="primary" @click="guide()" :loading="downloadLoading">导入合同</el-button></p>
 	  <ul class="client-ul">
 	  	
-	  	<li class="client-li"><span>合同编号</span><span>客户姓名</span><span class="client-span-card">身份证</span><span>借款金额</span><span >放款日期</span><span>期数</span><span>合同状态</span><span>合同批次号</span><span>操作</span></li>
+	  	<li class="client-li"><span>合同编号</span><span>客户姓名</span><span>所在门店</span><span class="client-span-card">身份证</span><span>借款金额</span><span >放款日期</span><span>期数</span><span>合同状态</span><span>合同批次号</span><span>操作</span></li>
 	  	<li v-for="(ele,k) in contractList">
 	  		<span >{{ele.contract_no}}</span>
 	  		<span >{{ele.customer}}</span>
+	  		<span>{{ele.shop}}</span>
 	  		<span class="client-span-card">{{ele.id_number}}</span>
 	  		<span >{{ele.contract_amount}}</span>
 	  		<span >{{ele.loan_date}}</span>
@@ -101,7 +105,8 @@
 	      		idNo:"",
 	      		contractNo:"",
 	      		checkStatus:"",
-	      		file_id:""
+	      		file_id:"",
+	      		shop:"",
 	      	},
 	      	 options: [{
 	          value: '选项1',
@@ -144,6 +149,7 @@
 	           data.append('contract_no', this.formSearch.contractNo);
 	           data.append('customer', this.formSearch.realName);
 	           data.append('all',1);
+	           data.append('shop',this.formSearch.shop);
 	           data.append('is_settled',this.formSearch.checkStatus);
 	           data.append('id_number', this.formSearch.idNo);
 	           data.append('file_id', this.formSearch.file_id);
@@ -232,6 +238,7 @@
 	           data.append('contract_no', this.formSearch.contractNo);
 	           data.append('customer', this.formSearch.realName);
 	           data.append('all',1);
+	           data.append('shop',this.formSearch.shop);
 	           data.append('is_settled',this.formSearch.checkStatus);
 	           data.append('id_number', this.formSearch.idNo);
 	           data.append('file_id', this.formSearch.file_id);
@@ -252,6 +259,7 @@
 	           data.append('contract_no', this.formSearch.contractNo);
 	           data.append('customer', this.formSearch.realName);
 	           data.append('all',1);
+	           data.append('shop',this.formSearch.shop);
 	           data.append('is_settled',this.formSearch.checkStatus);
 	           data.append('id_number', this.formSearch.idNo);
 	           data.append('file_id', this.formSearch.file_id);
@@ -329,6 +337,9 @@
 		font-size: 14px;
 		font-weight: bold;
 	}
+	.content .client-ul .client-li:hover{
+		background: #F1F2F8;
+	}
 	.content .client-ul .client-li span{
 		font-weight: bold;
 	}
@@ -337,7 +348,7 @@
 		text-align: center;
 		padding: .1rem 0;
 		border-right: 1px #E3E7F1 solid;
-		line-height: 50px;
+		line-height: 30px;
 		font-size: 14px;
 	}
 	.content .client-ul li .client-span-card{

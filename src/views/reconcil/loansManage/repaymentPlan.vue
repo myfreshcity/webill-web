@@ -15,7 +15,6 @@
 	  <div class="nav1">
 	  	  <p class="p-title"><span class="span-line"></span>还款计划</p>
 		  <ul class="client-ul">
-		  	<p><span class="client-spanLeft">数据列表</span></p>
 		  	<li class="client-li"><span>合同编号</span><span>还款日期</span><span>还款期数</span><span >应还本息</span><span>应还滞纳金</span><span>实还本息</span><span>实还滞纳金</span><span>实际还款日期</span><span>还款状态</span></li>
 		  	<li v-for="(ele,k) in repaymentList">
 		  		<span >{{ele.contract_no}}</span>
@@ -205,6 +204,9 @@
 		font-size: 14px;
 		font-weight: bold;
 	}
+	.content .client-ul .client-li:hover{
+		background: #F1F2F8;
+	}
 	.content .client-ul .client-li span{
 		font-weight: bold;
 	}
@@ -213,7 +215,7 @@
 		text-align: center;
 		padding: .1rem 0;
 		border-right: 1px #E3E7F1 solid;
-		line-height: 50px;
+		line-height: 20px;
 		font-size: 14px;
 	}
 	.content .client-ul li .client-span-card{

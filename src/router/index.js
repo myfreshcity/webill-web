@@ -108,6 +108,33 @@ export const constantRouterMap = [
       }
     ]
   },
+//{
+//  path: '/loan',
+//  component: Layout,
+//  redirect: '/loan/examine',
+//  name: 'Loan',
+//  meta: { title: '贷款管理', icon: 'other' },
+//  children: [
+//    {
+//      path: 'examine',
+//      name: 'Examine',
+//      component: _import('loan/examine'),
+//      meta: { title: '业务员审查', icon: '' }
+//    },
+//    {
+//      path: 'loanApply',
+//      name: 'LoanApply',
+//      component: _import('loan/loanApply'),
+//      meta: { title: '客户贷款申请', icon: '' }
+//    },
+//    {
+//      path: 'loanApprove',
+//      name: 'LoanApprove',
+//      component: _import('loan/loanApprove'),
+//      meta: { title: '贷款审批', icon: '' }
+//    },
+//  ]
+//},
 {
 	path: '/reconcil',
     component: Layout,
@@ -223,6 +250,7 @@ export const constantRouterMap = [
       }
     ]
   },
+  
   { path: '*', redirect: '/404', hidden: true }
 ]
 

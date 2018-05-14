@@ -83,7 +83,9 @@
     mounted:function(){
     	  $(window).unbind ('scroll');
 	     this.formSearch.page=1
-	     this.formSearch.shop=sessionStorage.getItem('shop')
+	     if(sessionStorage.getItem('creditshop')){
+	        this.formSearch.shop=sessionStorage.getItem('creditshop')
+	     }
     	 this.$options.methods.inquire.bind(this)()
     },
      methods: {
@@ -123,7 +125,7 @@
       onSearch(){
       	this.loading1=true
       	this.formSearch.page=1
-      	sessionStorage.setItem('shop',this.formSearch.shop)
+      	sessionStorage.setItem('creditshop',this.formSearch.shop)
     	this.$options.methods.inquire.bind(this)()
       }
     },

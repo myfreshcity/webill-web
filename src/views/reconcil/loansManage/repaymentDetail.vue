@@ -144,7 +144,9 @@
     },
     mounted:function(){
 		 $(window).unbind ('scroll');
-		 this.formSearch.shop=sessionStorage.getItem('shop')
+		 if(sessionStorage.getItem('repaymentshop')){
+		 	 this.formSearch.shop=sessionStorage.getItem('repaymentshop')
+		 }
 	     this.formSearch.page=1
     	 this.$options.methods.inquire.bind(this)()
     },
@@ -245,9 +247,8 @@
       onSearch(){
       	this.loading1=true
       	this.formSearch.page=1
-      	sessionStorage.setItem('shop',this.formSearch.shop)
+      	sessionStorage.setItem('repaymentshop',this.formSearch.shop)
     	this.$options.methods.inquire.bind(this)()
-
       }
     },
     computed: {

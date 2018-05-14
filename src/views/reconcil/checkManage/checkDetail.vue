@@ -211,7 +211,7 @@
 		      	},
 		      	currentPage:1,
 		      	checkDetail:{},
-		      	realPay:[],   //实际还款列表
+		      	realPay:[],    //实际还款列表
 		      	repayPlan:[],  //还款计划列表
 		      	repayPlan1:[],
 		      	repayPlan2:[],

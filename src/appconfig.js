@@ -5,6 +5,7 @@ export default class AppConfig {
 //  let basePath ='http://webill.test.manmanh.com/webill'
 //  let checkPath ='http://webill.test.manmanh.com'
 //  let basePath ='http://www.vebill.com/webill'
+//  let checkPath ='http://www.vebill.com/webill'
 //  let basePath ='http://webill.manmanh.com/webill'
 //  let imgPath ='http://yadong.test.manmanh.com'
     // 1. 添加全局方法或属性

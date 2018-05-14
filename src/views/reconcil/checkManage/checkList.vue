@@ -120,7 +120,9 @@
     },
     mounted:function(){
     	      $(window).unbind ('scroll');
-    	      this.formSearch.shop=sessionStorage.getItem('shop')
+    	      if(sessionStorage.getItem('checkshop')){
+    	      	this.formSearch.shop=sessionStorage.getItem('checkshop')
+    	      }
     	      this.formSearch.page=1
     	      this.$options.methods.inquire.bind(this)()
     },
@@ -190,7 +192,7 @@
       	    this.$options.methods.inquire.bind(this)()
       },
       onSearch(){
-      	sessionStorage.setItem('shop',this.formSearch.shop)
+      	sessionStorage.setItem('checkshop',this.formSearch.shop)
       	this.loading1=true
       	this.formSearch.page=1
       	this.$options.methods.inquire.bind(this)()

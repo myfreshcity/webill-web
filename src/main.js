@@ -19,13 +19,20 @@ Vue.prototype.HOST = '/api'
 import '@/icons' // icon
 import '@/permission' // permission control
 import {Message} from 'element-ui'
-
+console.log(Vue.prototype.$backStage(''))
 //import * as filters from './filters'
 Vue.use(ElementUI)
 
 //Object.keys(filters).forEach(key => {
 //Vue.filter(key, filters[key])
 //})
+//const service = axios.create({
+//baseURL: Vue.prototype.$backStage(''), // api的base_url
+////baseURL: "http://webill.test.manmanh.com/webill",
+////baseURL: "http://www.vebill.com/webill",
+//timeout: 0 // 请求超时时间
+//})
+//export default service
 axios.interceptors.request.use(
     config => {
     	  const token = localStorage.getItem('jwt_token')

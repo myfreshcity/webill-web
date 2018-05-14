@@ -1,11 +1,13 @@
+import Vue from 'vue'
 import axios from 'axios'
 import { Message, MessageBox } from 'element-ui'
 import store from '../store'
 import { getToken } from '@/utils/auth'
-
+import AppConfig from './../appconfig'
+Vue.use(new AppConfig())
 // 创建axios实例
 const service = axios.create({
-baseURL: "http://longfei.test.manmanh.com/webill-app", // api的base_url
+baseURL: Vue.prototype.$backStage(''), // api的base_url
 //baseURL: "http://webill.test.manmanh.com/webill",
 //baseURL: "http://www.vebill.com/webill",
   timeout: 0 // 请求超时时间

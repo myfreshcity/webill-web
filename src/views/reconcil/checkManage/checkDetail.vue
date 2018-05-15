@@ -18,7 +18,7 @@
 			 <el-tabs  v-model="activeName2" type="border-card" @tab-click="repayClick">
 			    <el-tab-pane label="逾期" name="first">逾期</el-tab-pane>
 			    <el-tab-pane label="结清" name="second">结清</el-tab-pane>
-			    <el-tab-pane label="还款中" name="third">还款中</el-tab-pane>
+			    <el-tab-pane label="待还" name="third">待还</el-tab-pane>
 			    <el-tab-pane label="全部" name="fourth">全部</el-tab-pane>
 			  </el-tabs>
 			</div>

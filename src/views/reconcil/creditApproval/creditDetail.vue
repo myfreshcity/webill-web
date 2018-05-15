@@ -117,7 +117,7 @@
 								          type: 'success'
 							         });
 		           	            }else{
-		           	            	this.$alert("审核失败", '系统提示', {
+		           	            	this.$alert(response.data.message, '系统提示', {
 							                  confirmButtonText: '确定',
 									    });
 		           	            }

@@ -5,9 +5,8 @@
          <p class="p-title">现金流水-模板下载</p>
          <p class="p-download p-download1"><el-button   @click="downLoad"><img src="../../../../static/images/reconcil/downLoad.png" alt="" /><span class="span1">点击下载 </span></el-button><span class="tip">(请先下载Excel模板，按照模板格式填写数据，以确保数据格式正确)</span></p>
          <p class="p-title">上传流水文件</p>
-         <p class="p-download"><upload-excel-component @on-selected-file='selected'></upload-excel-component></p>
+         <p class="p-download" ><upload-excel-component @on-selected-file='selected' ></upload-excel-component></p>
          <p class="p4"><el-button  type="primary" @click="UpladFile()" >确认上传</el-button></p>
-         <!--<upload-excel-component @on-selected-file='selected'></upload-excel-component>-->
          <el-table :data="tableData" border highlight-current-row style="width: 100%;margin-top:20px;">
 	      <el-table-column v-for='item of tableHeader' :prop="item" :label="item" :key='item'>
 	      </el-table-column>
@@ -22,6 +21,8 @@
 	import waves from '@/directive/waves/index.js' // 水波纹指令
 	import UploadExcelComponent from '@/components/UploadExcel/index.vue'
 	import {timeChange,MyFormatTime} from '@/utils/utils.js'
+	import NProgress from 'nprogress' // Progress 进度条
+    import 'nprogress/nprogress.css'// Progress 进度条样式
 	export default {
 		 directives: {
 		    waves
@@ -117,7 +118,7 @@
 	     		window.open(url)
 	     	},
 	     	selected(data) {
-//	     	  console.log(data)
+	     	  NProgress.done()
 		      this.tableData = data.results
 		      this.tableHeader = data.header
 		    }

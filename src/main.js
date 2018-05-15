@@ -19,25 +19,18 @@ Vue.prototype.HOST = '/api'
 import '@/icons' // icon
 import '@/permission' // permission control
 import {Message} from 'element-ui'
-console.log(Vue.prototype.$backStage(''))
+import NProgress from 'nprogress' // Progress 进度条
+import 'nprogress/nprogress.css'// Progress 进度条样式
 //import * as filters from './filters'
 Vue.use(ElementUI)
 
-//Object.keys(filters).forEach(key => {
-//Vue.filter(key, filters[key])
-//})
-//const service = axios.create({
-//baseURL: Vue.prototype.$backStage(''), // api的base_url
-////baseURL: "http://webill.test.manmanh.com/webill",
-////baseURL: "http://www.vebill.com/webill",
-//timeout: 0 // 请求超时时间
-//})
-//export default service
 axios.interceptors.request.use(
+	
     config => {
-    	  const token = localStorage.getItem('jwt_token')
+    	NProgress.start()
+    	const token = localStorage.getItem('jwt_token')
         if (token) {  // 每次发送请求之前判断是否存在token，如果存在，则统一在http请求的header都加上token，不用每次请求都手动添加了
-            config.headers.Token = token;
+           config.headers.Token = token;
         }
         return config;
     },
@@ -48,7 +41,7 @@ axios.interceptors.request.use(
     
 axios.interceptors.response.use(
     response => {
-//  	  console.log(response)
+    	NProgress.done()
     	  if(response.data.obj){
     	  	if(response.data.obj.jwtToken){
     	  		let token= response.data.obj.jwtToken

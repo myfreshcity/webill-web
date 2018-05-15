@@ -10,11 +10,11 @@
 
 <script>
 import XLSX from 'xlsx'
-
+import NProgress from 'nprogress' // Progress 进度条
+import 'nprogress/nprogress.css'// Progress 进度条样式
 export default {
   data() {
     return {
-      loading: false,
       excelData: {
         header: null,
         results: null
@@ -52,6 +52,7 @@ export default {
       const files = e.target.files
       const itemFile = files[0] // only use files[0]
       this.readerData(itemFile)
+      NProgress.start()
     },
     readerData(itemFile) {
       const reader = new FileReader()

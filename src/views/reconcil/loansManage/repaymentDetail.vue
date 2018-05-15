@@ -164,11 +164,12 @@
 	           data.append('file_id', this.formSearch.file_id);
 	           const url=this.$checkStage('/charge/contract/select')
 	           this.$http.post(url, data).then((response) => {
+	           	            this.loading1=false
 	           	            console.log(response)
 	                        this.contractList=response.data.contract_list
 	                        this.totalCount=response.data.num
 	                    }, (response) => {
-
+                            this.loading1=false
 	                    });
      	},
      	checkDetail(data){

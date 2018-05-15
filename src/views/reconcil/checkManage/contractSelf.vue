@@ -23,6 +23,8 @@
 	import $ from 'jquery'
 	import { mapGetters } from 'vuex'
 	import waves from '@/directive/waves/index.js' // 水波纹指令
+	import NProgress from 'nprogress' // Progress 进度条
+    import 'nprogress/nprogress.css'// Progress 进度条样式
 	import UploadExcelComponent from '@/components/UploadExcel/index.vue'
 	export default {
 		 directives: {
@@ -84,6 +86,7 @@
 	     		window.open(this.$checkStage('/charge/plan/download'))
 	     	},
 	     	selected(data) {
+	     	  NProgress.done()
 		      this.tableData = data.results
 		      this.tableHeader = data.header
 		    }

@@ -563,7 +563,6 @@
 		padding: .3rem;
 	}
 	.nav1 ul{
-		width: 80%;
 		margin-top: .1rem;
 		padding: .1rem .2rem;
 	}
@@ -588,8 +587,6 @@
 	.nav1 ul .li-head{
 		border-top:1px #E3E7F1 solid ;
 	}
-	/*.nav1 .history li{
-	}*/
 	.nav1 ul li span{
 		flex: 1;
 	}
@@ -615,20 +612,16 @@
 		font-size: 14px;
 	}
 	.nav1 ul li .span-right-money i{
-		/*display: inline-block;
-		width: 40px;*/
 		font-style: normal;
 	}
 	.nav2{
 		padding: .1rem .3rem;
 	}
 	.nav2 .nav2-box{
-		width: 80%;
 		margin-top: .1rem;
 		padding: .1rem .2rem;
 	}
 	.nav2 ul{
-		width: 80%;
 		padding: .1rem .2rem;
 		margin-top: -.3rem;
 	}
@@ -714,7 +707,6 @@
 	.client-serach .el-select{
 		width: 1.9rem;
 	}
-	/*dataInp*/
 	.el-button--primary{
 		margin-left: .2rem;
 	}

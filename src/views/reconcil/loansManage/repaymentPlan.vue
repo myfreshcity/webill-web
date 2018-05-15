@@ -172,9 +172,7 @@
 	.content .client-ul{
 		margin: 0 20px;
 		margin-top: 20px;
-		border: 1px #E3E7F1 solid;
-		border-right:none ;
-		border-bottom: none;
+		
 		font-size: 12px;
 		border-radius: 5px;
 	}
@@ -193,13 +191,16 @@
 		margin-right: .3rem;
 	}
 	.content .client-ul li{
+		border: 1px #E3E7F1 solid;
+		border-right:none ;
+		border-top: none;
 		display: flex;
-		border-bottom: 1px #E3E7F1 solid;
 	}
 	.content .client-ul li:hover{
 		background: #ecf5ff;
 	}
 	.content .client-ul .client-li{
+		border-top: 1px #E3E7F1 solid;
 		background: #F1F2F8;
 		font-size: 14px;
 		font-weight: bold;

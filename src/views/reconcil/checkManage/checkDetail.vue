@@ -639,6 +639,12 @@
 		border: 1px #E3E7F1 solid;
 		border-top:none ;
 	}
+	.nav2 ul li:hover{
+		background: #ecf5ff;
+	}
+	.nav2 ul .nav2-li-head:hover{
+		background: #F1F2F8;
+	}
 	 .last-li p{
 	 	text-align: center;
 		width: 100%;
@@ -647,7 +653,6 @@
 		color: red;
 	}
 	.nav2 ul .nav2-li-head{
-		/*border-top: 1px #E3E7F1 solid;*/
 		background: #F1F2F8;
 	}
 	.nav2 ul li span{
@@ -796,7 +801,11 @@
 		opacity: .3;
 	}
 	.span-check{
+		
 		color: #0BB1FF;
+	}
+	.span-check button{
+		height: 25px;
 	}
 	.span-check:hover{
 		color: #2299DD;

@@ -13,16 +13,25 @@
         <el-form-item label="">
 		    <el-input v-model="formSearch.contractNo" placeholder="合同编号"></el-input>
 		  </el-form-item>
-		   <el-form-item label="">
-		    <el-select v-model="formSearch.dealType" placeholder="处理状态">
-		      <el-option label="未处理" value="0"></el-option>
-		      <el-option label="已处理" value="1"></el-option>
+		  <el-form-item label="">
+		    <el-select v-model="formSearch.checkStatus" placeholder="合同状态">
+		      <el-option label="还款中" value="0"></el-option>
+		      <el-option label="逾期" value="100"></el-option>
+		      <el-option label="移交外催" value="200"></el-option>
+		      <el-option label="结清" value="300"></el-option>
 		    </el-select>
+		  </el-form-item>
+		  <el-form-item label="">
+		    <el-date-picker class="dataInp"
+                          v-model="formSearch.repayDate"
+                          type="date"
+                          placeholder="还款日"
+                          value-format="yyyy-MM-dd">
+            </el-date-picker>
 		  </el-form-item>
 		  <el-form-item label="逾期天数">
 		    <el-input v-model="formSearch.startDate" placeholder="" class="dateRange"  type="number"></el-input>
-		  </el-form-item>
-		  <el-form-item label="—">
+		    -
 		    <el-input v-model="formSearch.endDate" placeholder="" class="dateRange" type="number"></el-input>
 		  </el-form-item>
 		  <el-form-item>
@@ -34,20 +43,17 @@
 	  <p class="ul-head"><span class="client-spanLeft">数据列表</span><el-button type="primary" @click="handleDownload()" :loading="downloadLoading">导出数据</el-button></p>
 	  <ul class="client-ul">
 	  	
-	  	<li class="client-li"><span>合同编号</span><span>客户姓名</span><span>所在门店</span><span class="client-span-card">身份证</span><span>放款日期</span><span >逾期天数</span><span>合同状态</span><span>处理状态</span><span>操作</span></li>
+	  	<li class="client-li"><span>合同编号</span><span>客户姓名</span><span>所在门店</span><span class="client-span-card">联系电话</span><span>放款日</span><span >下一还款日</span><span >最高逾期天数</span><span>合同状态</span><span>操作</span></li>
 	  	<li v-for="(ele,k) in contractList">
 	  		<span >{{ele.contract_no}}</span>
 	  		<span >{{ele.customer}}</span>
 	  		<span>{{ele.shop}}</span>
-	  		<span class="client-span-card">{{ele.id_number}}</span>
+	  		<span class="client-span-card">{{ele.mobile_no}}</span>
 	  		<span>{{ele.loan_date}}</span>
+	  		<span>{{ele.repay_date}}</span>
 	  		<span :class="{'leadDay':ele.delay_days<0}">{{ele.delay_days|decorateDelayDay}}</span>
 	  		<span >{{ele.is_settled|checkStatus}}</span>
-	  		<span >
-	  			<el-tooltip class="item" effect="dark" content="未处理" placement="right"><svg-icon icon-class="wait" v-show="ele.deal_status==0"/></el-tooltip>
-	  			<el-tooltip class="item" effect="dark" content="已处理" placement="right"><svg-icon icon-class="duihao" v-show="ele.deal_status==1" class="duihao"/></el-tooltip>
-	  		</span>
-	  		<span @click="checkDetail(ele.contract_id)" class="span-check"><el-button type="text">查看详情</el-button></span>
+	  		<span @click="checkDetail(ele.contract_id)" class="span-check"><el-button type="text">详情</el-button></span>
 	  	</li>
 	  </ul>
 	  <div class="block" id="foot-page">
@@ -78,12 +84,13 @@
       	filename:"对账列表",
       	formSearch:{
       		realName:"",
-      		date:"",
+      		repayDate:"",
       		contractNo:"",
       		dealType:"",
       		shop:"",       //门店
       		startDate:"",
       		endDate:"",
+      		checkStatus:"",
       		page:1
       	},
       	currentPage:1,
@@ -124,6 +131,8 @@
     	      	this.formSearch.shop=sessionStorage.getItem('checkshop')
     	      }
     	      this.formSearch.page=1
+    	      var dd = new Date(); 
+    	      this.formSearch.repayDate=timeStampToDate(dd.getTime());
     	      this.$options.methods.inquire.bind(this)()
     },
      methods: {
@@ -134,10 +143,13 @@
 	           data.append('contract_no', this.formSearch.contractNo);
 	           data.append('customer', this.formSearch.realName);
 	           data.append('all',0);
+	           data.append('repay_date',this.formSearch.repayDate);
 	           data.append('shop',this.formSearch.shop);
 	           data.append('from_yu_day',this.formSearch.startDate);
 	           data.append('to_yu_day',this.formSearch.endDate);
 	           data.append('is_dealt',this.formSearch.dealType);
+	           data.append('is_settled',this.formSearch.checkStatus);
+	           
 	           const url=this.$checkStage('/charge/contract/select')
 	           this.$http.post(url, data).then((response) => {
 	           	            this.loading1=false

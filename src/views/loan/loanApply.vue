@@ -47,7 +47,7 @@
 		<div v-if="navShow==2" class="nav2">
 			<p class="p-title"><span class="span-line"></span>个人信息</p>
 				<div class="nav-person">
-					
+					<p>姓名：<el-input v-model="data2.name" class="nav-input"></el-input></p>
 				</div>
 			<p class="p-title"><span class="span-line"></span>公司信息</p>
 		</div>
@@ -78,6 +78,10 @@
 	        	agent:"",   //中介
 	        	loanMoney:"",   //借款金额
 	        	way:"",         //用途
+	        },
+	        data2:{
+	        	name:"",
+	        	
 	        }
 	      }
 	    },

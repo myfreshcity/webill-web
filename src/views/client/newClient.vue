@@ -89,7 +89,7 @@
 	    	<div class="tip-div" v-show="step2&&!update">
 				<p>非最新数据，可能存在风险</p>
 				<p><el-button   @click="lastStep(1)" class="subPwd" >上一步</el-button>
-				<el-button type="primary" >下一步</el-button></p>
+				<el-button type="primary" @click="goReport()">下一步</el-button></p>
 			</div>
 	    	<div  v-show="step2&&update">
 				<p class="add-p"><span>选择获取信息内容</span></p>
@@ -305,6 +305,9 @@
       	}
       	this.$router.push({path:'/personal/buyData'})
       },
+      goReport(){
+      	this.$router.push({path:'/client/clientList'})
+      },
        submitForm(formName) {
        	 if(this.userInfo.isVerified==0){
        		  this.$confirm('您还未进行实名认证，请先完成实名认证才可使用', '系统提示', {
@@ -336,7 +339,11 @@
 					          		this.isNew=false
 					          		this.addRelShow=true
 					          	}else if(response.data.status==200){
-					          		this.isNew=true
+					          		if(response.data.obj.latestReportTime){
+					          			this.isNew=true
+					          		}else{
+					          			this.isNew=false
+					          		}
 					          		if(response.data.obj.contacts){
 					          			this.addRelShow=false
 						          		for(var i=0;i<response.data.obj.contacts.length;i++){
@@ -551,7 +558,7 @@
       		this.$alert('联系人信息至少有一条', '系统提示', {
 	          confirmButtonText: '确定',
 	        });
-      	}else if(this.selectType==0&&this.baseCount==0){
+      	}else if(this.selectType==0&&this.baseCount<1){
       		this.$confirm('基础版可查询次数为0, 前往购买?', '系统提示', {
 	          confirmButtonText: '确定',
 	          cancelButtonText: '取消',
@@ -562,7 +569,7 @@
 	        }).catch(() => {
 	                
 	        });
-      	}else if(this.selectType==1&&this.normCount==0){
+      	}else if(this.selectType==1&&this.normCount<1){
       		this.$confirm('标准版可查询次数为0, 前往购买?', '系统提示', {
 	          confirmButtonText: '确定',
 	          cancelButtonText: '取消',

@@ -47,7 +47,8 @@
 	  		<span >{{ele.tensor}}</span>
 	  		<span :class="{'redSpan':ele.check_status==0}">{{ele.is_settled|checkFilter}}</span>
 	  		<span>{{ele.file_id}}</span>
-	  		<span @click="checkDetail(ele.contract_id)" class="span-check"><el-button type="text">查看详情</el-button></span>
+	  		<span class="span-check"><el-button type="text" @click="checkDetail(ele.contract_id)">查看</el-button>
+	  		<el-button type="text" @click="delContract(ele.contract_id)">删除</el-button></span>
 	  	</li>
 	  </ul>
 	  <div class="block" id="foot-page">
@@ -172,9 +173,44 @@
                             this.loading1=false
 	                    });
      	},
+     	postDel(cid){
+ 	 		var data = new FormData();
+	           data.append('cid', cid);
+	           const url=this.$checkStage('/charge/contract/del')
+	           this.$http.post(url, data).then((response) => {
+	           	            console.log(response)
+	           	            if(response.data.isSucceed==200){
+           	            	  this.$message({
+						          message: '操作成功',
+						          type: 'success'
+						        });
+    	                       this.$options.methods.inquire.bind(this)()
+	           	            }else{
+	           	            	this.$alert(response.data.message, '系统提示', {
+					                  confirmButtonText: '确定',
+							    });
+	           	            }
+	                    }, (response) => {
+	                    	
+	                        
+	                    });
+ 		
+ 	 },
      	checkDetail(data){
      		sessionStorage.setItem('extraData',data)
      		this.$router.push({path:'/reconcil/repaymentPlan'})
+     	},
+     	delContract(data){
+     		this.$confirm('删除后数据将不可恢复，确认要继续吗？', '系统提示', {
+							          confirmButtonText: '继续删除',
+							          cancelButtonText: '再想一想',
+							          type: 'warning'
+							        }).then(() => {
+							           this.postDel(data)
+							        }).catch(() => {
+							           
+							        });
+     		
      	},
      	UpladFile(){
      		    if(document.getElementById("file").files.length==0){

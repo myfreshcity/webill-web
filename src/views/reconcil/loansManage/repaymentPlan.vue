@@ -39,7 +39,7 @@
 		  	<li class="client-li">
 		  		<span class="date-span">申请时间</span>
 			 	<span>申请方式</span>
-			 	<span>协商金额</span>
+			 	<span>减免金额</span>
 			 	<span>是否有效</span>
 			 	<span class="remark-span">备注</span>
 		  	</li>

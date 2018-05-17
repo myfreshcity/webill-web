@@ -51,6 +51,7 @@ axios.interceptors.response.use(
         return response;
     },
     error => {
+        NProgress.done()
         if (error.response) {
             switch (error.response.status) {
             	case 400:

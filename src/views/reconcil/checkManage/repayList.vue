@@ -52,7 +52,11 @@
 	  			<el-tooltip class="item" effect="dark" content="匹配中" placement="right"><svg-icon icon-class="wait" v-show="ele.t_status==0"/></el-tooltip>
 	  		</span>
 	  		<span class="client-span-time">{{ele.create_time}}</span>
-	  		<span @click="check(ele)" class="span-check"><el-button type="text" v-if="ele.t_status==1">查看</el-button><el-button type="text" v-if="ele.t_status==2">重试</el-button></span>
+	  		<span class="span-check">
+	  		<el-button type="text" v-if="ele.t_status==1" @click="detail(ele)" >查看</el-button>
+	  		<el-button type="text" v-if="ele.t_status==2" @click="rematch(ele)">重试</el-button>
+	  		<el-button type="text" v-if="ele.t_status==1" @click="reset(ele)">重置</el-button>
+	  		</span>
 	  	</li>
 	  </ul>
 	  <div class="block" id="foot-page">
@@ -146,22 +150,25 @@
                         this.loading1=false
                     });
      },
- 	 check(obj){
- 	 	if(obj.t_status==1){
- 	 		sessionStorage.setItem('extraData',obj.contract_id)
- 		    this.$router.push({path:'/reconcil/repaymentPlan'})
- 	 	}else if(obj.t_status==2){
- 	 		   var data = new FormData();
+ 	 detail(obj){
+ 		sessionStorage.setItem('extraData',obj.contract_id)
+	    this.$router.push({path:'/reconcil/repaymentPlan'})
+ 	 },
+ 	 reset(obj){
+ 	 	this.$confirm('确定要重置还款流水吗？', '系统提示', {
+							          confirmButtonText: '确定',
+							          cancelButtonText: '取消',
+							          type: 'warning'
+							        }).then(() => {
+							           var data = new FormData();
 	           data.append('refund_id', obj.refund_id);
-	           const url=this.$checkStage('/charge/refund/rematch')
+	           const url=this.$checkStage('/charge/refund/reset')
 	           this.$http.post(url, data).then((response) => {
-	           	            console.log(response)
 	           	            if(response.data.isSucceed==200){
            	            	  this.$message({
-						          message: '匹配成功',
+						          message: '重置成功',
 						          type: 'success'
 						        });
-	           	               this.formSearch.page=1
     	                       this.$options.methods.inquire.bind(this)()
 	           	            }else{
 	           	            	this.$alert(response.data.message, '系统提示', {
@@ -172,8 +179,35 @@
 	                    	
 	                        
 	                    });
- 	 	}
- 		
+							        }).catch(() => {
+							           
+							        });
+
+
+ 	 		   
+
+ 	 },
+ 	 rematch(obj){
+ 	 	var data = new FormData();
+	           data.append('refund_id', obj.refund_id);
+	           const url=this.$checkStage('/charge/refund/rematch')
+	           this.$http.post(url, data).then((response) => {
+	           	            console.log(response)
+	           	            if(response.data.isSucceed==200){
+           	            	  this.$message({
+						          message: '匹配成功',
+						          type: 'success'
+						        });
+    	                       this.$options.methods.inquire.bind(this)()
+	           	            }else{
+	           	            	this.$alert(response.data.message, '系统提示', {
+					                  confirmButtonText: '确定',
+							    });
+	           	            }
+	                    }, (response) => {
+	                    	
+	                        
+	                    });
  	 },
 	  guide(){
 	  	this.$router.push({path:'/reconcil/checkSelf'})

@@ -123,7 +123,7 @@
     	}
     },
     watch:{
-    	
+
     },
     mounted:function(){
 		 $(window).unbind ('scroll');
@@ -151,8 +151,8 @@
                     });
      },
  	 detail(obj){
- 		sessionStorage.setItem('extraData',obj.contract_id)
-	    this.$router.push({path:'/reconcil/repaymentPlan'})
+     let routeData = this.$router.resolve({path:'/reconcil/contractDetail/'+obj.contract_id})
+     window.open(routeData.href,'_blank')
  	 },
  	 reset(obj){
  	 	this.$confirm('确定要重置还款流水吗？', '系统提示', {
@@ -176,15 +176,15 @@
 							    });
 	           	            }
 	                    }, (response) => {
-	                    	
-	                        
+
+
 	                    });
 							        }).catch(() => {
-							           
+
 							        });
 
 
- 	 		   
+
 
  	 },
  	 rematch(obj){
@@ -205,8 +205,8 @@
 							    });
 	           	            }
 	                    }, (response) => {
-	                    	
-	                        
+
+
 	                    });
  	 },
 	  guide(){
@@ -220,7 +220,7 @@
       	this.formSearch.wasteId=""
       	this.formSearch.shop=""
       },
-      
+
       handleCurrentChange(val) {
       	  if(val!=1){
        	   	   $(".el-pager").children("li").eq(0).removeClass("active");
@@ -283,7 +283,7 @@
 		padding: .2rem 0 .1rem 0;
 		font-size: 16px;
 		font-weight: bold;
-		
+
 	}
 	.ul-head button{
 		float: right;

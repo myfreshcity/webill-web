@@ -53,15 +53,15 @@
 		 		this.loading1=true
 		 		this.bgShow=true
 	     		var fileObj = document.getElementById("excel-upload-input").files; // 获取文件对象
-	            var FileController = this.$checkStage('/charge/plan/upload');                    // 接收上传文件的后台地址 
+	            var FileController = this.$checkStage('/charge/plan/upload');                    // 接收上传文件的后台地址
 	            // FormData 对象
 	            var form = new FormData();
-//	            for(var i=0;i<fileObj.length;i++){      
-//                 form.append("file["+i+"]", fileObj[i]); //++++++++++    
+//	            for(var i=0;i<fileObj.length;i++){
+//                 form.append("file["+i+"]", fileObj[i]); //++++++++++
 //               }
 	            form.append("file", fileObj[0])
                 var _this=this
-	            _this.$http.post(FileController, form).then(response=>{  
+	            _this.$http.post(FileController, form).then(response=>{
 //	            	console.log(response)
                     this.loading1=false
 		 		    this.bgShow=false
@@ -70,7 +70,7 @@
 				          message: '上传文件成功',
 				          type: 'success'
 				        });
-		                _this.$router.push({path:'/reconcil/repaymentDetail'})
+		                _this.$router.push({path:'/backPage'})
 	            	}else{
 	            		_this.$alert(response.data.message, '系统提示', {
 					        confirmButtonText: '确定',

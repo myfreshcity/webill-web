@@ -79,7 +79,7 @@ export const constantRouterMap = [
       }
     ]
   },
- 
+
    {
   	path: '/template',
     component: Layout,
@@ -138,12 +138,12 @@ export const constantRouterMap = [
 {
 	path: '/reconcil',
     component: Layout,
-    redirect: '/reconcil/repaymentDetail',
+    redirect: '/reconcil/contractList',
     name: 'Reconcil',
     hidden: false,
     meta: { title: '对账管理', icon: 'qian' },
     children: [
-     
+
 	      {
 	        path: 'checkSelf',
 	        name: 'CheckSelf',
@@ -177,23 +177,23 @@ export const constantRouterMap = [
 	        meta: { title: '对账处理', icon: '' }
 	      },
 	      {
-	        path: 'checkDetail',
+	        path: 'checkDetail/:contractId',
 	        name: 'CheckDetail',
 	        hidden: true,
 	        component: _import('reconcil/checkManage/checkDetail'),
 	        meta: { title: '对账详情', icon: '' }
 	      },
 	       {
-	        path: 'repaymentDetail',
-	        name: 'RepaymentDetail',
-	        component: _import('reconcil/loansManage/repaymentDetail'),
+	        path: 'contractList',
+	        name: 'ContractList',
+	        component: _import('reconcil/loansManage/contractList'),
 	        meta: { title: '合同列表', icon: '' }
 	      },
 	      {
-	        path: 'repaymentPlan',
-	        name: 'RepaymentPlan',
+	        path: 'contractDetail/:contractId',
+	        name: 'ContractDetail',
 	        hidden: true,
-	        component: _import('reconcil/loansManage/repaymentPlan'),
+	        component: _import('reconcil/loansManage/contractDetail'),
 	        meta: { title: '合同详情', icon: '' }
 	      },
 	      {
@@ -250,7 +250,7 @@ export const constantRouterMap = [
       }
     ]
   },
-  
+
   { path: '*', redirect: '/404', hidden: true }
 ]
 

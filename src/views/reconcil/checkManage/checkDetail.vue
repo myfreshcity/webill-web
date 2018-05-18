@@ -50,7 +50,6 @@
 						     <el-radio-group v-model="dealDetail">
 						      <el-radio-button label="提醒还款" :disabled="radioDisable"></el-radio-button>
 						      <el-radio-button label="申请减免" :disabled="radioDisable"></el-radio-button>
-						      <el-radio-button label="移交外催" :disabled="radioDisable"></el-radio-button>
 						    </el-radio-group>
 					</span>
 				</li>
@@ -58,9 +57,17 @@
 				<li><span class="span-left">协商金额</span><span class="span-right nav3-span-right"><el-input v-model="consultValue" :disabled="radioDisable||handOver" class="work-input" type="number" placeholder="协商后的还款金额"></el-input></span></li>
 				<li><span class="span-left">处理备注</span><span class="span-right nav3-span-right"><el-input   v-model="remark" :disabled="radioDisable" class="remark-input" placeholder="选填"></el-input></span></li>
 			</ul>
-			 <p class="nav3-sub" ><el-button v-if="!radioDisable" @click="goBack">返回</el-button><el-button v-if="!radioDisable" v-waves type="primary" @click="commitSub">提交</el-button><el-button class="history-span"  @click="showHistory"><svg-icon icon-class="zhankai" v-show="!historyShow"/><svg-icon icon-class="shousuo" v-show="historyShow"/>历史记录 </el-button></p>
-			 <ul class="history" v-show="historyShow">
-			 	<li class="li-head">
+		
+			 <p class="nav3-sub" >
+			 <el-button v-if="!radioDisable" @click="goBack">返回</el-button>
+			 <el-button v-if="!radioDisable" v-waves type="primary" @click="commitSub">提交</el-button>
+			 </p>
+		</div>
+
+		<div class="nav2">
+			<p class="p-title"><span class="span-line"></span>历史处理情况</p>
+			<ul style="margin-top: .3rem;">
+				<li class="nav2-li-head">
 			 		<span class="date-span">申请时间</span>
 				 	<span>申请方式</span>
 				 	<span>减免金额</span>
@@ -75,18 +82,13 @@
 				 	<span  class="remark-span">{{ele.remark}}</span>
 			 	</li>
 			 	<li v-if="historyList.length==0" class="noRecord">无记录</li>
-			 </ul>
-		</div>
+			</ul>
+	    </div>
+
+
 		<div class="nav2">
 			<p class="p-title"><span class="span-line"></span>冲账流水</p>
-			<div class="nav2-box">
-			 <el-tabs  v-model="activeName1" type="border-card" @tab-click="realClick">
-			    <el-tab-pane label="冲账历史" name="first">冲账历史</el-tab-pane>
-			    <!--<el-tab-pane label="已冲账" name="second">已冲账</el-tab-pane>-->
-			    <!--<el-tab-pane label="全部" name="third">全部</el-tab-pane>-->
-			  </el-tabs>
-			</div>
-			<ul>
+			<ul style="margin-top: .3rem;">
 				<li class="nav2-li-head"><span>支付时间</span><span>姓名</span><span>还款金额</span><span>冲账余额</span><span >还款渠道</span><span>流水创建时间</span></li>
 				<li v-for="(ele,k) in realPay">
 					<span>{{ele.refund_time}}</span>
@@ -96,11 +98,10 @@
 					<span>{{ele.way}}</span>
 					<span>{{ele.create_time}}</span>
 				</li>
-				<!--<li class="last-li"><p>冲账余额：{{checkDetail.remain_sum}} <b>注：冲账余额>0,为客户多还金额</b></p></li>-->
 			</ul>
 	    </div>
-	    <p class="p-waste"><el-button   @click="showWaste"><svg-icon icon-class="zhankai" v-show="!wasteShow"/><svg-icon icon-class="shousuo" v-show="wasteShow"/>未匹配流水列表 </el-button></p>
-		<div class="nav4" v-if="!radioDisable&&wasteShow">
+	    
+		<div class="nav4">
 			<p class="p-title"><span class="span-line"></span>未匹配流水列表</p>
 			 <div class="filter-container client-serach">
 			  	<el-form :inline="true" :model="formSearch" class="demo-form-inline">
@@ -257,9 +258,10 @@
 		},
 		mounted:function(){
 			 $(window).unbind ('scroll');
+
 //			 if(this.userInfo.mobileNo){
 			 	  const checkUrl=this.$checkStage('/charge/contract/detail/get')
-		           this.$http.post(checkUrl, {'contract_id':sessionStorage.getItem('extraData'),"is_overtime":0}).then((response) => {
+		           this.$http.post(checkUrl, {'contract_id':this.$route.params.contractId,"is_overtime":0}).then((response) => {
 		           	            console.log(response)
 		           	            this.checkDetail=response.data
 		           	            this.overList=response.data.overtime_list
@@ -482,16 +484,17 @@
 		           data.append('type', this.dealType);
 		           data.append('discount_type', this.isSettle);
 		           data.append('amount', this.reduceMoney);
+		           data.append('pay_amt', this.consultValue);
 		           data.append('commit',this.remark);
 		           const url=this.$checkStage('/charge/commit/create')
 		           this.$http.post(url, data).then((response) => {
 		           	            console.log(response)
 		           	            if(response.data.isSucceed==200){
+		           	            	 this.$router.push({path:'/backPage'})
 		           	            	 this.$message({
 								          message: this.dealDetail+'成功',
 								          type: 'success'
 							         });
-		           	            	this.$router.push({path:'/reconcil/checkList'})
 		           	            }else{
 		           	            	this.$alert(response.data.message, '系统提示', {
 						                  confirmButtonText: '确定',
@@ -791,6 +794,7 @@
 		bottom: 0;
 		background: #000;
 		opacity: .3;
+		z-index:999;
 	}
 	.span-check{
 		

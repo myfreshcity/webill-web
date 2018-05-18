@@ -11,6 +11,9 @@
 			<p class="nav1-p">借款金额：<span>{{checkDetail.contract_amount}}</span></p>
 			<p class="nav1-p">放款金额：<span>{{checkDetail.loan_amount}}</span></p>
 			<p class="nav1-p">放款日期：<span>{{checkDetail.loan_date}}</span></p>
+			<p class="nav1-p">所在门店：<span>{{checkDetail.shop}}</span></p>
+			<p class="nav1-p">客户经理：<span>{{checkDetail.sale_person}}</span></p>
+			<p class="nav1-p">导入时间：<span>{{checkDetail.created_time}}</span></p>
 	  </div>
 	  <div class="nav1">
 	  	  <p class="p-title"><span class="span-line"></span>还款计划</p>
@@ -130,7 +133,7 @@
     mounted:function(){
 			 $(window).unbind ('scroll');
 			   const checkUrl=this.$checkStage('/charge/contract/detail/get')
-	           this.$http.post(checkUrl, {"is_overtime":0,"contract_id":sessionStorage.getItem('extraData')}).then((response) => {
+	           this.$http.post(checkUrl, {"is_overtime":0,"contract_id":this.$route.params.contractId}).then((response) => {
 	           	            console.log(response)
 	           	            this.checkDetail=response.data
 	           	            this.repaymentList=response.data.overtime_list

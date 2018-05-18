@@ -17,7 +17,6 @@
 		    <el-select v-model="formSearch.checkStatus" placeholder="合同状态">
 		      <el-option label="还款中" value="0"></el-option>
 		      <el-option label="逾期" value="100"></el-option>
-		      <el-option label="移交外催" value="200"></el-option>
 		      <el-option label="结清" value="300"></el-option>
 		    </el-select>
 		  </el-form-item>
@@ -160,10 +159,9 @@
                             this.loading1=false
 	                    });
         },
-     	checkDetail(data){
-//   		this.$store.dispatch('ContractNo', data)
-     		sessionStorage.setItem('extraData',data)
-     		this.$router.push({path:'/reconcil/checkDetail'})
+     	checkDetail(contractId){
+     		let routeData = this.$router.resolve({path:'/reconcil/checkDetail/'+contractId})
+     		window.open(routeData.href,'_blank')
      	},
 	    handleDownload() {
 	      

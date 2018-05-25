@@ -33,6 +33,7 @@
 	  </div>
 	  <p class="ul-head"><span class="client-spanLeft">数据列表</span><el-button type="primary" @click="handleDownload()" :loading="downloadLoading">导出数据</el-button></p>
 	  <ul class="client-ul">
+
 	  	<li class="client-li"><span>合同编号</span><span>客户姓名</span><span>所在门店</span><span class="client-span-card">联系电话</span><span>放款日</span><span >下一还款日</span><span >逾期天数</span><span>合同状态</span><span>操作</span></li>
 	  	<li v-for="(ele,k) in contractList">
 	  		<span >{{ele.contract_no}}</span>
@@ -78,8 +79,8 @@
       		contractNo:"",
       		dealType:"",
       		shop:"",       //门店
-      		startDate:"0",
-      		endDate:"3",
+      		startDate:"1",
+      		endDate:"7",
       		checkStatus:"",
       		page:1
       	},

@@ -141,9 +141,8 @@ export const constantRouterMap = [
     redirect: '/reconcil/contractList',
     name: 'Reconcil',
     hidden: false,
-    meta: { title: '对账管理', icon: 'qian' },
+    meta: { title: '账务管理', icon: 'qian' },
     children: [
-
 	      {
 	        path: 'checkSelf',
 	        name: 'CheckSelf',
@@ -170,19 +169,34 @@ export const constantRouterMap = [
 //	        component: _import('reconcil/checkManage/checkOrder'),
 //	        meta: { title: '对账派单', icon: '' }
 //	      },
-	      {
-	        path: 'checkList',
-	        name: 'CheckList',
-	        component: _import('reconcil/checkManage/checkList'),
-	        meta: { title: '对账处理', icon: '' }
-	      },
-	      {
-	        path: 'checkDetail/:contractId',
-	        name: 'CheckDetail',
-	        hidden: true,
-	        component: _import('reconcil/checkManage/checkDetail'),
-	        meta: { title: '对账详情', icon: '' }
-	      },
+      {
+        path: 'checkList',
+        name: 'CheckList',
+        component: _import('reconcil/checkManage/checkList'),
+        meta: { title: '账务处理', icon: '' }
+      },
+      {
+        path: 'checkDetail/:contractId',
+        name: 'CheckDetail',
+        hidden: true,
+        component: _import('reconcil/checkManage/checkDetail'),
+        props: { detailType: "check" },
+        meta: { title: '账务详情', icon: '' }
+      },
+      {
+        path: 'delayList',
+        name: 'DelayList',
+        component: _import('reconcil/checkManage/delayList'),
+        meta: { title: '逾期管理', icon: '' }
+      },
+      {
+        path: 'delayDetail/:contractId',
+        name: 'DelayDetail',
+        hidden: true,
+        component: _import('reconcil/checkManage/checkDetail'),
+        props: { detailType: "delay" },
+        meta: { title: '逾期详情', icon: '' }
+      },
 	       {
 	        path: 'contractList',
 	        name: 'ContractList',
@@ -194,6 +208,7 @@ export const constantRouterMap = [
 	        name: 'ContractDetail',
 	        hidden: true,
 	        component: _import('reconcil/loansManage/contractDetail'),
+          props: { detailType: "detail" },
 	        meta: { title: '合同详情', icon: '' }
 	      },
 	      {
@@ -207,7 +222,7 @@ export const constantRouterMap = [
 	        path: 'creditList',
 	        name: 'CreditList',
 	        component: _import('reconcil/creditApproval/creditList'),
-	        meta: { title: '对账审核', icon: '' }
+	        meta: { title: '减免审核', icon: '' }
 	      }
     ]
 },

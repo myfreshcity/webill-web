@@ -80,12 +80,18 @@
   import { getToken } from '@/utils/auth' // 验权
   import Cookies from 'js-cookie'
   export default {
+    props: {
+      detailType: {
+        type: String,
+        default: 'detail'
+      }
+    },
     data() {
       return {
       	historyList:[],
       	checkDetail:{},
       	downloadLoading:false,
-      	repaymentList:[], 
+      	repaymentList:[],
       	loading1:false,
       	loading2:false,
       	totalCount:0,

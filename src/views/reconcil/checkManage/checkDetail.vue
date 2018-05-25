@@ -183,7 +183,7 @@
 				truePay2:0,    //实还逾期
 				truePay3:0,    
 				truePay4:0,    
-				isSettle:1,
+				isSettle:0,
 				dealDetail:"提醒还款",
 				dealType:"0",
 				activeName1: 'first',

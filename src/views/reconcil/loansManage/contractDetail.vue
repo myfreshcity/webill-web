@@ -18,7 +18,7 @@
 	  <div class="nav1">
 	  	  <p class="p-title"><span class="span-line"></span>还款计划</p>
 		  <ul class="client-ul">
-		  	<li class="client-li"><span>合同编号</span><span>还款日期</span><span>还款期数</span><span >应还本息</span><span>应还滞纳金</span><span>实还本息</span><span>实还滞纳金</span><span>实际还款日期</span><span>还款状态</span></li>
+		  	<li class="client-li"><span>合同编号</span><span>还款日期</span><span>还款期数</span><span >应还本息</span><span>应还滞纳金</span><span>实还本息</span><span>实还滞纳金</span><span>本息缴清日</span><span>还款状态</span></li>
 		  	<li v-for="(ele,k) in repaymentList">
 		  		<span >{{ele.contract_no}}</span>
 		  		<span >{{ele.deadline}}</span>
@@ -41,14 +41,16 @@
 	  	  <ul class="client-ul">
 		  	<li class="client-li">
 		  		<span class="date-span">申请时间</span>
-			 	<span>申请方式</span>
+          <span>减免方式</span>
+			 	<span>实还金额</span>
 			 	<span>减免金额</span>
 			 	<span>是否有效</span>
 			 	<span class="remark-span">备注</span>
 		  	</li>
 		  	<li v-for="(ele,k) in historyList">
-		  		<span class="date-span">{{ele.apply_date}}</span>
-			 	<span>{{ele.type|applyType}}</span>
+		  	<span class="date-span">{{ele.apply_date}}</span>
+          <span>{{ele.discount_type | discountType}}</span>
+			 	<span>{{ele.pay_amt}}</span>
 			 	<span>{{ele.amount}}</span>
 			 	<span>{{ele.result|resultFilter}}</span>
 			 	<span  class="remark-span">{{ele.remark}}</span>
@@ -126,13 +128,13 @@
 				return ""
 			}
 		},
-		applyType(index){
-			if(index==0){
-				return "提醒还款"
-			}else if(index==1){
-				return "申请减免"
+		discountType(index){
+			if(index==1){
+				return "有息结清"
+			}else if(index==2){
+				return "无息结清"
 			}else{
-				return "移交外催"
+				return "不结清"
 			}
 		},
     },
@@ -149,8 +151,8 @@
 	                    });
      },
      methods: {
-	   
-      
+
+
     },
     computed: {
 	    ...mapGetters([
@@ -181,7 +183,7 @@
 	.content .client-ul{
 		margin: 0 20px;
 		margin-top: 20px;
-		
+
 		font-size: 12px;
 		border-radius: 5px;
 	}

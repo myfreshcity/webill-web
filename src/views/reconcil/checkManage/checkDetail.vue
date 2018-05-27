@@ -5,25 +5,42 @@
 		<p class="title">
 			对账信息
 		</p>
-		
+
 		<div class="nav1">
 			<p class="p-title"><span class="span-line"></span>客户信息</p>
-			<p class="nav1-p">手机号码：<span>{{checkDetail.mobile_no}}</span></p>
-			<p class="nav1-p">客户姓名：<span>{{checkDetail.customer}}</span></p>
-			<p class="nav1-p">身份证号：<span>{{checkDetail.id_number}}</span></p>
+      <div class="nav1-grid">
+        <el-row>
+          <el-col :span="6"><div>手机号码:{{checkDetail.mobile_no}}</div></el-col>
+          <el-col :span="6"><div>客户姓名:{{checkDetail.customer}}</div></el-col>
+          <el-col :span="6"><div>身份证号:{{checkDetail.id_number}}</div></el-col>
+          <el-col :span="6"><div>借款期数：{{checkDetail.tensor}}</div></el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="6"><div>借款金额:{{checkDetail.contract_amount}}</div></el-col>
+          <el-col :span="6"><div>放款金额:{{checkDetail.loan_amount}}</div></el-col>
+          <el-col :span="6"><div>放款日期:{{checkDetail.loan_date}}</div></el-col>
+          <el-col :span="6"><div>所在门店：{{checkDetail.shop}}</div></el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="6"><div>客户经理:{{checkDetail.sale_person}}</div></el-col>
+          <el-col :span="6"><div>导入时间:{{checkDetail.created_time}}</div></el-col>
+          <el-col :span="6"><div></div></el-col>
+          <el-col :span="6"><div></div></el-col>
+        </el-row>
+      </div>
 		</div>
 		 <div class="nav2">
 			<p class="p-title"><span class="span-line"></span>还款情况 (合同编号——{{checkDetail.contract_no}})</p>
 			<div class="nav2-box">
 			 <el-tabs  v-model="activeName2" type="border-card" @tab-click="repayClick">
-			    <el-tab-pane label="逾期" name="first">逾期</el-tab-pane>
-			    <el-tab-pane label="结清" name="second">结清</el-tab-pane>
-			    <el-tab-pane label="待还" name="third">待还</el-tab-pane>
+			    <el-tab-pane label="待还" name="first">待还</el-tab-pane>
+			    <el-tab-pane label="已结清" name="second">已结清</el-tab-pane>
+			    <el-tab-pane label="未到期" name="third">未到期</el-tab-pane>
 			    <el-tab-pane label="全部" name="fourth">全部</el-tab-pane>
 			  </el-tabs>
 			</div>
 			<ul>
-				<li class="nav2-li-head"><span>应还日期</span><span>还款期数</span><span>逾期天数</span><span>应还本息</span><span>应还滞纳金</span><span>实还本息</span><span>实还滞纳金</span><span class="nav2-span-right">还款状态</span></li>
+				<li class="nav2-li-head"><span>应还日期</span><span>还款期数</span><span>逾期天数</span><span>应还本息</span><span>应还滞纳金</span><span>实还本息</span><span>实还滞纳金</span><span>本息缴清日</span><span class="nav2-span-right">还款状态</span></li>
 				<li v-for="(ele,k) in repayPlan">
 					<span>{{ele.deadline}}</span>
 					<span>第{{ele.tensor}}期</span>
@@ -32,35 +49,48 @@
 					<span>{{ele.fee}}</span>
 					<span>{{ele.actual_amt}}</span>
 					<span>{{ele.actual_fee}}</span>
-					<span><b v-if="ele.is_settled==0&&ele.delay_day>0">逾期</b><b v-if="ele.is_settled==0&&ele.delay_day<1">还款中</b><b v-if="ele.is_settled==1">结清</b></span>
+          <span >{{ele.settled_date}}</span>
+          <span >
+		  			<el-tooltip class="item" effect="dark" content="还款中" placement="right"><svg-icon icon-class="wait" v-show="ele.is_settled==0&&ele.delay_day<1"/></el-tooltip>
+		  			<el-tooltip class="item" effect="dark" content="结清" placement="right"><svg-icon icon-class="duihao" v-show="ele.is_settled==1" class="duihao"/></el-tooltip>
+		  			<el-tooltip class="item" effect="dark" content="逾期" placement="right"><svg-icon icon-class="yuqi" v-show="ele.is_settled==0&&ele.delay_day>0"/></el-tooltip>
+		  		</span>
 				</li>
 				<li class="last-li">
 					<span class="total-span">小计</span><span>{{shouldPay1}}</span><span>{{shouldPay2}}</span><span>{{truePay1}}</span><span>{{truePay2}}</span><span></span>
 				</li>
 			</ul>
 	    </div>
-		<div class="nav1 nav3">
-			<p class="p-title"><span class="span-line"></span>处理面板</p>
+		<div class="nav1 nav3" v-show="checkDetail.is_settled!=300">
+			<p class="p-title"><span class="span-line"></span>减免申请</p>
 			<ul>
-				<!--<li class="li-head"><span class="span-left" >审批结果</span><span class="span-right">{{approveResult|resultFilter}}</span></li>
-				<li v-if="approveResult==200"><span class="span-left" >拒绝理由</span><span class="span-right">{{approveRemark}}</span></li>-->
 				<li class="li-head">
-					<span class="span-left">处理方式</span>
-					<span class="span-right nav3-span-right">
-						     <el-radio-group v-model="dealDetail">
-						      <el-radio-button label="提醒还款" :disabled="radioDisable"></el-radio-button>
-						      <el-radio-button label="申请减免" :disabled="radioDisable"></el-radio-button>
-						    </el-radio-group>
+					<span class="span-left">是否结清</span>
+          <span class="span-right nav3-span-right">
+            <el-radio-group v-model="reduceType">
+            <el-radio label="不结清"></el-radio>
+            <el-radio label="无息结清"></el-radio>
+            <el-radio label="有息结清"></el-radio>
+          </el-radio-group>
 					</span>
 				</li>
-				<li ><span class="span-left">应还总额</span><span class="span-right span-right-money"><i>{{minSum}}</i> (<b>减免金额：{{reduceMoney}}</b>)&nbsp;&nbsp;&nbsp;<el-checkbox v-model="selectType" :disabled="radioDisable||handOver">一次结清</el-checkbox></span></li>
-				<li><span class="span-left">协商金额</span><span class="span-right nav3-span-right"><el-input v-model="consultValue" :disabled="radioDisable||handOver" class="work-input" type="number" placeholder="协商后的还款金额"></el-input></span></li>
-				<li><span class="span-left">处理备注</span><span class="span-right nav3-span-right"><el-input   v-model="remark" :disabled="radioDisable" class="remark-input" placeholder="选填"></el-input></span></li>
+				<li ><span class="span-left">应还总额</span>
+          <span class="span-right span-right-money"><i>{{minSum}}</i></span>
+        </li>
+        <li ><span class="span-left">减免金额</span>
+          <span class="span-right span-right-money"><i>{{reduceMoney}}</i></span>
+        </li>
+				<li><span class="span-left">协商金额</span><span class="span-right nav3-span-right">
+          <el-input v-model="consultValue" :disabled="radioDisable" class="work-input" type="number" placeholder="协商后的还款金额"></el-input></span>
+        </li>
+				<li><span class="span-left">处理备注</span><span class="span-right nav3-span-right">
+          <el-input   v-model="remark" :disabled="radioDisable" class="remark-input" placeholder="选填"></el-input></span>
+        </li>
 			</ul>
-		
+
 			 <p class="nav3-sub" >
-			 <el-button v-if="!radioDisable" @click="goBack">返回</el-button>
-			 <el-button v-if="!radioDisable" v-waves type="primary" @click="commitSub">提交</el-button>
+			 <el-button @click="goBack">返回</el-button>
+			 <el-button type="primary" @click="commitSub">提交</el-button>
 			 </p>
 		</div>
 
@@ -69,14 +99,14 @@
 			<ul style="margin-top: .3rem;">
 				<li class="nav2-li-head">
 			 		<span class="date-span">申请时间</span>
-				 	<span>申请方式</span>
+				 	<span>减免方式</span>
 				 	<span>减免金额</span>
 				 	<span>是否有效</span>
 				 	<span class="remark-span">备注</span>
 			 	</li>
 			 	<li v-for="(ele,k) in historyList">
 			 		<span class="date-span">{{ele.apply_date}}</span>
-				 	<span>{{ele.type|applyType}}</span>
+				 	<span>{{ele.discount_type|discountFilter}}</span>
 				 	<span>{{ele.amount}}</span>
 				 	<span>{{ele.result|resultFilter}}</span>
 				 	<span  class="remark-span">{{ele.remark}}</span>
@@ -100,7 +130,7 @@
 				</li>
 			</ul>
 	    </div>
-	    
+
 		<div class="nav4">
 			<p class="p-title"><span class="span-line"></span>未匹配流水列表</p>
 			 <div class="filter-container client-serach">
@@ -163,7 +193,7 @@
 <script>
 	import $ from 'jquery'
 	import { mapGetters } from 'vuex'
-	import { DateDiff } from '@/utils/utils'
+  import { getLoginUser,timeStampToDate,DateDiff } from '@/utils/utils'
 	import waves from '@/directive/waves/index.js' // 水波纹指令
 	export default {
 		 directives: {
@@ -171,53 +201,56 @@
 		 },
 		 data(){
 			return {
-				wasteShow:false,
-				historyList:[],  //协商历史
-				historyShow:false,
-				reduceMoney:0,  //减免金额
-				shouldPay1:0,  //应还本息
-				shouldPay2:0,  //应还逾期
-				shouldPay3:0,  
-				shouldPay4:0,  
-				truePay1:0,    //实还本息
-				truePay2:0,    //实还逾期
-				truePay3:0,    
-				truePay4:0,    
-				isSettle:0,
-				dealDetail:"提醒还款",
-				dealType:"0",
-				activeName1: 'first',
-				activeName2: 'first',
-				overList:[],  //逾期列表
-				minSum:0,   //最低还款额
-				isStrike:false,
-				strikeDetail:{},
-				bgShow:false,
-				radioDisable:false, 
-				handOver:true,
-				selectType:false,    
-				consultValue:"",
-				repayDate:'',      //承诺还款日期
-				remark:'',         //备注
-				loading1:false,
-		      	totalCount:0,
-		      	contractList:[],
-		      	approveResult:"",   //审批结果
-		      	approveRemark:"",   //拒绝审批理由
-		      	formSearch:{
-		      		realName:"",
-		      		range:"",
-		      		date:"",
-		      		page:1,
-		      	},
-		      	currentPage:1,
-		      	checkDetail:{},
-		      	realPay:[],    //实际还款列表
-		      	repayPlan:[],  //还款计划列表
-		      	repayPlan1:[],
-		      	repayPlan2:[],
-		      	repayPlan3:[],
-		      	repayPlan4:[],
+        wasteShow: false,
+        historyList: [],  //协商历史
+        historyShow: false,
+        reduceMoney: 0,  //减免金额
+        shouldPay1: 0,  //应还本息
+        shouldPay2: 0,  //应还逾期
+        shouldPay3: 0,
+        shouldPay4: 0,
+        truePay1: 0,    //实还本息
+        truePay2: 0,    //实还逾期
+        truePay3: 0,
+        truePay4: 0,
+        isSettle: 0,
+        dealDetail: "申请减免",
+        dealType: "1",
+        activeName1: 'first',
+        activeName2: 'first',
+        overList: [],  //逾期列表
+        minSum: 0,   //最低还款额
+        minSum1: 0, //当前应还额
+        minSum2: 0, //当前未到期
+        futureInterest: 0,//未到期利息
+        isStrike: false,
+        strikeDetail: {},
+        bgShow: false,
+        radioDisable: false,
+        handOver: true,
+        reduceType: "不结清",
+        consultValue: "",
+        repayDate: '',      //承诺还款日期
+        remark: '',         //备注
+        loading1: false,
+        totalCount: 0,
+        contractList: [],
+        approveResult: "",   //审批结果
+        approveRemark: "",   //拒绝审批理由
+        formSearch: {
+          realName: "",
+          range: "",
+          date: "",
+          page: 1,
+        },
+        currentPage: 1,
+        checkDetail: {},
+        realPay: [],    //实际还款列表
+        repayPlan: [],  //还款计划列表
+        repayPlan1: [],
+        repayPlan2: [],
+        repayPlan3: [],
+        repayPlan4: [],
 			}
 		},
 		filters:{
@@ -239,21 +272,14 @@
 					return ""
 				}
 			},
-			applyType(index){
-				if(index==0){
-					return "提醒还款"
-				}else if(index==1){
-					return "申请减免"
-				}else{
-					return "移交外催"
-				}
-			},
 			discountFilter(index){
-				if(index==1){
-					return "一次结清"
-				}else{
-					return ""
-				}
+        if(index==1){
+          return "有息结清"
+        }else if(index==2){
+          return "无息结清"
+        }else{
+          return "不结清"
+        }
 			}
 		},
 		mounted:function(){
@@ -262,63 +288,67 @@
 //			 if(this.userInfo.mobileNo){
 			 	  const checkUrl=this.$checkStage('/charge/contract/detail/get')
 		           this.$http.post(checkUrl, {'contract_id':this.$route.params.contractId,"is_overtime":0}).then((response) => {
-		           	            console.log(response)
+                            let today = timeStampToDate(new Date().getTime())
+
 		           	            this.checkDetail=response.data
+                            this.futureInterest = response.data.future_interest
 		           	            this.overList=response.data.overtime_list
 		           	            this.historyList=response.data.commit_history
-		           	          
+
 		           	            this.approveResult=this.checkDetail.commit.result
 		           	            this.approveRemark=this.checkDetail.commit.approve_remark
 		           	            this.realPay=this.checkDetail.real_pays
 		           	            this.repayPlan4=this.checkDetail.overtime_list
-		           	            
+
 		           	            for(let i=0;i<this.repayPlan4.length;i++){
 		           	            	if(this.repayPlan4[i].is_settled==1){
 		           	            		this.repayPlan2.push(this.repayPlan4[i])
-		           	            	}else if(this.repayPlan4[i].is_settled==0){
+		           	            	}else if(this.repayPlan4[i].delay_day==0 && this.repayPlan4[i].deadline!=today){
 		           	            		this.repayPlan3.push(this.repayPlan4[i])
 		           	            	}
 		           	            }
-		           	            for(let j=0;j<this.repayPlan3.length;j++){
-		           	            	if(this.repayPlan3[j].delay_day>0){
-		           	            		this.repayPlan1.push(this.repayPlan3[j])
+		           	            // 待还面板
+		           	            for(let j=0;j<this.repayPlan4.length;j++){
+		           	            	if(this.repayPlan4[j].delay_day>0 || this.repayPlan4[j].deadline==today){
+		           	            		this.repayPlan1.push(this.repayPlan4[j])
 		           	            	}
 		           	            }
-		           	            this.repayPlan=this.repayPlan1
-		           	             for(let i=0;i<this.repayPlan.length;i++){
-		           	             	if(this.repayPlan[i].amount){
-		           	             		this.shouldPay1+=Number(this.repayPlan[i].amount)
-		           	             	}
-								   	if(this.repayPlan[i].fee){
-		           	             		this.shouldPay2+=Number(this.repayPlan[i].fee)
-		           	             	}
-								   	if(this.repayPlan[i].actual_amt){
-		           	             		this.truePay1+=Number(this.repayPlan[i].actual_amt)
-		           	             	}
-								   	if(this.repayPlan[i].actual_fee){
-		           	             		this.truePay2+=Number(this.repayPlan[i].actual_fee)
-		           	                }
-								  }
-		           	             for(let i=0;i<this.repayPlan3.length;i++){
-		           	             	if(this.repayPlan3[i].amount){
-		           	             		this.shouldPay3+=Number(this.repayPlan3[i].amount)
-		           	             	}
-								   	if(this.repayPlan3[i].fee){
-		           	             		this.shouldPay4+=Number(this.repayPlan3[i].fee)
-		           	             	}
-								   	if(this.repayPlan3[i].actual_amt){
-		           	             		this.truePay3+=Number(this.repayPlan3[i].actual_amt)
-		           	             	}
-								   	if(this.repayPlan3[i].actual_fee){
-		           	             		this.truePay4+=Number(this.repayPlan3[i].actual_fee)
-		           	                }
-								  }
+                             this.repayPlan = this.repayPlan1
+                             for (let i = 0; i < this.repayPlan.length; i++) {
+                               if (this.repayPlan[i].amount) {
+                                 this.shouldPay1 += Number(this.repayPlan[i].amount)
+                               }
+                               if (this.repayPlan[i].fee) {
+                                 this.shouldPay2 += Number(this.repayPlan[i].fee)
+                               }
+                               if (this.repayPlan[i].actual_amt) {
+                                 this.truePay1 += Number(this.repayPlan[i].actual_amt)
+                               }
+                               if (this.repayPlan[i].actual_fee) {
+                                 this.truePay2 += Number(this.repayPlan[i].actual_fee)
+                               }
+                             }
+                             for (let i = 0; i < this.repayPlan3.length; i++) {
+                               if (this.repayPlan3[i].amount) {
+                                 this.shouldPay3 += Number(this.repayPlan3[i].amount)
+                               }
+                               if (this.repayPlan3[i].fee) {
+                                 this.shouldPay4 += Number(this.repayPlan3[i].fee)
+                               }
+                               if (this.repayPlan3[i].actual_amt) {
+                                 this.truePay3 += Number(this.repayPlan3[i].actual_amt)
+                               }
+                               if (this.repayPlan3[i].actual_fee) {
+                                 this.truePay4 += Number(this.repayPlan3[i].actual_fee)
+                               }
+                             }
 		           	             this.minSum1=this.shouldPay1+this.shouldPay2-this.truePay1-this.truePay2
 		           	             this.minSum2=this.shouldPay3+this.shouldPay4-this.truePay3-this.truePay4
+
 		           	             this.minSum=this.minSum1
 		           	             this.consultValue=this.minSum1
 		                    }, (response) => {
-	
+
 		                    });
 		           var data = new FormData();
 		           data.append('userId', this.userInfo.id);
@@ -331,44 +361,34 @@
 		           	            console.log(response)
 		                        this.contractList=response.data.unlinked_list
 		                        this.totalCount=response.data.num
-		                       
+
 		                    }, (response) => {
-	
+
 		                    });
 		},
 		watch:{
-			 selectType:function(str){
-		     	if(str){
-		     		    this.isSettle=1
-				  		this.minSum=this.minSum2
-				  		this.consultValue=this.minSum2
-				  		this.reduceMoney=this.minSum-this.consultValue
-				 }else{
-				 	    this.isSettle=0
-				  		this.consultValue=this.minSum1
-				  		this.minSum=this.minSum1
-				  		this.reduceMoney=this.minSum-this.consultValue
-				}
-		     	
-		     },
-		     dealDetail:function(str){
-		     	if(str=="提醒还款"){
-		     		this.handOver=true;
-		     		this.dealType='0'
-		     		this.selectType=false
-		     	}else if(str=="申请减免"){
-		     		this.handOver=false;
-		     		this.dealType='1'
-		     		this.selectType=false
-		     	}else{
-		     		this.handOver=true;
-		     		this.dealType='2'
-		     		this.selectType=false
-		     	}
-		     },
-		     consultValue:function(str){
-		     	this.reduceMoney=this.minSum-str
-		     }
+        reduceType: function (str) {
+          console.log('reduceType:'+str)
+          if (str=='有息结清') {
+            this.isSettle = 1
+            this.minSum = this.minSum1+this.minSum2
+            this.consultValue = this.minSum
+            this.reduceMoney = this.minSum - this.consultValue
+          } else if(str=='无息结清'){
+            this.isSettle = 2
+            this.minSum = this.minSum1+this.minSum2 - this.futureInterest
+            this.consultValue = this.minSum
+            this.reduceMoney = this.minSum - this.consultValue
+          }else{
+            this.isSettle = 0
+            this.minSum = this.minSum1
+            this.consultValue = this.minSum
+            this.reduceMoney = this.minSum - this.consultValue
+          }
+        },
+      consultValue:function(str){
+        this.reduceMoney=this.minSum-str
+      }
 		},
 		methods:{
 			inquire(){
@@ -455,8 +475,8 @@
 							    });
 	           	            }
 	                    }, (response) => {
-	                    	
-	                        
+
+
 	                    });
 			},
 			goBack(){
@@ -476,7 +496,7 @@
 			   	  this.$alert("协商金额不能为空", '系统提示', {
 					     confirmButtonText: '确定',
 				   });
-				   
+
 			   }else{
 				   var data = new FormData();
 		           data.append('contract_no', this.checkDetail.contract_no);
@@ -501,7 +521,7 @@
 								    });
 		           	            }
 		                    }, (response) => {
-		                        
+
 		                    });
 	          }
 			},
@@ -516,7 +536,7 @@
 	      	this.loading1=true
 	        this.formSearch.page=1
     	    this.$options.methods.inquire.bind(this)()
-	                    
+
 	       },
 	       clear(){
 //	       	this.currentPage=6
@@ -535,7 +555,7 @@
 </script>
 
 <style scoped>
-	
+
 	.title{
 		height: .5rem;
 		background:#F1F2F8 ;
@@ -555,6 +575,14 @@
 	.nav1{
 		padding: .2rem .3rem;
 	}
+  .nav1 .nav1-grid{
+    font-size: 16px;
+    padding-left: 30px;
+    margin-top: 20px;
+  }
+  .el-col-6{
+    margin-bottom: 20px;
+  }
 	.nav1 .nav1-p{
 		padding-left: 30px;
 		margin-top: 20px;
@@ -688,7 +716,7 @@
 		width: 90%;
 		height: .4rem;
 	}
-	
+
 	.nav3-sub{
 		width: 80%;
 		padding: .1rem .2rem;
@@ -797,7 +825,7 @@
 		z-index:999;
 	}
 	.span-check{
-		
+
 		color: #0BB1FF;
 	}
 	.span-check button{
@@ -806,9 +834,13 @@
 	.span-check:hover{
 		color: #2299DD;
 	}
-	
+
 	.redSpan{
 		margin-left: .2rem;
 		color: red;
 	}
+
+  .duihao{
+    color: #10C55B;
+  }
 </style>

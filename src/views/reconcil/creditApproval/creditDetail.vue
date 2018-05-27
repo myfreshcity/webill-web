@@ -10,7 +10,7 @@
 		<div class="nav1">
 			<ul>
 				<li class="li-head"><span class="span-left">客户姓名</span><span class="span-right">{{creditDetail.customer}}</span></li>
-				<li><span class="span-left">借款金额</span><span class="span-right">{{creditDetail.loan_amount}}</span></li>
+				<li><span class="span-left">借款金额</span><span class="span-right">{{creditDetail.amount}}</span></li>
 				<li><span class="span-left">总期数</span><span class="span-right">{{creditDetail.tensor}}</span></li>
 			</ul>
 		</div>
@@ -28,9 +28,12 @@
 		</div>
 		<div class="nav1 nav3">
 			<ul>
-				<li class="li-head"><span class="span-left">申请状态</span><span class="span-right">{{creditDetail.result|resultFilter}}</span></li>
-				<li><span class="span-left">减免金额</span><span class="span-right">{{creditDetail.commit_amount}}</span></li>
-				<li><span class="span-left">处理备注</span><span class="span-right">{{creditDetail.remark}}</span></li>
+        <li class="li-head"><span class="span-left">申请状态</span><span
+          class="span-right">{{creditDetail.result | resultFilter}}</span></li>
+        <li><span class="span-left">减免方式</span><span class="span-right">{{creditDetail.discount_type | discountFilter}}</span></li>
+        <li><span class="span-left">待还金额</span><span class="span-right">{{creditDetail.pay_amt}}</span></li>
+        <li><span class="span-left">减免金额</span><span class="span-right">{{creditDetail.commit_amount}}</span></li>
+        <li><span class="span-left">处理备注</span><span class="span-right">{{creditDetail.remark}}</span></li>
 				<!--<li><span class="span-left">协商有效期</span><span class="span-right">{{creditDetail.deadline}}</span></li>-->
 				<li>
 					<span class="span-left">审核操作</span>
@@ -57,7 +60,7 @@
 		 data(){
 			return {
 				creditShow:true,
-				selectType:'',    
+				selectType:'',
 				creditDetail:{},   //协商详情
 				overtimeList:[],
 				remark:"",
@@ -72,7 +75,16 @@
 				}else{
 					return "拒绝"
 				}
-			}
+			},
+      discountFilter(index){
+        if(index==1){
+          return "有息结清"
+        }else if(index==2){
+          return "无息结清"
+        }else{
+          return "不结清"
+        }
+      }
 		},
 		mounted:function(){
 					   $(window).unbind ('scroll');
@@ -121,9 +133,9 @@
 							                  confirmButtonText: '确定',
 									    });
 		           	            }
-	
+
 		           }, (response) => {
-	
+
 		                    });
 	            }
          	}
@@ -140,7 +152,7 @@
 </script>
 
 <style>
-	
+
 	.title{
 		height: .5rem;
 		background:#ccc ;
@@ -201,7 +213,7 @@
 	.nav2 ul li .nav2-span-right{
 		border-right: none;
 	}
-	
+
 	.nav3 .work-input{
 		width: 30%;
 	}

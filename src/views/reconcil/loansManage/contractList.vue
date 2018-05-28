@@ -8,7 +8,15 @@
           <el-input v-model="formSearch.realName" placeholder="客户姓名"></el-input>
         </el-form-item>
         <el-form-item label="">
-		    <el-input v-model="formSearch.shop" placeholder="门店"></el-input>
+          <el-select v-model="formSearch.shop" filterable allow-create placeholder="选择门店" >
+            <el-option
+              v-for="item in shopOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+
 		 </el-form-item>
 		 <el-form-item label="">
 		    <el-input v-model="formSearch.sale_person" placeholder="客户经理"></el-input>
@@ -104,6 +112,22 @@
 	      	contractList:[],
 	      	isGuide:false,
 	      	bgShow:false,
+          shopOptions: [{
+            value: '济南门店',
+            label: '济南门店'
+          }, {
+            value: '苏州门店',
+            label: '苏州门店'
+          }, {
+            value: '天津门店',
+            label: '天津门店'
+          }, {
+            value: '青岛门店',
+            label: '青岛门店'
+          },{
+            value: '泉州门店',
+            label: '泉州门店'
+          }],
 	      	formSearch:{
 	      		realName:"",
 	      		idNo:"",

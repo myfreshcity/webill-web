@@ -128,15 +128,13 @@
 				return ""
 			}
 		},
-		discountType(index){
-			if(index==1){
-				return "有息结清"
-			}else if(index==2){
-				return "无息结清"
-			}else{
-				return "不结清"
-			}
-		},
+    discountFilter(index){
+      if(index==1){
+        return "结清"
+      }else{
+        return "清欠"
+      }
+    },
     },
     mounted:function(){
 			 $(window).unbind ('scroll');

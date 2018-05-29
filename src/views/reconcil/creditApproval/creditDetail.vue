@@ -23,7 +23,7 @@
 					<span>{{ele.amount}}</span>
 					<span class="nav2-span-right">-</span>
 				</li>
-				<li><span>合计</span><span>共{{creditDetail.overtime_num}}期</span><span>{{creditDetail.overtime_sum}}</span><span>{{creditDetail.remain_sum}}</span></li>
+				<li><span>合计</span><span>共{{creditDetail.overtime_num}}期</span><span>{{creditDetail.overtime_sum}}</span><span></span></li>
 			</ul>
 		</div>
 		<div class="nav1 nav3">
@@ -78,11 +78,9 @@
 			},
       discountFilter(index){
         if(index==1){
-          return "有息结清"
-        }else if(index==2){
-          return "无息结清"
+          return "结清"
         }else{
-          return "不结清"
+          return "清欠"
         }
       }
 		},

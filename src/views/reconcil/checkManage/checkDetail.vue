@@ -22,6 +22,12 @@
           <el-col :span="6"><div>所在门店：{{checkDetail.shop}}</div></el-col>
         </el-row>
         <el-row>
+          <el-col :span="6"><div>还款类型:{{checkDetail.repay_type|repayTypeFilter}}</div></el-col>
+          <el-col :span="6"><div>提前还款是否计息:{{checkDetail.prepay_type|yesNoFilter}}</div></el-col>
+          <el-col :span="6"><div>是否移交外催：{{checkDetail.is_out|yesNoFilter}}</div></el-col>
+          <el-col :span="6"><div>合同状态：{{checkDetail.is_settled|statusFilter}}</div></el-col>
+        </el-row>
+        <el-row>
           <el-col :span="6"><div>客户经理:{{checkDetail.sale_person}}</div></el-col>
           <el-col :span="6"><div>导入时间:{{checkDetail.created_time}}</div></el-col>
           <el-col :span="6"><div></div></el-col>
@@ -67,11 +73,11 @@
 				<li class="li-head">
 					<span class="span-left">是否结清</span>
           <span class="span-right nav3-span-right">
-            <el-radio-group v-model="reduceType">
-            <el-radio label="不结清"></el-radio>
-            <el-radio label="无息结清"></el-radio>
-            <el-radio label="有息结清"></el-radio>
-          </el-radio-group>
+            <el-switch
+              v-model="reduceType"
+              active-color="#13ce66"
+              inactive-color="#dcdfe6">
+            </el-switch>
 					</span>
 				</li>
 				<li ><span class="span-left">应还总额</span>
@@ -179,13 +185,30 @@
 		    </el-pagination>
 		  </div>
 		</div>
-		 <div class="unlinked_list" v-show="isStrike">
-		  	 <p class="p1">冲账确认</p>
-		  	 <p class="p2"><span class="unlinked_span1">客户姓名：</span><span class="unlinked_span2">{{checkDetail.customer}}</span></p>
-		  	 <p class="p2"><span class="unlinked_span1">合同编号：</span><span class="unlinked_span2">{{checkDetail.contract_no}}</span></p>
-		  	 <p class="p2"><span class="unlinked_span1">冲账金额：</span><span class="unlinked_span2">{{strikeDetail.remain_amt}}</span></p>
-		  	 <p class="p3"><el-button  @click="cancel" >取消</el-button><el-button type="primary" @click="confirm" >确定</el-button></p>
-		  </div>
+    <el-dialog title="冲账确认" :visible.sync="isStrike">
+      <el-form :model="strikeDetail" label-width="100px">
+        <el-form-item label="客户姓名">
+          {{checkDetail.customer}}
+        </el-form-item>
+        <el-form-item label="合同编号">
+          {{checkDetail.contract_no}}
+        </el-form-item>
+        <el-form-item label="冲账金额">
+          <el-input v-model="strikeDetail.amount" type="number" style="width:120px;"></el-input>
+        </el-form-item>
+        <el-form-item label="优先冲滞纳金">
+          <el-switch
+            v-model="strikeDetail.fee_first"
+            active-color="#13ce66"
+            inactive-color="#dcdfe6">
+          </el-switch>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="isStrike = false">取 消</el-button>
+        <el-button type="primary" @click="confirm">确 定</el-button>
+      </div>
+    </el-dialog>
 		<div class="bg" v-show="bgShow" @click="showBg()"></div>
 	</div>
 </template>
@@ -224,11 +247,16 @@
         minSum2: 0, //当前未到期
         futureInterest: 0,//未到期利息
         isStrike: false,
-        strikeDetail: {},
+        strikeDetail: {
+          remain_amt:0,
+          refund_id:"",
+          fee_first:"",
+          amount:0
+        },
         bgShow: false,
         radioDisable: false,
         handOver: true,
-        reduceType: "不结清",
+        reduceType: false,
         consultValue: "",
         repayDate: '',      //承诺还款日期
         remark: '',         //备注
@@ -261,6 +289,29 @@
 					return index
 				}
 			},
+      repayTypeFilter(index){
+        if(index==0){
+          return "期初还款"
+        }else{
+          return "期末还款"
+        }
+      },
+      yesNoFilter(index){
+        if(index==0){
+          return "否"
+        }else{
+          return "是"
+        }
+      },
+      statusFilter(index){
+        if(index==0){
+          return "还款中"
+        }else if(index==100){
+          return "逾期"
+        }else if(index==300){
+          return "结清"
+        }
+      },
 			resultFilter(index){
 				if(index===0){
 					return "待审核"
@@ -274,11 +325,9 @@
 			},
 			discountFilter(index){
         if(index==1){
-          return "有息结清"
-        }else if(index==2){
-          return "无息结清"
+          return "结清"
         }else{
-          return "不结清"
+          return "清欠"
         }
 			}
 		},
@@ -300,19 +349,23 @@
 		           	            this.realPay=this.checkDetail.real_pays
 		           	            this.repayPlan4=this.checkDetail.overtime_list
 
-		           	            for(let i=0;i<this.repayPlan4.length;i++){
-		           	            	if(this.repayPlan4[i].is_settled==1){
-		           	            		this.repayPlan2.push(this.repayPlan4[i])
-		           	            	}else if(this.repayPlan4[i].delay_day==0 && this.repayPlan4[i].deadline!=today){
-		           	            		this.repayPlan3.push(this.repayPlan4[i])
-		           	            	}
-		           	            }
+                             for (let i = 0; i < this.repayPlan4.length; i++) {
+                               if (this.repayPlan4[i].is_settled == 1) {
+                                 this.repayPlan2.push(this.repayPlan4[i])
+                               } else if (this.repayPlan4[i].delay_day == 0 && this.repayPlan4[i].deadline != today) {
+                                 if (this.repayPlan4[i].is_settled == 0) {
+                                   this.repayPlan3.push(this.repayPlan4[i])
+                                 }
+                               }
+                             }
 		           	            // 待还面板
-		           	            for(let j=0;j<this.repayPlan4.length;j++){
-		           	            	if(this.repayPlan4[j].delay_day>0 || this.repayPlan4[j].deadline==today){
-		           	            		this.repayPlan1.push(this.repayPlan4[j])
-		           	            	}
-		           	            }
+                             for (let j = 0; j < this.repayPlan4.length; j++) {
+                               if (this.repayPlan4[j].delay_day > 0 || this.repayPlan4[j].deadline == today) {
+                                 if (this.repayPlan4[j].is_settled == 0) {
+                                   this.repayPlan1.push(this.repayPlan4[j])
+                                 }
+                               }
+                             }
                              this.repayPlan = this.repayPlan1
                              for (let i = 0; i < this.repayPlan.length; i++) {
                                if (this.repayPlan[i].amount) {
@@ -369,22 +422,15 @@
 		watch:{
         reduceType: function (str) {
           console.log('reduceType:'+str)
-          if (str=='有息结清') {
+          if(str){
             this.isSettle = 1
-            this.minSum = this.minSum1+this.minSum2
-            this.consultValue = this.minSum
-            this.reduceMoney = this.minSum - this.consultValue
-          } else if(str=='无息结清'){
-            this.isSettle = 2
             this.minSum = this.minSum1+this.minSum2 - this.futureInterest
-            this.consultValue = this.minSum
-            this.reduceMoney = this.minSum - this.consultValue
           }else{
             this.isSettle = 0
             this.minSum = this.minSum1
-            this.consultValue = this.minSum
-            this.reduceMoney = this.minSum - this.consultValue
           }
+          this.consultValue = this.minSum
+          this.reduceMoney = this.minSum - this.consultValue
         },
       consultValue:function(str){
         this.reduceMoney=this.minSum-str
@@ -455,30 +501,39 @@
 				this.isStrike=false
 				this.bgShow=false
 			},
-			confirm(){
-			   var data = new FormData();
-	           data.append('contract_no', this.checkDetail.contract_no);
-	           data.append('user_id',this.userInfo.id);
-	           data.append('refund_id', this.strikeDetail.refund_id);
-	           const url=this.$checkStage('/charge/refund/unlink/link')
-	           this.$http.post(url, data).then((response) => {
-	           	            console.log(response)
-	           	            if(response.data.isSucceed==200){
-	           	            	 this.$router.push({path:'/backPage'})
-	           	            	  this.$message({
-							          message: '冲账成功',
-							          type: 'success'
-							      });
-	           	            }else{
-	           	            	this.$alert(response.data.message, '系统提示', {
-					                  confirmButtonText: '确定',
-							    });
-	           	            }
-	                    }, (response) => {
+      confirm(){
+        if(Number(this.strikeDetail.amount) < 0) {
+          return this.$alert("冲账金额不能小于零");
+        }
+
+        if(Number(this.strikeDetail.amount) > Number(this.strikeDetail.remain_amt)) {
+          return this.$alert("冲账金额不能大于流水余额");
+        }
+
+        var data = new FormData();
+        data.append('contract_no', this.checkDetail.contract_no);
+        data.append('user_id', this.userInfo.id);
+        data.append('refund_id', this.strikeDetail.refund_id);
+        data.append('fee_first', this.strikeDetail.fee_first);
+        data.append('amount', this.strikeDetail.amount);
+        const url = this.$checkStage('/charge/refund/unlink/link')
+        this.$http.post(url, data).then((response) => {
+          if (response.data.isSucceed == 200) {
+            this.$router.push({path: '/backPage'})
+            this.$message({
+              message: '冲账成功',
+              type: 'success'
+            });
+          } else {
+            this.$alert(response.data.message, '系统提示', {
+              confirmButtonText: '确定',
+            });
+          }
+        }, (response) => {
 
 
-	                    });
-			},
+        });
+      },
 			goBack(){
 				this.$router.push({path:'/reconcil/checkList'})
 			},
@@ -488,8 +543,9 @@
 			},
 			strike(data){
 				this.isStrike=true
-				this.bgShow=true
-				this.strikeDetail=data
+				this.strikeDetail.refund_id=data.refund_id
+        this.strikeDetail.amount=data.remain_amt
+        this.strikeDetail.remain_amt=data.remain_amt
 			},
 			commitSub(){
 			   if((!this.consultValue)&&!this.handOver){

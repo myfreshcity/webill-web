@@ -63,7 +63,7 @@
 		  		</span>
 				</li>
 				<li class="last-li">
-					<span class="total-span">小计</span><span>{{shouldPay1}}</span><span>{{shouldPay2}}</span><span>{{truePay1}}</span><span>{{truePay2}}</span><span></span>
+					<span class="total-span">小计</span><span>{{shouldPay1}}</span><span>{{shouldPay2}}</span><span>{{truePay1}}</span><span>{{truePay2}}</span><span></span><span></span>
 				</li>
 			</ul>
 	    </div>
@@ -244,8 +244,8 @@
         overList: [],  //逾期列表
         minSum: 0,   //最低还款额
         minSum1: 0, //当前应还额
-        minSum2: 0, //当前未到期
-        futureInterest: 0,//未到期利息
+        minSum2: 0, //当前逾期金额
+        futureOffset: 0,//未到期费差
         isStrike: false,
         strikeDetail: {
           remain_amt:0,
@@ -340,7 +340,7 @@
                             let today = timeStampToDate(new Date().getTime())
 
 		           	            this.checkDetail=response.data
-                            this.futureInterest = response.data.future_interest
+                            this.futureOffset = Number(response.data.future_interest)
 		           	            this.overList=response.data.overtime_list
 		           	            this.historyList=response.data.commit_history
 
@@ -366,6 +366,7 @@
                                  }
                                }
                              }
+
                              this.repayPlan = this.repayPlan1
                              for (let i = 0; i < this.repayPlan.length; i++) {
                                if (this.repayPlan[i].amount) {
@@ -380,7 +381,21 @@
                                if (this.repayPlan[i].actual_fee) {
                                  this.truePay2 += Number(this.repayPlan[i].actual_fee)
                                }
+
+                               this.minSum1 += Number(this.repayPlan[i].amount)
+                               this.minSum1 += Number(this.repayPlan[i].fee)
+                               this.minSum1 -= Number(this.repayPlan[i].actual_amt)
+                               this.minSum1 -= Number(this.repayPlan[i].actual_fee)
+
+                               if(this.repayPlan[i].deadline != today){
+                                 this.minSum2 += Number(this.repayPlan[i].amount)
+                                 this.minSum2 += Number(this.repayPlan[i].fee)
+                                 this.minSum2 -= Number(this.repayPlan[i].actual_amt)
+                                 this.minSum2 -= Number(this.repayPlan[i].actual_fee)
+                               }
+
                              }
+
                              for (let i = 0; i < this.repayPlan3.length; i++) {
                                if (this.repayPlan3[i].amount) {
                                  this.shouldPay3 += Number(this.repayPlan3[i].amount)
@@ -395,11 +410,9 @@
                                  this.truePay4 += Number(this.repayPlan3[i].actual_fee)
                                }
                              }
-		           	             this.minSum1=this.shouldPay1+this.shouldPay2-this.truePay1-this.truePay2
-		           	             this.minSum2=this.shouldPay3+this.shouldPay4-this.truePay3-this.truePay4
 
-		           	             this.minSum=this.minSum1
-		           	             this.consultValue=this.minSum1
+                              this.minSum=this.minSum1
+
 		                    }, (response) => {
 
 		                    });
@@ -424,7 +437,7 @@
           console.log('reduceType:'+str)
           if(str){
             this.isSettle = 1
-            this.minSum = this.minSum1+this.minSum2 - this.futureInterest
+            this.minSum = this.minSum2+ this.futureOffset
           }else{
             this.isSettle = 0
             this.minSum = this.minSum1

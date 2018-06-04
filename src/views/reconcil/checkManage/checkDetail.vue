@@ -106,16 +106,22 @@
 				<li class="nav2-li-head">
 			 		<span class="date-span">申请时间</span>
 				 	<span>减免方式</span>
-				 	<span>减免金额</span>
-				 	<span>是否有效</span>
-				 	<span class="remark-span">备注</span>
+          <span>付款额</span>
+				 	<span>减免额</span>
+				 	<span>是否生效</span>
+				 	<span>备注</span>
 			 	</li>
 			 	<li v-for="(ele,k) in historyList">
 			 		<span class="date-span">{{ele.apply_date}}</span>
 				 	<span>{{ele.discount_type|discountFilter}}</span>
+          <span>{{ele.pay_amt}}</span>
 				 	<span>{{ele.amount}}</span>
-				 	<span>{{ele.result|resultFilter}}</span>
-				 	<span  class="remark-span">{{ele.remark}}</span>
+          <span >
+		  			<el-tooltip class="item" effect="dark" content="待审核" placement="right"><svg-icon icon-class="wait" v-show="ele.result<100"/></el-tooltip>
+		  			<el-tooltip class="item" effect="dark" content="结清" placement="right"><i class="el-icon-check" v-show="ele.result==100&&ele.remain_amt==0" /></el-tooltip>
+		  			<el-tooltip class="item" effect="dark" content="未生效" placement="right"><i class="el-icon-close" v-show="(ele.result==100&&ele.remain_amt>0) || ele.result==200" /></el-tooltip>
+		  		</span>
+				 	<span>{{ele.remark}}</span>
 			 	</li>
 			 	<li v-if="historyList.length==0" class="noRecord">无记录</li>
 			</ul>
@@ -908,6 +914,17 @@
 		margin-left: .2rem;
 		color: red;
 	}
+
+  .el-icon-check{
+    font-size: 20px;
+    font-weight: bold;
+    color: #10C55B;
+  }
+  .el-icon-close{
+    font-size: 20px;
+    font-weight: bold;
+    color: #FF3F3F;
+  }
 
   .duihao{
     color: #10C55B;

@@ -100,32 +100,29 @@
 			 </p>
 		</div>
 
-		<div class="nav2">
-			<p class="p-title"><span class="span-line"></span>历史处理情况</p>
-			<ul style="margin-top: .3rem;">
-				<li class="nav2-li-head">
-			 		<span class="date-span">申请时间</span>
-				 	<span>减免方式</span>
-          <span>付款额</span>
-				 	<span>减免额</span>
-				 	<span>是否生效</span>
-				 	<span>备注</span>
-			 	</li>
-			 	<li v-for="(ele,k) in historyList">
-			 		<span class="date-span">{{ele.apply_date}}</span>
-				 	<span>{{ele.discount_type|discountFilter}}</span>
-          <span>{{ele.pay_amt}}</span>
-				 	<span>{{ele.amount}}</span>
+    <div class="nav2">
+      <p class="p-title"><span class="span-line"></span>历史处理情况</p>
+    <el-table :data="historyList" style="width: 98%;margin: .2rem .2rem;">
+      <el-table-column prop="apply_date" label="申请时间" min-width="25%"></el-table-column>
+      <el-table-column label="减免方式" min-width="10%">
+        <template slot-scope="scope">
+          <span style="width:20px;">{{ scope.row.discount_type|discountFilter }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="pay_amt" label="付款额" min-width="10%"></el-table-column>
+      <el-table-column prop="amount" label="减免额" min-width="10%"></el-table-column>
+      <el-table-column label="是否生效" min-width="10%">
+        <template slot-scope="scope">
           <span >
-		  			<el-tooltip class="item" effect="dark" content="待审核" placement="right"><svg-icon icon-class="wait" v-show="ele.result<100"/></el-tooltip>
-		  			<el-tooltip class="item" effect="dark" content="结清" placement="right"><i class="el-icon-check" v-show="ele.result==100&&ele.remain_amt==0" /></el-tooltip>
-		  			<el-tooltip class="item" effect="dark" content="未生效" placement="right"><i class="el-icon-close" v-show="(ele.result==100&&ele.remain_amt>0) || ele.result==200" /></el-tooltip>
+		  			<el-tooltip class="item" effect="dark" content="待审核" placement="right"><svg-icon icon-class="wait" v-show="scope.row.result<100"/></el-tooltip>
+		  			<el-tooltip class="item" effect="dark" content="结清" placement="right"><i class="el-icon-check" v-show="scope.row.result==100&&scope.row.remain_amt==0" /></el-tooltip>
+		  			<el-tooltip class="item" effect="dark" content="未生效" placement="right"><i class="el-icon-close" v-show="(scope.row.result==100&&scope.row.remain_amt>0) || scope.row.result==200" /></el-tooltip>
 		  		</span>
-				 	<span>{{ele.remark}}</span>
-			 	</li>
-			 	<li v-if="historyList.length==0" class="noRecord">无记录</li>
-			</ul>
-	    </div>
+        </template>
+      </el-table-column>
+      <el-table-column prop="remark" label="备注"></el-table-column>
+    </el-table>
+    </div>
 
 
 		<div class="nav2">
@@ -418,6 +415,7 @@
                              }
 
                               this.minSum=this.minSum1
+                              this.consultValue = this.minSum
 
 		                    }, (response) => {
 

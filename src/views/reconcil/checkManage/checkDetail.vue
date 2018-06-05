@@ -115,8 +115,8 @@
         <template slot-scope="scope">
           <span >
 		  			<el-tooltip class="item" effect="dark" content="待审核" placement="right"><svg-icon icon-class="wait" v-show="scope.row.result<100"/></el-tooltip>
-		  			<el-tooltip class="item" effect="dark" content="结清" placement="right"><i class="el-icon-check" v-show="scope.row.result==100&&scope.row.remain_amt==0" /></el-tooltip>
-		  			<el-tooltip class="item" effect="dark" content="未生效" placement="right"><i class="el-icon-close" v-show="(scope.row.result==100&&scope.row.remain_amt>0) || scope.row.result==200" /></el-tooltip>
+		  			<el-tooltip class="item" effect="dark" content="已生效" placement="right"><i class="el-icon-check" v-show="scope.row.result==100&&scope.row.is_valid==1" /></el-tooltip>
+		  			<el-tooltip class="item" effect="dark" content="未生效" placement="right"><i class="el-icon-close" v-show="(scope.row.result==100&&scope.row.is_valid==0) || scope.row.result==200" /></el-tooltip>
 		  		</span>
         </template>
       </el-table-column>

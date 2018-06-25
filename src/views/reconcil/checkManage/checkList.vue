@@ -101,8 +101,8 @@
       		contractNo:"",
       		dealType:"",
       		shop:"",       //门店
-      		startDate:"0",
-      		endDate:"3",
+      		startDate:"",
+      		endDate:"",
       		checkStatus:"",
       		page:1
       	},

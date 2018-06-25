@@ -11,17 +11,17 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-//  	'/api': {
-//          target: 'http://longfei.test.manmanh.com',
-//          changeOrigin: true,
-//          pathRewrite: {
-//              '^/api': '/'
-//          }
-//      }
+  	'/api': {
+          target: 'http://localhost:7080/webill-app/api',
+          changeOrigin: true,
+          pathRewrite: {
+              '^/api': '/'
+          }
+      }
     },
 
     // Various Dev Server settings
-    host: '192.168.99.153', // can be overwritten by process.env.HOST
+    host: 'localhost', // can be overwritten by process.env.HOST
     env: require('./dev.env'),
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
